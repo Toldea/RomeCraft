@@ -39,7 +39,7 @@ public class RomeCraft {
 	// Says where the client and server 'proxy' code is loaded.
 	@SidedProxy(clientSide = "toldea.romecraft.client.ClientProxy", serverSide = "toldea.romecraft.CommonProxy")
 	public static CommonProxy proxy;
-
+	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		// Stub Method
@@ -53,6 +53,7 @@ public class RomeCraft {
 		ItemManager.registerItems();
 		BlockManager.registerBlocks();
 		EntityManager.registerEntities();
+		EventManager.registerEvents();
 	}
 
 	@EventHandler

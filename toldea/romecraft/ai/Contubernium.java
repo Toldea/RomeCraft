@@ -6,6 +6,7 @@ import java.util.List;
 import toldea.romecraft.entity.EntityLegionary;
 
 import net.minecraft.block.ITileEntityProvider;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -20,7 +21,8 @@ public class Contubernium {
 	
 	private List<EntityLegionary> squadMembersList;
 	private Vec3 targetLocation = null;
-
+	private boolean shouldFollowPlayer = true;
+	
 	public Contubernium() {
 		squadMembersList = new ArrayList<EntityLegionary>();
 	}
@@ -59,6 +61,10 @@ public class Contubernium {
 		} else
 			return -1;
 	}
+	
+	public void setShouldFollowPlayer(boolean par1shouldFollowPlayer) {
+		shouldFollowPlayer = par1shouldFollowPlayer;
+	}
 
 	public void setTargetLocation(Vec3 newTargetLocation) {
 		targetLocation = newTargetLocation;
@@ -71,16 +77,23 @@ public class Contubernium {
 		} else {
 			if (targetLocation == null) {
 				EntityLegionary legionary = squadMembersList.get(0);
-				if (legionary == null)
+				if (legionary == null) {
 					return null;
-				if (legionary.worldObj.playerEntities.size() == 0)
+				}
+				if (shouldFollowPlayer) {
+					if (legionary.worldObj.playerEntities.size() == 0) {
+						return null;
+					}
+					EntityPlayer player = ((EntityPlayer) legionary.worldObj.playerEntities.get(0));
+					if (player == null) {
+						return null;
+					}
+					Vec3 vec = player.getPosition(1.0f);
+					vec.zCoord = vec.zCoord + 5;
+					return vec;
+				} else {
 					return null;
-				EntityPlayer player = ((EntityPlayer) legionary.worldObj.playerEntities.get(0));
-				if (player == null)
-					return null;
-				Vec3 vec = player.getPosition(1.0f);
-				vec.zCoord = vec.zCoord + 5;
-				return vec;
+				}
 			} else {
 				return targetLocation;
 			}

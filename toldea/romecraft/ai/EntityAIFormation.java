@@ -44,9 +44,7 @@ public class EntityAIFormation extends EntityAIBase {
 		if (vec3 == null) {
 			return false;
 		} else {
-			int squadSize = contubernium.getSquadSize();
-			int firstFileSize = squadSize - (squadSize % Contubernium.files);
-			float offset = (firstFileSize - 1f) / 2f;
+			float offset = SquadManager.getFormationOffset(contubernium);
 			this.xPosition = vec3.xCoord + (legionary.getSquadIndex() % Contubernium.files * Contubernium.tightness) - (offset * Contubernium.tightness);
 			this.yPosition = vec3.yCoord;
 			this.zPosition = vec3.zCoord + ((int)(legionary.getSquadIndex() / Contubernium.files) * Contubernium.tightness);
