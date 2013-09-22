@@ -18,11 +18,11 @@ public class Contubernium {
 	public static final int ranks = 2;
 	public static final int files = 6;
 	public static final float tightness = 2f;
-	
+
 	private List<EntityLegionary> squadMembersList;
 	private Vec3 targetLocation = null;
 	private boolean shouldFollowPlayer = true;
-	
+
 	public Contubernium() {
 		squadMembersList = new ArrayList<EntityLegionary>();
 	}
@@ -61,7 +61,7 @@ public class Contubernium {
 		} else
 			return -1;
 	}
-	
+
 	public void setShouldFollowPlayer(boolean par1shouldFollowPlayer) {
 		shouldFollowPlayer = par1shouldFollowPlayer;
 	}
@@ -96,6 +96,26 @@ public class Contubernium {
 				}
 			} else {
 				return targetLocation;
+			}
+		}
+	}
+
+	public void saveNBTData(NBTTagCompound compound) {
+		if (targetLocation != null) {
+			compound.setDouble("targetLocationX", targetLocation.xCoord);
+			compound.setDouble("targetLocationY", targetLocation.yCoord);
+			compound.setDouble("targetLocationZ", targetLocation.zCoord);
+		}
+	}
+
+	public void loadNBTData(NBTTagCompound compound) {
+		if (compound != null) {
+			System.out.println(compound);
+			if (compound.hasKey("targetLocationX")) {
+				Double xCoord = compound.getDouble("targetLocationX");
+				Double yCoord = compound.getDouble("targetLocationY");
+				Double zCoord = compound.getDouble("targetLocationZ");
+				targetLocation = Vec3.createVectorHelper(xCoord, yCoord, zCoord);
 			}
 		}
 	}

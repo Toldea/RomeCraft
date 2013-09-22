@@ -1,6 +1,10 @@
 package toldea.romecraft.ai;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import toldea.romecraft.RomeCraft;
 import toldea.romecraft.entity.EntityLegionary;
@@ -13,37 +17,33 @@ import net.minecraftforge.common.IExtendedEntityProperties;
 
 public class SquadManager implements IExtendedEntityProperties {
 	private static HashMap<Integer, Contubernium> contuberniumMap = new HashMap<Integer, Contubernium>();
-	
+
 	public static SquadManager instance = new SquadManager();
-	
-	private SquadManager() {}
-	
-	public static void registerToContubernium(int contuberniumId, EntityLegionary squadMember) {
+
+	private SquadManager() {
+	}
+
+	// Get the Contubernium from it's id. Create it if it doesn't exist yet.
+	public static Contubernium getContubernium(int contuberniumId) {
 		if (contuberniumMap.get(contuberniumId) == null) {
 			contuberniumMap.put(contuberniumId, new Contubernium());
-		} 
-		contuberniumMap.get(contuberniumId).registerSquadMember(squadMember);
+		}
+		return contuberniumMap.get(contuberniumId);
 	}
-	
-	public static Contubernium getContubernium(int contuberniumId) {
-		if (contuberniumMap.get(contuberniumId) != null) {
-			return contuberniumMap.get(contuberniumId);
-		} else return null;
+
+	public static void registerToContubernium(int contuberniumId, EntityLegionary squadMember) {
+		getContubernium(contuberniumId).registerSquadMember(squadMember);
 	}
-	
+
 	public static void removeFromContubernium(int contuberniumId, EntityLegionary squadMember) {
-		if (contuberniumMap.get(contuberniumId) != null) {
-			contuberniumMap.get(contuberniumId).removeSquadMember(squadMember);
-		} 
+		getContubernium(contuberniumId).removeSquadMember(squadMember);
 	}
-	
+
 	public static void giveMovementOrder(int contuberniumId, Vec3 targetLocation) {
-		if (contuberniumMap.get(contuberniumId) != null) {
-			contuberniumMap.get(contuberniumId).setTargetLocation(targetLocation);
-		} 
+		getContubernium(contuberniumId).setTargetLocation(targetLocation);
 	}
-	
-	public static float getFormationOffset(Contubernium contubernium) {
+
+	public static float getFormationOffsetForContubernium(Contubernium contubernium) {
 		int squadSize = contubernium.getSquadSize();
 		int firstFileSize = squadSize - (squadSize % Contubernium.files);
 		return ((firstFileSize - 1f) / 2f);
@@ -51,16 +51,44 @@ public class SquadManager implements IExtendedEntityProperties {
 
 	@Override
 	public void saveNBTData(NBTTagCompound compound) {
-		//compound.setInteger("HerpDerp", 1337);
-		System.out.println("saveNBTData");
+		int[] contuberniumIdsArray = new int[contuberniumMap.size()];
+		int index = 0;
+
+		// Loop over all Contubernium entries.
+		for (Map.Entry<Integer, Contubernium> entry : contuberniumMap.entrySet()) {
+			Integer contuberniumId = entry.getKey();
+			Contubernium contubernium = entry.getValue();
+
+			// Keep a list of all registered Contubernium Ids.
+			contuberniumIdsArray[index++] = contuberniumId;
+
+			// Each Contubernium gets its own NBT compound to save data into.
+			NBTTagCompound contuberniumCompound = new NBTTagCompound();
+			contubernium.saveNBTData(contuberniumCompound);
+
+			// Save the newly created compound to the SquadManager's NBT compound.
+			compound.setCompoundTag(new String("contubernium_" + contuberniumId), contuberniumCompound);
+		}
+
+		// Save the array of Contubernium id's.
+		compound.setIntArray("contuberniumIdsArray", contuberniumIdsArray);
 	}
 
 	@Override
 	public void loadNBTData(NBTTagCompound compound) {
-		//System.out.println("HerpDerp: " + compound.getInteger("HerpDerp"));
-		System.out.println("loadNBTData");
+		// Get the registered contubernium ids array, then get or create their respective Contubernium objects and let them load their NBT compound.
+		int[] contuberniumIdsArray = compound.getIntArray("contuberniumIdsArray");
+		for (int i = 0; i < contuberniumIdsArray.length; i++) {
+			int contuberniumId = contuberniumIdsArray[i];
+			NBTTagCompound contuberniumCompound = compound.getCompoundTag(new String("contubernium_" + contuberniumId));
+			if (contuberniumCompound != null) {
+				Contubernium contubernium = getContubernium(contuberniumId);
+				contubernium.loadNBTData(contuberniumCompound);
+			}
+		}
 	}
 
 	@Override
-	public void init(Entity entity, World world) {}
+	public void init(Entity entity, World world) {
+	}
 }
