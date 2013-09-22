@@ -101,6 +101,8 @@ public class Contubernium {
 	}
 
 	public void saveNBTData(NBTTagCompound compound) {
+		compound.setBoolean("shouldFollowPlayer", shouldFollowPlayer);
+		
 		if (targetLocation != null) {
 			compound.setDouble("targetLocationX", targetLocation.xCoord);
 			compound.setDouble("targetLocationY", targetLocation.yCoord);
@@ -110,7 +112,8 @@ public class Contubernium {
 
 	public void loadNBTData(NBTTagCompound compound) {
 		if (compound != null) {
-			System.out.println(compound);
+			shouldFollowPlayer = compound.getBoolean("shouldFollowPlayer");
+			
 			if (compound.hasKey("targetLocationX")) {
 				Double xCoord = compound.getDouble("targetLocationX");
 				Double yCoord = compound.getDouble("targetLocationY");

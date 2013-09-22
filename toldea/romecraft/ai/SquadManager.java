@@ -40,7 +40,9 @@ public class SquadManager implements IExtendedEntityProperties {
 	}
 
 	public static void giveMovementOrder(int contuberniumId, Vec3 targetLocation) {
-		getContubernium(contuberniumId).setTargetLocation(targetLocation);
+		Contubernium contubernium = getContubernium(contuberniumId);
+		contubernium.setTargetLocation(targetLocation);
+		contubernium.setShouldFollowPlayer(targetLocation == null);
 	}
 
 	public static float getFormationOffsetForContubernium(Contubernium contubernium) {
