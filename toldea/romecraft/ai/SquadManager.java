@@ -47,7 +47,7 @@ public class SquadManager implements IExtendedEntityProperties {
 
 	public static float getFormationOffsetForContubernium(Contubernium contubernium) {
 		int squadSize = contubernium.getSquadSize();
-		int firstFileSize = squadSize - (squadSize % Contubernium.files);
+		int firstFileSize = (squadSize > Contubernium.files) ? Contubernium.files : squadSize;
 		return ((firstFileSize - 1f) / 2f);
 	}
 

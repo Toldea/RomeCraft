@@ -150,6 +150,15 @@ public class EntityLegionary extends EntityMob implements IRangedAttackMob {
 		return (pilaLeft >= 1);
 	}
 	
+	public boolean isHoldingPilum() {
+		ItemStack itemStack = getCurrentItemOrArmor(0);
+		if (itemStack != null) {
+			return (itemStack.itemID == ItemManager.itemPilum.itemID);
+		} else {
+			return false;
+		}
+	}
+	
 	public void equipItem(LEGIONARY_EQUIPMENT equipment) {
 		switch(equipment) {
 		case LORICA_SEGMENTATA:

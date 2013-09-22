@@ -4,7 +4,7 @@
 // Keep in mind that you still need to fill in some blanks
 // - ZeuX
 
-package toldea.romecraft.model;
+package toldea.romecraft.client.model;
 
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;

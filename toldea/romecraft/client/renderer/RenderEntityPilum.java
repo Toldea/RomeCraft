@@ -11,9 +11,9 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
+import toldea.romecraft.client.model.ModelBloomery;
+import toldea.romecraft.client.model.ModelPilum;
 import toldea.romecraft.entity.EntityPilum;
-import toldea.romecraft.model.ModelBloomery;
-import toldea.romecraft.model.ModelPilum;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -54,7 +54,6 @@ public class RenderEntityPilum extends Render {
 		GL11.glNormal3f(f10, 0.0F, 0.0F);
 		
 		bindTexture(pilumTexture);
-		//this.modelPilum.render((Entity) null, 0.0F, 0.0F, -0.1F, 0.0F, 0.0F, 0.0625F);
 		this.modelPilum.render(entityPilum, 0.0F, 0.0F, -0.1F, 0.0F, 0.0F, 0.0625F);
 		
 		GL11.glDisable(GL12.GL_RESCALE_NORMAL);
