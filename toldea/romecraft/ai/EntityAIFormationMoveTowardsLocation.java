@@ -15,9 +15,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
-public class EntityAIFormation extends EntityAIBase {
+public class EntityAIFormationMoveTowardsLocation extends EntityAIBase {
 	World worldObj;
-	EntityLegionary legionary;
+	EntityLegionary entityLegionary;
 
 	private float distanceFromEntity;
 
@@ -26,37 +26,42 @@ public class EntityAIFormation extends EntityAIBase {
 	private double zPosition;
 	private double speed;
 
-	public EntityAIFormation(EntityLegionary par1Legionary, double par2Speed) {
-		legionary = par1Legionary;
-		worldObj = legionary.worldObj;
+	public EntityAIFormationMoveTowardsLocation(EntityLegionary par1Legionary, double par2Speed) {
+		entityLegionary = par1Legionary;
+		worldObj = entityLegionary.worldObj;
 		speed = par2Speed;
 	}
 
 	@Override
 	public boolean shouldExecute() {
-		if (!legionary.isRegistered()) {
+		if (!entityLegionary.isRegistered()) {
 			return false;
 		}
-		int contuberniumId = legionary.getContuberniumId();
+		int contuberniumId = entityLegionary.getContuberniumId();
 		Contubernium contubernium = SquadManager.getContubernium(contuberniumId);
+		// If we have an active attack target, prioritize that over this behavior. 
+		if (contubernium.getTargetEntity() != null) {
+			return false;
+		}
+		
 		Vec3 vec3 = contubernium.getTargetLocation();
 
 		if (vec3 == null) {
 			return false;
 		} else {
 			float offset = SquadManager.getFormationOffsetForContubernium(contubernium);
-			this.xPosition = vec3.xCoord + (legionary.getSquadIndex() % Contubernium.files * Contubernium.tightness) - (offset * Contubernium.tightness);
+			this.xPosition = vec3.xCoord + (entityLegionary.getSquadIndex() % Contubernium.files * Contubernium.tightness) - (offset * Contubernium.tightness);
 			this.yPosition = vec3.yCoord;
-			this.zPosition = vec3.zCoord + ((int)(legionary.getSquadIndex() / Contubernium.files) * Contubernium.tightness);
+			this.zPosition = vec3.zCoord + ((int)(entityLegionary.getSquadIndex() / Contubernium.files) * Contubernium.tightness);
 			return true;
 		}
 	}
 
 	public boolean continueExecuting() {
-		return !this.legionary.getNavigator().noPath();
+		return !this.entityLegionary.getNavigator().noPath();
 	}
 
 	public void updateTask() {
-		this.legionary.getNavigator().tryMoveToXYZ(this.xPosition, this.yPosition, this.zPosition, this.speed);
+		this.entityLegionary.getNavigator().tryMoveToXYZ(this.xPosition, this.yPosition, this.zPosition, this.speed);
 	}
 }

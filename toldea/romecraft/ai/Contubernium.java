@@ -7,6 +7,7 @@ import toldea.romecraft.entity.EntityLegionary;
 
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -21,6 +22,7 @@ public class Contubernium {
 
 	private List<EntityLegionary> squadMembersList;
 	private Vec3 targetLocation = null;
+	private EntityLivingBase targetEntity = null;
 	private boolean shouldFollowPlayer = true;
 
 	public Contubernium() {
@@ -69,7 +71,6 @@ public class Contubernium {
 	public void setTargetLocation(Vec3 newTargetLocation) {
 		targetLocation = newTargetLocation;
 	}
-
 	public Vec3 getTargetLocation() {
 		validateSquadMembers();
 		if (squadMembersList.size() <= 0) {
@@ -98,6 +99,13 @@ public class Contubernium {
 				return targetLocation;
 			}
 		}
+	}
+	
+	public void setTargetEntity(EntityLivingBase entity) {
+		this.targetEntity = entity;
+	}
+	public EntityLivingBase getTargetEntity() {
+		return this.targetEntity;
 	}
 
 	public void saveNBTData(NBTTagCompound compound) {

@@ -10,6 +10,7 @@ import toldea.romecraft.RomeCraft;
 import toldea.romecraft.entity.EntityLegionary;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
@@ -30,23 +31,42 @@ public class SquadManager implements IExtendedEntityProperties {
 		}
 		return contuberniumMap.get(contuberniumId);
 	}
-
+	private static void removeContubernium(int contuberniumId) {
+		Contubernium contubernium = getContubernium(contuberniumId);
+		if (contubernium != null) {
+			contuberniumMap.remove(contubernium);
+		}
+	}
+	
 	public static void registerToContubernium(int contuberniumId, EntityLegionary squadMember) {
 		getContubernium(contuberniumId).registerSquadMember(squadMember);
 	}
 
 	public static void removeFromContubernium(int contuberniumId, EntityLegionary squadMember) {
-		getContubernium(contuberniumId).removeSquadMember(squadMember);
+		Contubernium contubernium = getContubernium(contuberniumId);
+		contubernium.removeSquadMember(squadMember);
+		// Remove the Contubernium if the last squad member got removed.
+		if (contubernium.getSquadSize() <= 0) {
+			removeContubernium(contuberniumId);
+		}
 	}
 
 	public static void giveMovementOrder(int contuberniumId, Vec3 targetLocation) {
 		Contubernium contubernium = getContubernium(contuberniumId);
 		contubernium.setTargetLocation(targetLocation);
+		contubernium.setTargetEntity(null);
 		contubernium.setShouldFollowPlayer(targetLocation == null);
 	}
 
-	public static void giveAttackOrder(int i, Entity entity) {
-		System.out.println("Attack order received for Contubernium: " + i + ", Target Entity: " + entity);
+	public static void giveAttackOrder(int contuberniumId, Entity entity) {
+		if (!(entity instanceof EntityLivingBase)) {
+			return;
+		}
+		System.out.println("Attack order received for Contubernium: " + contuberniumId + ", Target Entity: " + entity);
+		Contubernium contubernium = getContubernium(contuberniumId);
+		//contubernium.setTargetLocation(null);
+		contubernium.setTargetEntity((EntityLivingBase)entity);
+		contubernium.setShouldFollowPlayer(false);
 	}
 	
 	public static float getFormationOffsetForContubernium(Contubernium contubernium) {

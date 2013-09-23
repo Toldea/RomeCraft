@@ -23,6 +23,7 @@ import net.minecraft.world.World;
 public class ItemScepter extends GenericItem {
 	public ItemScepter(int id) {
 		super(id);
+		this.setMaxStackSize(1);
 	}
 
 	@Override

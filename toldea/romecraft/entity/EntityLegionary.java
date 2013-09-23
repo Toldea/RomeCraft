@@ -1,7 +1,8 @@
 package toldea.romecraft.entity;
 
 import toldea.romecraft.ItemManager;
-import toldea.romecraft.ai.EntityAIFormation;
+import toldea.romecraft.ai.EntityAIFormationMoveTowardsLocation;
+import toldea.romecraft.ai.EntityAIFormationMoveTowardsTarget;
 import toldea.romecraft.ai.EntityAIMeleeAttack;
 import toldea.romecraft.ai.EntityAIThrowingAttack;
 import toldea.romecraft.ai.SquadManager;
@@ -78,12 +79,10 @@ public class EntityLegionary extends EntityMob implements IRangedAttackMob {
 
 		// this.setSneaking(true);
 
-		// this.tasks.addTask(1, new EntityAIAttackOnCollide(this, 1.0D, true));
-
-		
-		this.tasks.addTask(1, new EntityAIFormation(this, movementSpeed));
-		this.tasks.addTask(2, new EntityAIMeleeAttack(this));
-		this.tasks.addTask(3, new EntityAIThrowingAttack(this, 1.0D, 20, 60, pilumRange));
+		this.tasks.addTask(1, new EntityAIMeleeAttack(this));
+		this.tasks.addTask(2, new EntityAIThrowingAttack(this, 1.0D, 20, 60, pilumRange));
+		this.tasks.addTask(3, new EntityAIFormationMoveTowardsTarget(this, movementSpeed, 32.0f));
+		this.tasks.addTask(4, new EntityAIFormationMoveTowardsLocation(this, movementSpeed));
 
 		// this.tasks.addTask(2, new EntityAIMoveTowardsTarget(this, 0.9D, 32.0F));
 		// this.tasks.addTask(3, new EntityAIMoveThroughVillage(this, 0.6D, true));
