@@ -28,7 +28,6 @@ public class EntityAIThrowingAttack extends EntityAIBase {
 	 */
 	private int rangedAttackTime;
 	private double entityMoveSpeed;
-	private int field_75318_f;
 	private int field_96561_g;
 
 	/**
@@ -90,7 +89,6 @@ public class EntityAIThrowingAttack extends EntityAIBase {
 	 */
 	public void resetTask() {
 		this.attackTarget = null;
-		this.field_75318_f = 0;
 		this.rangedAttackTime = -1;
 	}
 
@@ -101,11 +99,6 @@ public class EntityAIThrowingAttack extends EntityAIBase {
 		double d0 = this.legionaryEntityHost.getDistanceSq(this.attackTarget.posX, this.attackTarget.boundingBox.minY, this.attackTarget.posZ);
 		boolean flag = this.legionaryEntityHost.getEntitySenses().canSee(this.attackTarget);
 
-		if (flag) {
-			++this.field_75318_f;
-		} else {
-			this.field_75318_f = 0;
-		}
 		this.legionaryEntityHost.getLookHelper().setLookPositionWithEntity(this.attackTarget, 30.0F, 30.0F);
 		float f;
 
@@ -126,11 +119,9 @@ public class EntityAIThrowingAttack extends EntityAIBase {
 			}
 
 			this.legionaryEntityHost.attackEntityWithRangedAttack(this.attackTarget, f1);
-			//this.rangedAttackTime = MathHelper.floor_float(f * (float) (this.maxRangedAttackTime - this.field_96561_g) + (float) this.field_96561_g);
 			this.rangedAttackTime = MathHelper.floor_float(f * (float) (this.maxRangedAttackTime) + (float) this.field_96561_g);
 		} else if (this.rangedAttackTime < 0) {
 			f = MathHelper.sqrt_double(d0) / this.maxDistanceToTarget;
-			//this.rangedAttackTime = MathHelper.floor_float(f * (float) (this.maxRangedAttackTime - this.field_96561_g) + (float) this.field_96561_g);
 			this.rangedAttackTime = MathHelper.floor_float(f * (float) (this.maxRangedAttackTime) + (float) this.field_96561_g);
 		}
 	}

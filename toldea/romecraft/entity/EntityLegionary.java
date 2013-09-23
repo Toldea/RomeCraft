@@ -203,11 +203,11 @@ public class EntityLegionary extends EntityMob implements IRangedAttackMob {
 		}
 	}
 
-	public void attackEntityWithRangedAttack(EntityLivingBase par1EntityLivingBase, float par2) {
+	public void attackEntityWithRangedAttack(EntityLivingBase par1EntityLivingBase, float rangeDamagePenalty) {
 		EntityPilum entityPilum = new EntityPilum(this.worldObj, this, par1EntityLivingBase, 1.6F, accuracy);
 		int i = EnchantmentHelper.getEnchantmentLevel(Enchantment.power.effectId, this.getHeldItem());
 		int j = EnchantmentHelper.getEnchantmentLevel(Enchantment.punch.effectId, this.getHeldItem());
-		entityPilum.setDamage((double) (par2 * 2.0F) + this.rand.nextGaussian() * 0.25D + (double) ((float) this.worldObj.difficultySetting * 0.11F));
+		entityPilum.setDamage((double) (rangeDamagePenalty * 2.0F) + this.rand.nextGaussian() * 0.25D + (double) ((float) this.worldObj.difficultySetting * 0.11F));
 
 		if (i > 0) {
 			entityPilum.setDamage(entityPilum.getDamage() + (double) i * 0.5D + 0.5D);

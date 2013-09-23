@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.lwjgl.input.Keyboard;
 
+import toldea.romecraft.RayTracer;
 import toldea.romecraft.ai.SquadManager;
 
 import net.minecraft.client.Minecraft;
@@ -45,8 +46,13 @@ public class ItemScepter extends GenericItem {
 		MovingObjectPosition blockRayTrace = world.rayTraceBlocks_do_do(vec3d, vec3d1, false, true);
 
 		if (blockRayTrace != null && blockRayTrace.typeOfHit == EnumMovingObjectType.TILE) {
-			//System.out.println("Tile Selected: " + blockRayTrace.hitVec);
+			System.out.println("Tile Selected: " + blockRayTrace.hitVec);
 			SquadManager.giveMovementOrder(1, blockRayTrace.hitVec);
+		} else {
+			MovingObjectPosition entityRayTrace = RayTracer.getMouseOver(1.0f, d3);
+			if (entityRayTrace != null) {
+				System.out.println("Entity Selected: " + entityRayTrace.entityHit);
+			}
 		}
 	}
 
