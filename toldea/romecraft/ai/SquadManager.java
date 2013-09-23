@@ -45,6 +45,10 @@ public class SquadManager implements IExtendedEntityProperties {
 		contubernium.setShouldFollowPlayer(targetLocation == null);
 	}
 
+	public static void giveAttackOrder(int i, Entity entity) {
+		System.out.println("Attack order received for Contubernium: " + i + ", Target Entity: " + entity);
+	}
+	
 	public static float getFormationOffsetForContubernium(Contubernium contubernium) {
 		int squadSize = contubernium.getSquadSize();
 		int firstFileSize = (squadSize > Contubernium.files) ? Contubernium.files : squadSize;

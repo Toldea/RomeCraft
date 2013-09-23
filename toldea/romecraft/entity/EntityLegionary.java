@@ -58,7 +58,7 @@ public class EntityLegionary extends EntityMob implements IRangedAttackMob {
 		WATERSKIN
 	}
 	
-	private static final EntitySelectorLegionary enemySelector = new EntitySelectorLegionary();
+	private static final EntitySelectorLegionary enemySelector = EntitySelectorLegionary.instance;
 	private static final float accuracy = 5f;
 	private static final float pilumRange = 20f;
 	private static final double movementSpeed = .6d;
