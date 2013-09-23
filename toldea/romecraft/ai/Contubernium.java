@@ -105,7 +105,28 @@ public class Contubernium {
 		this.targetEntity = entity;
 	}
 	public EntityLivingBase getTargetEntity() {
+		if (this.targetEntity != null && !this.targetEntity.isEntityAlive()) {
+			this.targetEntity = null;
+		}
 		return this.targetEntity;
+	}
+	
+	
+	/**
+	 * @return Returns average position of all squad members.
+	 */
+	public Vec3 getContuberniumCenter() {
+		Vec3 center = Vec3.createVectorHelper(0d,0d,0d);
+		Vec3 vec;
+		double squadSize = getSquadSize();
+		for (EntityLegionary legionary : squadMembersList) {
+			vec = legionary.getPosition(1.0f);
+			center = center.addVector(vec.xCoord, vec.yCoord, vec.zCoord);
+		}
+		center.xCoord = center.xCoord / squadSize;
+		center.yCoord = center.yCoord / squadSize;
+		center.zCoord = center.zCoord / squadSize;
+		return center;
 	}
 
 	public void saveNBTData(NBTTagCompound compound) {
@@ -117,7 +138,6 @@ public class Contubernium {
 			compound.setDouble("targetLocationZ", targetLocation.zCoord);
 		}
 	}
-
 	public void loadNBTData(NBTTagCompound compound) {
 		if (compound != null) {
 			shouldFollowPlayer = compound.getBoolean("shouldFollowPlayer");

@@ -40,7 +40,7 @@ public class EntityAIFormationMoveTowardsLocation extends EntityAIBase {
 		int contuberniumId = entityLegionary.getContuberniumId();
 		Contubernium contubernium = SquadManager.getContubernium(contuberniumId);
 		// If we have an active attack target, prioritize that over this behavior. 
-		if (contubernium.getTargetEntity() != null) {
+		if (contubernium == null || contubernium.getTargetEntity() != null) {
 			return false;
 		}
 		

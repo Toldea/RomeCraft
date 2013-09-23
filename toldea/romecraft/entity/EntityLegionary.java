@@ -1,6 +1,7 @@
 package toldea.romecraft.entity;
 
 import toldea.romecraft.ItemManager;
+import toldea.romecraft.ai.EntityAIChargeThrow;
 import toldea.romecraft.ai.EntityAIFormationMoveTowardsLocation;
 import toldea.romecraft.ai.EntityAIFormationMoveTowardsTarget;
 import toldea.romecraft.ai.EntityAIMeleeAttack;
@@ -61,6 +62,7 @@ public class EntityLegionary extends EntityMob implements IRangedAttackMob {
 	
 	private static final EntitySelectorLegionary enemySelector = EntitySelectorLegionary.instance;
 	private static final float accuracy = 5f;
+	private static final float pilumChargeRange = 20f;
 	private static final float pilumRange = 20f;
 	private static final double movementSpeed = .6d;
 	
@@ -79,8 +81,9 @@ public class EntityLegionary extends EntityMob implements IRangedAttackMob {
 
 		// this.setSneaking(true);
 
-		this.tasks.addTask(1, new EntityAIMeleeAttack(this));
-		this.tasks.addTask(2, new EntityAIThrowingAttack(this, 1.0D, 20, 60, pilumRange));
+		//this.tasks.addTask(1, new EntityAIThrowingAttack(this, 1.0D, 20, 60, pilumRange));
+		this.tasks.addTask(1, new EntityAIChargeThrow(this, 5, pilumChargeRange));
+		this.tasks.addTask(2, new EntityAIMeleeAttack(this));
 		this.tasks.addTask(3, new EntityAIFormationMoveTowardsTarget(this, movementSpeed, 32.0f));
 		this.tasks.addTask(4, new EntityAIFormationMoveTowardsLocation(this, movementSpeed));
 
@@ -140,7 +143,7 @@ public class EntityLegionary extends EntityMob implements IRangedAttackMob {
 		equipItem(LEGIONARY_EQUIPMENT.CALIGAE);
 		
 		//equipItem(LEGIONARY_EQUIPMENT.GLADIUS);
-		equipItem(LEGIONARY_EQUIPMENT.PILUM);
+		//equipItem(LEGIONARY_EQUIPMENT.PILUM);
 
 		return par1EntityLivingData;
 	}
@@ -256,6 +259,9 @@ public class EntityLegionary extends EntityMob implements IRangedAttackMob {
 
 	public void writeEntityToNBT(NBTTagCompound par1NBTTagCompound) {
 		super.writeEntityToNBT(par1NBTTagCompound);
+		
+		pilaLeft = 1; // TODO: temporary cheat to easily reload legionary ammo.
+		
 		par1NBTTagCompound.setInteger("Contubernium", this.contuberniumId);
 		par1NBTTagCompound.setInteger("pilaLeft", this.pilaLeft);
 	}

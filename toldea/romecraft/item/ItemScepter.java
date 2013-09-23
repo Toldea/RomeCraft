@@ -37,14 +37,15 @@ public class ItemScepter extends GenericItem {
 			Entity entity = entityRayTrace.entityHit;
 			if (EntitySelectorLegionary.instance.isEntityApplicable(entity)) {
 				SquadManager.giveAttackOrder(1, entity);
+				return;
 			}
-		} else {
-			MovingObjectPosition blockRayTrace = RayTracer.blockRayTrace(entityplayer, world, distance);
-
-			if (blockRayTrace != null && blockRayTrace.typeOfHit == EnumMovingObjectType.TILE) {
-				System.out.println("Tile Selected: " + blockRayTrace.hitVec);
-				SquadManager.giveMovementOrder(1, blockRayTrace.hitVec);
-			}
+		} 
+		
+		MovingObjectPosition blockRayTrace = RayTracer.blockRayTrace(entityplayer, world, distance);
+		if (blockRayTrace != null && blockRayTrace.typeOfHit == EnumMovingObjectType.TILE) {
+			System.out.println("Tile Selected: " + blockRayTrace.hitVec);
+			SquadManager.giveMovementOrder(1, blockRayTrace.hitVec);
+			return;
 		}
 	}
 

@@ -25,7 +25,8 @@ public class EntityAIFormationMoveTowardsTarget extends EntityAIBase {
 		this.speed = par2;
 		this.maxTargetDistance = par4;
 		//this.setMutexBits(1);
-		this.setMutexBits(3);
+		//this.setMutexBits(3);
+		this.setMutexBits(0);
 	}
 
 	/**

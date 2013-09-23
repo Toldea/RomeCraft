@@ -32,9 +32,8 @@ public class SquadManager implements IExtendedEntityProperties {
 		return contuberniumMap.get(contuberniumId);
 	}
 	private static void removeContubernium(int contuberniumId) {
-		Contubernium contubernium = getContubernium(contuberniumId);
-		if (contubernium != null) {
-			contuberniumMap.remove(contubernium);
+		if (contuberniumMap.get(contuberniumId) != null) {
+			contuberniumMap.remove(contuberniumId);
 		}
 	}
 	
