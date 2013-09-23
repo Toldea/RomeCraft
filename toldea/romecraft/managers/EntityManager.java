@@ -1,5 +1,6 @@
-package toldea.romecraft;
+package toldea.romecraft.managers;
 
+import toldea.romecraft.RomeCraft;
 import toldea.romecraft.ai.Contubernium;
 import toldea.romecraft.client.renderer.RenderEntityLegionary;
 import toldea.romecraft.client.renderer.RenderEntityPilum;

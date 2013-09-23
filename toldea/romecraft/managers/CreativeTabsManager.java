@@ -1,4 +1,4 @@
-package toldea.romecraft;
+package toldea.romecraft.managers;
 
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import net.minecraft.creativetab.CreativeTabs;

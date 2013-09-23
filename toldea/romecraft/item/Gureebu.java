@@ -1,6 +1,6 @@
 package toldea.romecraft.item;
 
-import toldea.romecraft.BlockManager;
+import toldea.romecraft.managers.BlockManager;
 import toldea.romecraft.tileentity.TileEntityGag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;

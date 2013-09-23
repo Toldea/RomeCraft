@@ -1,4 +1,4 @@
-package toldea.romecraft;
+package toldea.romecraft.managers;
 
 import toldea.romecraft.client.renderer.CustomItemRenderer;
 import toldea.romecraft.client.renderer.RenderItemPilum;

@@ -2,7 +2,7 @@ package toldea.romecraft.entity;
 
 import java.util.List;
 
-import toldea.romecraft.ItemManager;
+import toldea.romecraft.managers.ItemManager;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

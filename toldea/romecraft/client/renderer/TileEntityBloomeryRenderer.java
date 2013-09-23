@@ -2,9 +2,9 @@ package toldea.romecraft.client.renderer;
 
 import org.lwjgl.opengl.GL11;
 
-import toldea.romecraft.BlockManager;
 import toldea.romecraft.client.model.ModelBloomery;
 import toldea.romecraft.client.model.ModelPilum;
+import toldea.romecraft.managers.BlockManager;
 import toldea.romecraft.tileentity.TileEntityBloomery;
 
 import net.minecraft.block.Block;

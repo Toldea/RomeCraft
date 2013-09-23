@@ -2,8 +2,8 @@ package toldea.romecraft.item;
 
 import com.google.common.collect.Multimap;
 
-import toldea.romecraft.ItemManager;
 import toldea.romecraft.entity.EntityPilum;
+import toldea.romecraft.managers.ItemManager;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.SharedMonsterAttributes;

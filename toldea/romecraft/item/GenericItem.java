@@ -1,6 +1,6 @@
 package toldea.romecraft.item;
 
-import toldea.romecraft.CreativeTabsManager;
+import toldea.romecraft.managers.CreativeTabsManager;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 

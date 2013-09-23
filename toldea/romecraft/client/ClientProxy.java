@@ -8,7 +8,6 @@ import net.minecraft.client.model.ModelBiped;
 import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
 import toldea.romecraft.CommonProxy;
-import toldea.romecraft.ItemManager;
 import toldea.romecraft.client.model.ModelLegionaryBiped;
 import toldea.romecraft.client.renderer.CustomItemRenderer;
 import toldea.romecraft.client.renderer.RenderEntityLegionary;
@@ -17,6 +16,7 @@ import toldea.romecraft.client.renderer.RenderItemPilum;
 import toldea.romecraft.client.renderer.TileEntityBloomeryRenderer;
 import toldea.romecraft.entity.EntityLegionary;
 import toldea.romecraft.entity.EntityPilum;
+import toldea.romecraft.managers.ItemManager;
 import toldea.romecraft.tileentity.TileEntityBloomery;
 
 public class ClientProxy extends CommonProxy {

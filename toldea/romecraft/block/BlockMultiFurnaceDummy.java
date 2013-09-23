@@ -2,7 +2,7 @@ package toldea.romecraft.block;
 
 import java.util.Random;
 
-import toldea.romecraft.CreativeTabsManager;
+import toldea.romecraft.managers.CreativeTabsManager;
 import toldea.romecraft.tileentity.TileEntityMultiFurnaceCore;
 import toldea.romecraft.tileentity.TileEntityMultiFurnaceDummy;
 

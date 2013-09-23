@@ -1,6 +1,11 @@
 package toldea.romecraft;
 
 import toldea.romecraft.ai.Contubernium;
+import toldea.romecraft.managers.BlockManager;
+import toldea.romecraft.managers.CreativeTabsManager;
+import toldea.romecraft.managers.EntityManager;
+import toldea.romecraft.managers.EventManager;
+import toldea.romecraft.managers.ItemManager;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.model.ModelBiped;

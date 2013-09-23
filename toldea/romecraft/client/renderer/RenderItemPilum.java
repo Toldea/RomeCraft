@@ -73,8 +73,7 @@ public class RenderItemPilum implements IItemRenderer {
 		
 		// Translate a bit to move the pilum in the correct position.
 		// up/down - forward/backward - left/right
-		//GL11.glTranslatef(.8f, -1.8f, -.15f);
-		GL11.glTranslatef(.6f, -1.8f, -.15f);
+		GL11.glTranslatef(.6f, -2.3f, -.15f);
 
 		// Define the scale factor.
 		float f10 = 1.0f;

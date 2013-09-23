@@ -1,7 +1,7 @@
 package toldea.romecraft.tileentity;
 
-import toldea.romecraft.BlockManager;
 import toldea.romecraft.block.BlockMultiFurnaceCore;
+import toldea.romecraft.managers.BlockManager;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;

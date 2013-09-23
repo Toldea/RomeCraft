@@ -1,6 +1,5 @@
 package toldea.romecraft.entity;
 
-import toldea.romecraft.ItemManager;
 import toldea.romecraft.ai.EntityAIChargeThrow;
 import toldea.romecraft.ai.EntityAIFormationMoveTowardsLocation;
 import toldea.romecraft.ai.EntityAIFormationMoveTowardsTarget;
@@ -8,6 +7,7 @@ import toldea.romecraft.ai.EntityAIMeleeAttack;
 import toldea.romecraft.ai.EntityAIThrowingAttack;
 import toldea.romecraft.ai.SquadManager;
 import toldea.romecraft.command.EntitySelectorLegionary;
+import toldea.romecraft.managers.ItemManager;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityCreature;
@@ -143,7 +143,7 @@ public class EntityLegionary extends EntityMob implements IRangedAttackMob {
 		equipItem(LEGIONARY_EQUIPMENT.CALIGAE);
 		
 		//equipItem(LEGIONARY_EQUIPMENT.GLADIUS);
-		//equipItem(LEGIONARY_EQUIPMENT.PILUM);
+		equipItem(LEGIONARY_EQUIPMENT.PILUM);
 
 		return par1EntityLivingData;
 	}

@@ -1,4 +1,4 @@
-package toldea.romecraft;
+package toldea.romecraft.managers;
 
 import toldea.romecraft.ai.SquadManager;
 import net.minecraft.entity.player.EntityPlayer;

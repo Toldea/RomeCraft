@@ -1,4 +1,4 @@
-package toldea.romecraft;
+package toldea.romecraft.managers;
 
 import toldea.romecraft.block.BlockBloomery;
 import toldea.romecraft.block.BlockGag;
