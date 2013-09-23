@@ -62,7 +62,7 @@ public class EntityLegionary extends EntityMob implements IRangedAttackMob {
 	
 	private static final EntitySelectorLegionary enemySelector = EntitySelectorLegionary.instance;
 	private static final float accuracy = 5f;
-	private static final float pilumChargeRange = 20f;
+	private static final float pilumChargeRange = 15f;
 	private static final float pilumRange = 20f;
 	private static final double movementSpeed = .6d;
 	
@@ -151,6 +151,9 @@ public class EntityLegionary extends EntityMob implements IRangedAttackMob {
 	public boolean getPilumLeft() {
 		return (pilaLeft >= 1);
 	}
+	public int getPilumCount() {
+		return pilaLeft;
+	}
 	
 	public boolean isHoldingPilum() {
 		ItemStack itemStack = getCurrentItemOrArmor(0);
@@ -209,7 +212,8 @@ public class EntityLegionary extends EntityMob implements IRangedAttackMob {
 		EntityPilum entityPilum = new EntityPilum(this.worldObj, this, par1EntityLivingBase, 1.6F, accuracy);
 		int i = EnchantmentHelper.getEnchantmentLevel(Enchantment.power.effectId, this.getHeldItem());
 		int j = EnchantmentHelper.getEnchantmentLevel(Enchantment.punch.effectId, this.getHeldItem());
-		entityPilum.setDamage((double) (rangeDamagePenalty * 2.0F) + this.rand.nextGaussian() * 0.25D + (double) ((float) this.worldObj.difficultySetting * 0.11F));
+		//entityPilum.setDamage((double) (rangeDamagePenalty * 2.0F) + this.rand.nextGaussian() * 0.25D + (double) ((float) this.worldObj.difficultySetting * 0.11F));
+		entityPilum.setDamage(8d + this.rand.nextGaussian() * 4D);
 
 		if (i > 0) {
 			entityPilum.setDamage(entityPilum.getDamage() + (double) i * 0.5D + 0.5D);

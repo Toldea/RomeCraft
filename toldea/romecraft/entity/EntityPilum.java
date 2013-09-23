@@ -27,6 +27,8 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
 public class EntityPilum extends Entity implements IProjectile {
+	private static final float pilumFriendlyFireInvulnerabilityTimer = 15f;
+
 	private int xTile = -1;
 	private int yTile = -1;
 	private int zTile = -1;
@@ -73,6 +75,7 @@ public class EntityPilum extends Entity implements IProjectile {
 		}
 
 		this.posY = par2EntityLivingBase.posY + (double) par2EntityLivingBase.getEyeHeight() - 0.10000000149011612D;
+		this.posY += .5f;
 		double d0 = par3EntityLivingBase.posX - par2EntityLivingBase.posX;
 		double d1 = par3EntityLivingBase.boundingBox.minY + (double) (par3EntityLivingBase.height / 3.0F) - this.posY;
 		double d2 = par3EntityLivingBase.posZ - par2EntityLivingBase.posZ;
@@ -125,12 +128,15 @@ public class EntityPilum extends Entity implements IProjectile {
 		par1 /= (double) f2;
 		par3 /= (double) f2;
 		par5 /= (double) f2;
+
+		// Add 'randomness' to the throw.
 		par1 += this.rand.nextGaussian() * (double) (this.rand.nextBoolean() ? -1 : 1) * 0.007499999832361937D * (double) par8;
 		par3 += this.rand.nextGaussian() * (double) (this.rand.nextBoolean() ? -1 : 1) * 0.007499999832361937D * (double) par8;
 		par5 += this.rand.nextGaussian() * (double) (this.rand.nextBoolean() ? -1 : 1) * 0.007499999832361937D * (double) par8;
 		par1 *= (double) par7;
 		par3 *= (double) par7;
 		par5 *= (double) par7;
+		
 		this.motionX = par1;
 		this.motionY = par3;
 		this.motionZ = par5;
@@ -272,72 +278,88 @@ public class EntityPilum extends Entity implements IProjectile {
 
 			if (movingobjectposition != null) {
 				if (movingobjectposition.entityHit != null) {
-					f2 = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionY * this.motionY + this.motionZ * this.motionZ);
-					int i1 = MathHelper.ceiling_double_int((double) f2 * this.damage);
-
-					if (this.getIsCritical()) {
-						i1 += this.rand.nextInt(i1 / 2 + 2);
-					}
-
-					DamageSource damagesource = null;
-
-					if (this.shootingEntity == null) {
-						// damagesource = DamageSource.causeArrowDamage(this, this);
-						damagesource = DamageSource.causeThrownDamage(this, this);
-					} else {
-						// damagesource = DamageSource.causeArrowDamage(this, this.shootingEntity);
-						damagesource = DamageSource.causeThrownDamage(this, this.shootingEntity);
-					}
-
-					if (this.isBurning() && !(movingobjectposition.entityHit instanceof EntityEnderman)) {
-						movingobjectposition.entityHit.setFire(5);
-					}
-
-					if (movingobjectposition.entityHit.attackEntityFrom(damagesource, (float) i1)) {
-						if (movingobjectposition.entityHit instanceof EntityLivingBase) {
-							EntityLivingBase entitylivingbase = (EntityLivingBase) movingobjectposition.entityHit;
-
-							if (!this.worldObj.isRemote) {
-								entitylivingbase.setArrowCountInEntity(entitylivingbase.getArrowCountInEntity() + 1);
+					// Check if we just fired our pilum and it is about to hit a team member legionary. If so 'ignore' the hit.
+					boolean notHittingTeamMate = true;
+					if (ticksInAir < pilumFriendlyFireInvulnerabilityTimer) {
+						if (this.shootingEntity != null && this.shootingEntity instanceof EntityLegionary
+								&& movingobjectposition.entityHit instanceof EntityLegionary) {
+							EntityLegionary shootingLegionary = (EntityLegionary) this.shootingEntity;
+							EntityLegionary hitLegionary = (EntityLegionary) movingobjectposition.entityHit;
+							if (shootingLegionary.getContuberniumId() == hitLegionary.getContuberniumId()) {
+								notHittingTeamMate = false;
 							}
+						}
+					}
 
-							if (this.knockbackStrength > 0) {
-								f3 = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionZ * this.motionZ);
+					if (notHittingTeamMate) {
 
-								if (f3 > 0.0F) {
-									movingobjectposition.entityHit.addVelocity(this.motionX * (double) this.knockbackStrength * 0.6000000238418579D
-											/ (double) f3, 0.1D, this.motionZ * (double) this.knockbackStrength * 0.6000000238418579D / (double) f3);
+						f2 = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionY * this.motionY + this.motionZ * this.motionZ);
+						int i1 = MathHelper.ceiling_double_int((double) f2 * this.damage);
+
+						if (this.getIsCritical()) {
+							i1 += this.rand.nextInt(i1 / 2 + 2);
+						}
+
+						DamageSource damagesource = null;
+
+						if (this.shootingEntity == null) {
+							// damagesource = DamageSource.causeArrowDamage(this, this);
+							damagesource = DamageSource.causeThrownDamage(this, this);
+						} else {
+							// damagesource = DamageSource.causeArrowDamage(this, this.shootingEntity);
+							damagesource = DamageSource.causeThrownDamage(this, this.shootingEntity);
+						}
+
+						if (this.isBurning() && !(movingobjectposition.entityHit instanceof EntityEnderman)) {
+							movingobjectposition.entityHit.setFire(5);
+						}
+
+						if (movingobjectposition.entityHit.attackEntityFrom(damagesource, (float) i1)) {
+							if (movingobjectposition.entityHit instanceof EntityLivingBase) {
+								EntityLivingBase entitylivingbase = (EntityLivingBase) movingobjectposition.entityHit;
+
+								if (!this.worldObj.isRemote) {
+									entitylivingbase.setArrowCountInEntity(entitylivingbase.getArrowCountInEntity() + 1);
+								}
+
+								if (this.knockbackStrength > 0) {
+									f3 = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionZ * this.motionZ);
+
+									if (f3 > 0.0F) {
+										movingobjectposition.entityHit.addVelocity(this.motionX * (double) this.knockbackStrength * 0.6000000238418579D
+												/ (double) f3, 0.1D, this.motionZ * (double) this.knockbackStrength * 0.6000000238418579D / (double) f3);
+									}
+								}
+
+								if (this.shootingEntity != null) {
+									EnchantmentThorns.func_92096_a(this.shootingEntity, entitylivingbase, this.rand);
+								}
+
+								if (this.shootingEntity != null && movingobjectposition.entityHit != this.shootingEntity
+										&& movingobjectposition.entityHit instanceof EntityPlayer && this.shootingEntity instanceof EntityPlayerMP) {
+									((EntityPlayerMP) this.shootingEntity).playerNetServerHandler.sendPacketToPlayer(new Packet70GameEvent(6, 0));
 								}
 							}
 
-							if (this.shootingEntity != null) {
-								EnchantmentThorns.func_92096_a(this.shootingEntity, entitylivingbase, this.rand);
+							this.playSound("random.bowhit", 1.0F, 1.2F / (this.rand.nextFloat() * 0.2F + 0.9F));
+
+							if (!(movingobjectposition.entityHit instanceof EntityEnderman)) {
+								// Don't instantly lose momentum on contact like arrows do. Instead, slow down acting like it 'pierces through'.
+								this.motionX *= .5f;
+								this.motionZ *= .5f;
+
+								if (movingobjectposition.entityHit instanceof EntityPlayer) {
+									EntityPlayer player = (EntityPlayer) movingobjectposition.entityHit;
+									if (canBePickedUp == 2 || player.inventory.addItemStackToInventory(new ItemStack(ItemManager.itemPilum, 1)))
+										this.setDead();
+								} else if (movingobjectposition.entityHit instanceof EntityLivingBase) {
+									/*
+									 * EntityLivingBase living = (EntityLivingBase) movingobjectposition.entityHit; if (canBePickedUp == 2 ||
+									 * addItemStackToInventory(new ItemStack(ItemManager.itemPilum, 1), living)) this.setDead();
+									 */
+								}
+
 							}
-
-							if (this.shootingEntity != null && movingobjectposition.entityHit != this.shootingEntity
-									&& movingobjectposition.entityHit instanceof EntityPlayer && this.shootingEntity instanceof EntityPlayerMP) {
-								((EntityPlayerMP) this.shootingEntity).playerNetServerHandler.sendPacketToPlayer(new Packet70GameEvent(6, 0));
-							}
-						}
-
-						this.playSound("random.bowhit", 1.0F, 1.2F / (this.rand.nextFloat() * 0.2F + 0.9F));
-
-						if (!(movingobjectposition.entityHit instanceof EntityEnderman)) {
-							// Don't instantly lose momentum on contact like arrows do. Instead, slow down acting like it 'pierces through'.
-							this.motionX *= .5f;
-							this.motionZ *= .5f;
-
-							if (movingobjectposition.entityHit instanceof EntityPlayer) {
-								EntityPlayer player = (EntityPlayer) movingobjectposition.entityHit;
-								if (canBePickedUp == 2 || player.inventory.addItemStackToInventory(new ItemStack(ItemManager.itemPilum, 1)))
-									this.setDead();
-							} else if (movingobjectposition.entityHit instanceof EntityLivingBase) {
-								/*
-								 * EntityLivingBase living = (EntityLivingBase) movingobjectposition.entityHit; if (canBePickedUp == 2 ||
-								 * addItemStackToInventory(new ItemStack(ItemManager.itemPilum, 1), living)) this.setDead();
-								 */
-							}
-
 						}
 					} else {
 						// This does all the random rotation derping! D:
