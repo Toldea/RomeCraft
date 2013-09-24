@@ -103,7 +103,7 @@ public class EntityAIChargeThrow extends EntityAIBase {
 		}
 		//System.out.println("center: " + contubernium.getContuberniumCenter() + ", legionary position: " + entityLegionary.getPosition(1.0f));
 		//double derpsz = this.entityLegionary.getDistanceSq(this.attackTarget.posX, this.attackTarget.boundingBox.minY, this.attackTarget.posZ);
-		double d0 = contubernium.getContuberniumCenter().distanceTo(Vec3.createVectorHelper(this.attackTarget.posX, this.attackTarget.boundingBox.minY, this.attackTarget.posZ));
+		double d0 = contubernium.getCenter().distanceTo(Vec3.createVectorHelper(this.attackTarget.posX, this.attackTarget.boundingBox.minY, this.attackTarget.posZ));
 		d0 *= d0;
 		//System.out.println("derpz: " + derpsz + ", d0: " + d0);
 		boolean flag = this.entityLegionary.getEntitySenses().canSee(this.attackTarget);

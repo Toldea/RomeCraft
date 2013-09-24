@@ -1,5 +1,7 @@
 package toldea.romecraft.entity;
 
+import toldea.romecraft.ai.Contubernium;
+import toldea.romecraft.ai.Contubernium.Facing;
 import toldea.romecraft.ai.EntityAIChargeThrow;
 import toldea.romecraft.ai.EntityAIFormationMoveTowardsLocation;
 import toldea.romecraft.ai.EntityAIFormationMoveTowardsTarget;
@@ -46,33 +48,23 @@ import net.minecraftforge.event.Event.Result;
 
 public class EntityLegionary extends EntityMob implements IRangedAttackMob {
 	public enum LEGIONARY_EQUIPMENT {
-		LORICA_SEGMENTATA,
-		SCUTUM,
-		GALAE,
-		PILUM,
-		VERUTUM,
-		GLADIUS,
-		PUGIO,
-		CALIGAE,
-		SARCINA,
-		SUDIS,
-		SHOVEL,
-		WATERSKIN
+		LORICA_SEGMENTATA, SCUTUM, GALAE, PILUM, VERUTUM, GLADIUS, PUGIO, CALIGAE, SARCINA, SUDIS, SHOVEL, WATERSKIN
 	}
-	
+
 	private static final EntitySelectorLegionary enemySelector = EntitySelectorLegionary.instance;
 	private static final float accuracy = 5f;
 	private static final float pilumChargeRange = 15f;
 	private static final float pilumRange = 20f;
+	private static final float pathSearchRange = 128f;
 	private static final double movementSpeed = .6d;
-	
+
 	private int contuberniumId = 1;
 	private int pilaLeft;
 	private boolean registered = false;
 
 	public EntityLegionary(World par1World) {
 		super(par1World);
-		
+
 		// this.experienceValue = 10;
 
 		// this.getNavigator().setAvoidsWater(true);
@@ -81,7 +73,7 @@ public class EntityLegionary extends EntityMob implements IRangedAttackMob {
 
 		// this.setSneaking(true);
 
-		//this.tasks.addTask(1, new EntityAIThrowingAttack(this, 1.0D, 20, 60, pilumRange));
+		// this.tasks.addTask(1, new EntityAIThrowingAttack(this, 1.0D, 20, 60, pilumRange));
 		this.tasks.addTask(1, new EntityAIChargeThrow(this, 5, pilumChargeRange));
 		this.tasks.addTask(2, new EntityAIMeleeAttack(this));
 		this.tasks.addTask(3, new EntityAIFormationMoveTowardsTarget(this, movementSpeed, 32.0f));
@@ -96,7 +88,7 @@ public class EntityLegionary extends EntityMob implements IRangedAttackMob {
 		// this.tasks.addTask(8, new EntityAILookIdle(this));
 		// this.targetTasks.addTask(1, new EntityAIDefendVillage(this));
 		// this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
-		
+
 		this.targetTasks.addTask(1, new EntityAINearestAttackableTarget(this, EntityLiving.class, 0, false, true, enemySelector));
 
 	}
@@ -134,27 +126,28 @@ public class EntityLegionary extends EntityMob implements IRangedAttackMob {
 
 	public EntityLivingData onSpawnWithEgg(EntityLivingData par1EntityLivingData) {
 		par1EntityLivingData = super.onSpawnWithEgg(par1EntityLivingData);
-		
+
 		pilaLeft = 1;
 
 		// Give the Legionary it's default equipment.
 		equipItem(LEGIONARY_EQUIPMENT.LORICA_SEGMENTATA);
 		equipItem(LEGIONARY_EQUIPMENT.GALAE);
 		equipItem(LEGIONARY_EQUIPMENT.CALIGAE);
-		
-		//equipItem(LEGIONARY_EQUIPMENT.GLADIUS);
+
+		// equipItem(LEGIONARY_EQUIPMENT.GLADIUS);
 		equipItem(LEGIONARY_EQUIPMENT.PILUM);
 
 		return par1EntityLivingData;
 	}
-	
+
 	public boolean getPilumLeft() {
 		return (pilaLeft >= 1);
 	}
+
 	public int getPilumCount() {
 		return pilaLeft;
 	}
-	
+
 	public boolean isHoldingPilum() {
 		ItemStack itemStack = getCurrentItemOrArmor(0);
 		if (itemStack != null) {
@@ -163,9 +156,9 @@ public class EntityLegionary extends EntityMob implements IRangedAttackMob {
 			return false;
 		}
 	}
-	
+
 	public void equipItem(LEGIONARY_EQUIPMENT equipment) {
-		switch(equipment) {
+		switch (equipment) {
 		case LORICA_SEGMENTATA:
 			equipItemToSlot(Item.plateIron, 3);
 			equipItemToSlot(Item.legsIron, 2);
@@ -200,6 +193,7 @@ public class EntityLegionary extends EntityMob implements IRangedAttackMob {
 			break;
 		}
 	}
+
 	private void equipItemToSlot(Item item, int itemSlot) {
 		// Make sure the item isn't already equipped.
 		ItemStack currentEquippedItem = this.getCurrentItemOrArmor(itemSlot);
@@ -212,7 +206,8 @@ public class EntityLegionary extends EntityMob implements IRangedAttackMob {
 		EntityPilum entityPilum = new EntityPilum(this.worldObj, this, par1EntityLivingBase, 1.6F, accuracy);
 		int i = EnchantmentHelper.getEnchantmentLevel(Enchantment.power.effectId, this.getHeldItem());
 		int j = EnchantmentHelper.getEnchantmentLevel(Enchantment.punch.effectId, this.getHeldItem());
-		//entityPilum.setDamage((double) (rangeDamagePenalty * 2.0F) + this.rand.nextGaussian() * 0.25D + (double) ((float) this.worldObj.difficultySetting * 0.11F));
+		// entityPilum.setDamage((double) (rangeDamagePenalty * 2.0F) + this.rand.nextGaussian() * 0.25D + (double) ((float) this.worldObj.difficultySetting *
+		// 0.11F));
 		entityPilum.setDamage(8d + this.rand.nextGaussian() * 4D);
 
 		if (i > 0) {
@@ -222,11 +217,11 @@ public class EntityLegionary extends EntityMob implements IRangedAttackMob {
 		if (j > 0) {
 			entityPilum.setKnockbackStrength(j);
 		}
-		
+
 		if (EnchantmentHelper.getEnchantmentLevel(Enchantment.flame.effectId, this.getHeldItem()) > 0) {
 			entityPilum.setFire(100);
 		}
-		
+
 		this.playSound("random.bow", 1.0F, 1.0F / (this.getRNG().nextFloat() * 0.4F + 0.8F));
 		this.worldObj.spawnEntityInWorld(entityPilum);
 		pilaLeft--;
@@ -241,8 +236,9 @@ public class EntityLegionary extends EntityMob implements IRangedAttackMob {
 
 		if (!flag && this.isEntityAlive()) {
 			if (!this.worldObj.isRemote) {
+				Contubernium contubernium = SquadManager.getContubernium(contuberniumId);
 				par1EntityPlayer.sendChatToPlayer(ChatMessageComponent.createFromText("Legionary! (Contubernium: " + contuberniumId + ", Size: "
-						+ SquadManager.getContubernium(contuberniumId).getSquadSize() + ", Squad Index: " + getSquadIndex() + ")"));
+						+ contubernium.getSquadSize() + ", Facing: " + contubernium.getFacing() + ", Squad Index: " + getSquadIndex() + ")"));
 			}
 			return true;
 		} else {
@@ -253,19 +249,19 @@ public class EntityLegionary extends EntityMob implements IRangedAttackMob {
 	protected boolean canDespawn() {
 		return false;
 	}
-	
+
 	@Override
 	protected void applyEntityAttributes() {
-        super.applyEntityAttributes();
-        // Set it's 'followRange' to twice the normal size. This also causes the legionary to be able to shoot targets twice as far away.
-        this.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.followRange).setAttribute(pilumRange + 1f);
-    }
+		super.applyEntityAttributes();
+		// Set it's 'followRange' to a much larger value as the default one.
+		this.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.followRange).setAttribute(pathSearchRange);
+	}
 
 	public void writeEntityToNBT(NBTTagCompound par1NBTTagCompound) {
 		super.writeEntityToNBT(par1NBTTagCompound);
-		
+
 		pilaLeft = 1; // TODO: temporary cheat to easily reload legionary ammo.
-		
+
 		par1NBTTagCompound.setInteger("Contubernium", this.contuberniumId);
 		par1NBTTagCompound.setInteger("pilaLeft", this.pilaLeft);
 	}

@@ -20,10 +20,32 @@ public class Contubernium {
 	public static final int files = 6;
 	public static final float tightness = 2f;
 
+	public enum Facing {
+		NORTH(0), SOUTH(1), EAST(2), WEST(3);
+		private final int direction;
+		Facing(int par1Direction) {
+			direction = par1Direction;
+		}
+		public final int getIntValue() {
+			return direction;
+		}
+		public static Facing getFacingForIntValue(int intValue) {
+			// Loop over all values and return the Facing that matches the parsed intValue.
+			for (Facing f : Facing.values()) {
+				if (f.getIntValue() == intValue) {
+					return f;
+				}
+			}
+			// Default to North.
+			return NORTH;
+		}
+	}
+	
 	private List<EntityLegionary> squadMembersList;
 	private Vec3 targetLocation = null;
 	private EntityLivingBase targetEntity = null;
 	private boolean shouldFollowPlayer = true;
+	private Facing facing = Facing.NORTH;
 
 	public Contubernium() {
 		squadMembersList = new ArrayList<EntityLegionary>();
@@ -68,9 +90,28 @@ public class Contubernium {
 		shouldFollowPlayer = par1shouldFollowPlayer;
 	}
 
+	/**
+	 * Set the new target location for this Contubernium. If the location is valid, also remove all current squad member paths and update the Contubernium's
+	 * facing.
+	 * 
+	 * @param newTargetLocation
+	 *            The new Vec3 location for the Contubernium to move to.
+	 */
 	public void setTargetLocation(Vec3 newTargetLocation) {
-		targetLocation = newTargetLocation;
+		if (newTargetLocation != null) {
+			// Clear all current paths for all squad members.
+			for (EntityLegionary legionary : squadMembersList) {
+				legionary.getNavigator().clearPathEntity();
+			}
+			// Calculate the new facing direction based on the delta x and z between our center and the new target location.
+			faceTargetLocation(newTargetLocation);
+		}
+		// Finally update the target location to the new one.
+		targetLocation.xCoord = newTargetLocation.xCoord;
+		targetLocation.yCoord = newTargetLocation.yCoord;
+		targetLocation.zCoord = newTargetLocation.zCoord;
 	}
+
 	public Vec3 getTargetLocation() {
 		validateSquadMembers();
 		if (squadMembersList.size() <= 0) {
@@ -100,23 +141,52 @@ public class Contubernium {
 			}
 		}
 	}
-	
+
+	/**
+	 * Get the current center and compare it's x and z coordinates to the new target location. Update the facing according to which of the axis is the
+	 * 'greatest' (largest absolute difference).
+	 * 
+	 * @param targetLocation
+	 *            The Vec3 target location to face.
+	 */
+	private void faceTargetLocation(Vec3 targetLocation) {
+		Vec3 currentCenter = getCenter();
+		double dx = currentCenter.xCoord - targetLocation.xCoord;
+		double dz = currentCenter.zCoord - targetLocation.zCoord;
+		if (Math.abs(dx) > Math.abs(dz)) {
+			setFacing(dx > .0d ? Facing.WEST : Facing.EAST);
+		} else {
+			setFacing(dz > .0d ? Facing.NORTH : Facing.SOUTH);
+		}
+	}
+
+	/**
+	 * Sets the Contubernium's attack target. If it's a valid target it also clears all current squad member paths and updates the Contubernium's facing.
+	 * 
+	 * @param entity
+	 */
 	public void setTargetEntity(EntityLivingBase entity) {
+		if (entity != null) {
+			// Update the 'target location' to this entity's current position. When the entity is disposed, the squad will move to this position.
+			// This also clears the squad's active paths and updates the Contubernium's facing towards the entity.
+			setTargetLocation(entity.getPosition(1.0f));
+		}
 		this.targetEntity = entity;
 	}
+
 	public EntityLivingBase getTargetEntity() {
 		if (this.targetEntity != null && !this.targetEntity.isEntityAlive()) {
 			this.targetEntity = null;
 		}
 		return this.targetEntity;
 	}
-	
-	
+
 	/**
+	 * Calculates and returns the Vec3 center of this Contubernium. (All squad member's positions combined divided by squad size.)
 	 * @return Returns average position of all squad members.
 	 */
-	public Vec3 getContuberniumCenter() {
-		Vec3 center = Vec3.createVectorHelper(0d,0d,0d);
+	public Vec3 getCenter() {
+		Vec3 center = Vec3.createVectorHelper(0d, 0d, 0d);
 		Vec3 vec;
 		double squadSize = getSquadSize();
 		for (EntityLegionary legionary : squadMembersList) {
@@ -129,19 +199,29 @@ public class Contubernium {
 		return center;
 	}
 
+	public Facing getFacing() {
+		return this.facing;
+	}
+	public void setFacing(Facing par1Facing) {
+		this.facing = par1Facing;
+	}
+
 	public void saveNBTData(NBTTagCompound compound) {
 		compound.setBoolean("shouldFollowPlayer", shouldFollowPlayer);
-		
+		compound.setInteger("facingInt", this.facing.getIntValue());
+
 		if (targetLocation != null) {
 			compound.setDouble("targetLocationX", targetLocation.xCoord);
 			compound.setDouble("targetLocationY", targetLocation.yCoord);
 			compound.setDouble("targetLocationZ", targetLocation.zCoord);
 		}
 	}
+
 	public void loadNBTData(NBTTagCompound compound) {
 		if (compound != null) {
 			shouldFollowPlayer = compound.getBoolean("shouldFollowPlayer");
-			
+			facing = Facing.getFacingForIntValue(compound.getInteger("facingInt"));
+
 			if (compound.hasKey("targetLocationX")) {
 				Double xCoord = compound.getDouble("targetLocationX");
 				Double yCoord = compound.getDouble("targetLocationY");

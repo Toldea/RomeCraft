@@ -3,6 +3,7 @@ package toldea.romecraft.ai;
 import java.io.Console;
 import java.util.List;
 
+import toldea.romecraft.ai.Contubernium.Facing;
 import toldea.romecraft.entity.EntityLegionary;
 
 import net.minecraft.client.Minecraft;
@@ -39,20 +40,41 @@ public class EntityAIFormationMoveTowardsLocation extends EntityAIBase {
 		}
 		int contuberniumId = entityLegionary.getContuberniumId();
 		Contubernium contubernium = SquadManager.getContubernium(contuberniumId);
-		// If we have an active attack target, prioritize that over this behavior. 
+		// If we have an active attack target, prioritize that over this behavior.
 		if (contubernium == null || contubernium.getTargetEntity() != null) {
 			return false;
 		}
-		
+
 		Vec3 vec3 = contubernium.getTargetLocation();
 
 		if (vec3 == null) {
 			return false;
 		} else {
 			float offset = SquadManager.getFormationOffsetForContubernium(contubernium);
-			this.xPosition = vec3.xCoord + (entityLegionary.getSquadIndex() % Contubernium.files * Contubernium.tightness) - (offset * Contubernium.tightness);
+			Facing facing = contubernium.getFacing();
+			switch (facing) {
+			case NORTH:
+				this.xPosition = vec3.xCoord + (offset * Contubernium.tightness) - (entityLegionary.getSquadIndex() % Contubernium.files * Contubernium.tightness);
+				this.zPosition = vec3.zCoord + ((int) (entityLegionary.getSquadIndex() / Contubernium.files) * Contubernium.tightness);
+				break;
+			case SOUTH:
+				this.xPosition = vec3.xCoord + (entityLegionary.getSquadIndex() % Contubernium.files * Contubernium.tightness) - (offset * Contubernium.tightness);
+				this.zPosition = vec3.zCoord - ((int) (entityLegionary.getSquadIndex() / Contubernium.files) * Contubernium.tightness);
+				break;
+			case EAST:
+				this.xPosition = vec3.xCoord - ((int) (entityLegionary.getSquadIndex() / Contubernium.files) * Contubernium.tightness);
+				this.zPosition = vec3.zCoord + (offset * Contubernium.tightness) - (entityLegionary.getSquadIndex() % Contubernium.files * Contubernium.tightness);
+				break;
+			case WEST:
+				this.xPosition = vec3.xCoord + ((int) (entityLegionary.getSquadIndex() / Contubernium.files) * Contubernium.tightness);
+				this.zPosition = vec3.zCoord + (entityLegionary.getSquadIndex() % Contubernium.files * Contubernium.tightness) - (offset * Contubernium.tightness);
+				break;
+			default:
+				break;
+			}
+			
 			this.yPosition = vec3.yCoord;
-			this.zPosition = vec3.zCoord + ((int)(entityLegionary.getSquadIndex() / Contubernium.files) * Contubernium.tightness);
+			
 			return true;
 		}
 	}
