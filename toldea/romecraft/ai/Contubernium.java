@@ -105,11 +105,12 @@ public class Contubernium {
 			}
 			// Calculate the new facing direction based on the delta x and z between our center and the new target location.
 			faceTargetLocation(newTargetLocation);
+			
+			// Finally update the target location to the new one.
+			targetLocation = Vec3.createVectorHelper(newTargetLocation.xCoord, newTargetLocation.yCoord, newTargetLocation.zCoord);
+		} else {
+			targetLocation = null;
 		}
-		// Finally update the target location to the new one.
-		targetLocation.xCoord = newTargetLocation.xCoord;
-		targetLocation.yCoord = newTargetLocation.yCoord;
-		targetLocation.zCoord = newTargetLocation.zCoord;
 	}
 
 	public Vec3 getTargetLocation() {

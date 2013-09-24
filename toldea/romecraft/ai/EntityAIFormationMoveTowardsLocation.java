@@ -46,7 +46,7 @@ public class EntityAIFormationMoveTowardsLocation extends EntityAIBase {
 		}
 
 		Vec3 vec3 = contubernium.getTargetLocation();
-
+		
 		if (vec3 == null) {
 			return false;
 		} else {
@@ -75,6 +75,10 @@ public class EntityAIFormationMoveTowardsLocation extends EntityAIBase {
 			
 			this.yPosition = vec3.yCoord;
 			
+			if (entityLegionary.getDistanceSq(xPosition, yPosition, zPosition) < 3d) {
+				return false;
+			}
+			
 			return true;
 		}
 	}
@@ -83,7 +87,8 @@ public class EntityAIFormationMoveTowardsLocation extends EntityAIBase {
 		return !this.entityLegionary.getNavigator().noPath();
 	}
 
-	public void updateTask() {
+	//public void updateTask() {
+	public void startExecuting() {
 		this.entityLegionary.getNavigator().tryMoveToXYZ(this.xPosition, this.yPosition, this.zPosition, this.speed);
 	}
 }

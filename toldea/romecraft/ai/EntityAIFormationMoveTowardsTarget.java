@@ -39,18 +39,13 @@ public class EntityAIFormationMoveTowardsTarget extends EntityAIBase {
 		}
 		int contuberniumId = entityLegionary.getContuberniumId();
 		Contubernium contubernium = SquadManager.getContubernium(contuberniumId);
-		this.targetEntity = contubernium.getTargetEntity();//this.entityLegionary.getAttackTarget();
+		this.targetEntity = contubernium.getTargetEntity();
 
 		if (this.targetEntity == null) {
 			return false;
 		} else if (this.targetEntity.getDistanceSqToEntity(this.entityLegionary) > (double) (this.maxTargetDistance * this.maxTargetDistance)) {
 			return false;
 		} else {
-			/*
-			Vec3 vec3 = RandomPositionGenerator.findRandomTargetBlockTowards(this.entityLegionary, 16, 7, this.entityLegionary.worldObj.getWorldVec3Pool()
-					.getVecFromPool(this.targetEntity.posX, this.targetEntity.posY, this.targetEntity.posZ));
-			*/
-			
 			Vec3 vec3 = targetEntity.getPosition(1.0f);
 			
 			if (vec3 == null) {
@@ -78,6 +73,11 @@ public class EntityAIFormationMoveTowardsTarget extends EntityAIBase {
 				default:
 					break;
 				}
+				
+				if (entityLegionary.getDistanceSq(xPosition, yPosition, zPosition) < 3d) {
+					return false;
+				}
+				
 				return true;
 			}
 		}
