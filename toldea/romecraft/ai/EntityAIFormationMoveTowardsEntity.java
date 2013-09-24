@@ -8,7 +8,7 @@ import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.RandomPositionGenerator;
 import net.minecraft.util.Vec3;
 
-public class EntityAIFormationMoveTowardsTarget extends EntityAIBase {
+public class EntityAIFormationMoveTowardsEntity extends EntityAIBase {
 	private EntityLegionary entityLegionary;
 	private EntityLivingBase targetEntity;
 	private double xPosition;
@@ -21,12 +21,12 @@ public class EntityAIFormationMoveTowardsTarget extends EntityAIBase {
 	 */
 	private float maxTargetDistance;
 
-	public EntityAIFormationMoveTowardsTarget(EntityLegionary par1EntityLegionary, double par2, float par4) {
+	public EntityAIFormationMoveTowardsEntity(EntityLegionary par1EntityLegionary, double par2, float par4) {
 		this.entityLegionary = par1EntityLegionary;
 		this.speed = par2;
 		this.maxTargetDistance = par4;
-		//this.setMutexBits(1);
-		//this.setMutexBits(3);
+		// this.setMutexBits(1);
+		// this.setMutexBits(3);
 		this.setMutexBits(0);
 	}
 
@@ -47,7 +47,7 @@ public class EntityAIFormationMoveTowardsTarget extends EntityAIBase {
 			return false;
 		} else {
 			Vec3 vec3 = targetEntity.getPosition(1.0f);
-			
+
 			if (vec3 == null) {
 				return false;
 			} else {
@@ -55,29 +55,35 @@ public class EntityAIFormationMoveTowardsTarget extends EntityAIBase {
 				Facing facing = contubernium.getFacing();
 				switch (facing) {
 				case NORTH:
-					this.xPosition = vec3.xCoord + (offset * Contubernium.tightness) - (entityLegionary.getSquadIndex() % Contubernium.files * Contubernium.tightness);
+					this.xPosition = vec3.xCoord + (offset * Contubernium.tightness)
+							- (entityLegionary.getSquadIndex() % Contubernium.files * Contubernium.tightness);
 					this.zPosition = vec3.zCoord + ((int) (entityLegionary.getSquadIndex() / Contubernium.files) * Contubernium.tightness);
 					break;
 				case SOUTH:
-					this.xPosition = vec3.xCoord + (entityLegionary.getSquadIndex() % Contubernium.files * Contubernium.tightness) - (offset * Contubernium.tightness);
+					this.xPosition = vec3.xCoord + (entityLegionary.getSquadIndex() % Contubernium.files * Contubernium.tightness)
+							- (offset * Contubernium.tightness);
 					this.zPosition = vec3.zCoord - ((int) (entityLegionary.getSquadIndex() / Contubernium.files) * Contubernium.tightness);
 					break;
 				case EAST:
 					this.xPosition = vec3.xCoord - ((int) (entityLegionary.getSquadIndex() / Contubernium.files) * Contubernium.tightness);
-					this.zPosition = vec3.zCoord + (offset * Contubernium.tightness) - (entityLegionary.getSquadIndex() % Contubernium.files * Contubernium.tightness);
+					this.zPosition = vec3.zCoord + (offset * Contubernium.tightness)
+							- (entityLegionary.getSquadIndex() % Contubernium.files * Contubernium.tightness);
 					break;
 				case WEST:
 					this.xPosition = vec3.xCoord + ((int) (entityLegionary.getSquadIndex() / Contubernium.files) * Contubernium.tightness);
-					this.zPosition = vec3.zCoord + (entityLegionary.getSquadIndex() % Contubernium.files * Contubernium.tightness) - (offset * Contubernium.tightness);
+					this.zPosition = vec3.zCoord + (entityLegionary.getSquadIndex() % Contubernium.files * Contubernium.tightness)
+							- (offset * Contubernium.tightness);
 					break;
 				default:
 					break;
 				}
-				
+
+				this.yPosition = vec3.yCoord;
+
 				if (entityLegionary.getDistanceSq(xPosition, yPosition, zPosition) < 3d) {
 					return false;
 				}
-				
+
 				return true;
 			}
 		}
@@ -102,6 +108,7 @@ public class EntityAIFormationMoveTowardsTarget extends EntityAIBase {
 	 * Execute a one shot task or start executing a continuous task
 	 */
 	public void startExecuting() {
+		// public void updateTask() {
 		this.entityLegionary.getNavigator().tryMoveToXYZ(this.xPosition, this.yPosition, this.zPosition, this.speed);
 	}
 }

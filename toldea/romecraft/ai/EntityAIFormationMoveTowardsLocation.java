@@ -46,7 +46,7 @@ public class EntityAIFormationMoveTowardsLocation extends EntityAIBase {
 		}
 
 		Vec3 vec3 = contubernium.getTargetLocation();
-		
+
 		if (vec3 == null) {
 			return false;
 		} else {
@@ -54,31 +54,35 @@ public class EntityAIFormationMoveTowardsLocation extends EntityAIBase {
 			Facing facing = contubernium.getFacing();
 			switch (facing) {
 			case NORTH:
-				this.xPosition = vec3.xCoord + (offset * Contubernium.tightness) - (entityLegionary.getSquadIndex() % Contubernium.files * Contubernium.tightness);
+				this.xPosition = vec3.xCoord + (offset * Contubernium.tightness)
+						- (entityLegionary.getSquadIndex() % Contubernium.files * Contubernium.tightness);
 				this.zPosition = vec3.zCoord + ((int) (entityLegionary.getSquadIndex() / Contubernium.files) * Contubernium.tightness);
 				break;
 			case SOUTH:
-				this.xPosition = vec3.xCoord + (entityLegionary.getSquadIndex() % Contubernium.files * Contubernium.tightness) - (offset * Contubernium.tightness);
+				this.xPosition = vec3.xCoord + (entityLegionary.getSquadIndex() % Contubernium.files * Contubernium.tightness)
+						- (offset * Contubernium.tightness);
 				this.zPosition = vec3.zCoord - ((int) (entityLegionary.getSquadIndex() / Contubernium.files) * Contubernium.tightness);
 				break;
 			case EAST:
 				this.xPosition = vec3.xCoord - ((int) (entityLegionary.getSquadIndex() / Contubernium.files) * Contubernium.tightness);
-				this.zPosition = vec3.zCoord + (offset * Contubernium.tightness) - (entityLegionary.getSquadIndex() % Contubernium.files * Contubernium.tightness);
+				this.zPosition = vec3.zCoord + (offset * Contubernium.tightness)
+						- (entityLegionary.getSquadIndex() % Contubernium.files * Contubernium.tightness);
 				break;
 			case WEST:
 				this.xPosition = vec3.xCoord + ((int) (entityLegionary.getSquadIndex() / Contubernium.files) * Contubernium.tightness);
-				this.zPosition = vec3.zCoord + (entityLegionary.getSquadIndex() % Contubernium.files * Contubernium.tightness) - (offset * Contubernium.tightness);
+				this.zPosition = vec3.zCoord + (entityLegionary.getSquadIndex() % Contubernium.files * Contubernium.tightness)
+						- (offset * Contubernium.tightness);
 				break;
 			default:
 				break;
 			}
-			
+
 			this.yPosition = vec3.yCoord;
-			
+
 			if (entityLegionary.getDistanceSq(xPosition, yPosition, zPosition) < 3d) {
 				return false;
 			}
-			
+
 			return true;
 		}
 	}
@@ -87,7 +91,6 @@ public class EntityAIFormationMoveTowardsLocation extends EntityAIBase {
 		return !this.entityLegionary.getNavigator().noPath();
 	}
 
-	//public void updateTask() {
 	public void startExecuting() {
 		this.entityLegionary.getNavigator().tryMoveToXYZ(this.xPosition, this.yPosition, this.zPosition, this.speed);
 	}

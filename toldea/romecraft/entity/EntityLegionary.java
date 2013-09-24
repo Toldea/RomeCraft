@@ -4,7 +4,7 @@ import toldea.romecraft.ai.Contubernium;
 import toldea.romecraft.ai.Contubernium.Facing;
 import toldea.romecraft.ai.EntityAIChargeThrow;
 import toldea.romecraft.ai.EntityAIFormationMoveTowardsLocation;
-import toldea.romecraft.ai.EntityAIFormationMoveTowardsTarget;
+import toldea.romecraft.ai.EntityAIFormationMoveTowardsEntity;
 import toldea.romecraft.ai.EntityAIMeleeAttack;
 import toldea.romecraft.ai.EntityAIThrowingAttack;
 import toldea.romecraft.ai.SquadManager;
@@ -55,7 +55,7 @@ public class EntityLegionary extends EntityMob implements IRangedAttackMob {
 	private static final float accuracy = 5f;
 	private static final float pilumChargeRange = 15f;
 	private static final float pilumRange = 20f;
-	private static final float pathSearchRange = 32f;
+	private static final float pathSearchRange = 64f;
 	private static final double movementSpeed = .6d;
 
 	private int contuberniumId = 1;
@@ -67,16 +67,15 @@ public class EntityLegionary extends EntityMob implements IRangedAttackMob {
 
 		// this.experienceValue = 10;
 
-		// this.getNavigator().setAvoidsWater(true);
-
 		this.getNavigator().setCanSwim(true);
+		this.getNavigator().setAvoidsWater(true);
 
 		// this.setSneaking(true);
 
 		// this.tasks.addTask(1, new EntityAIThrowingAttack(this, 1.0D, 20, 60, pilumRange));
-		//this.tasks.addTask(1, new EntityAIChargeThrow(this, 5, pilumChargeRange));
-		//this.tasks.addTask(2, new EntityAIMeleeAttack(this));
-		//this.tasks.addTask(3, new EntityAIFormationMoveTowardsTarget(this, movementSpeed, 32.0f));
+		this.tasks.addTask(1, new EntityAIChargeThrow(this, 5, pilumChargeRange));
+		this.tasks.addTask(2, new EntityAIMeleeAttack(this));
+		this.tasks.addTask(3, new EntityAIFormationMoveTowardsEntity(this, movementSpeed, 32.0f));
 		this.tasks.addTask(4, new EntityAIFormationMoveTowardsLocation(this, movementSpeed));
 
 		// this.tasks.addTask(2, new EntityAIMoveTowardsTarget(this, 0.9D, 32.0F));
