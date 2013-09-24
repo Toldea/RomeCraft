@@ -133,8 +133,8 @@ public class EntityLegionary extends EntityMob implements IRangedAttackMob {
 		equipItem(LEGIONARY_EQUIPMENT.GALAE);
 		equipItem(LEGIONARY_EQUIPMENT.CALIGAE);
 
-		// equipItem(LEGIONARY_EQUIPMENT.GLADIUS);
-		equipItem(LEGIONARY_EQUIPMENT.PILUM);
+		//equipItem(LEGIONARY_EQUIPMENT.GLADIUS);
+		//equipItem(LEGIONARY_EQUIPMENT.PILUM);
 
 		return par1EntityLivingData;
 	}
