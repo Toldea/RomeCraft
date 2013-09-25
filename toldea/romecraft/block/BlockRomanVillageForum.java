@@ -50,7 +50,8 @@ public class BlockRomanVillageForum extends BlockContainer {
 			// Check if the multi-block structure has been formed.
 			if (tileEntity.getIsValid()) {
 				if (world.isRemote) {
-					player.sendChatToPlayer(ChatMessageComponent.createFromText("Roman Forum is formed correctly!"));
+					//player.sendChatToPlayer(ChatMessageComponent.createFromText("Roman Forum is formed correctly!"));
+					tileEntity.printVillageData(player);
 				}
 				// player.openGui(MultiFurnaceMod.instance, ModConfig.GUIIDs.multiFurnace, world, x, y, z);
 			}

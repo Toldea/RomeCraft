@@ -2,12 +2,19 @@ package toldea.romecraft.tileentity;
 
 import toldea.romecraft.block.BlockRomanVillageForum;
 import toldea.romecraft.managers.BlockManager;
+import toldea.romecraft.managers.TickManager;
+import toldea.romecraft.romanvillage.RomanVillage;
+import toldea.romecraft.romanvillage.RomanVillageCollection;
 import net.minecraft.block.Block;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.MathHelper;
 
 public class TileEntityRomanVillageForum extends TileEntity {
 	private boolean isValidMultiblock = false;
+	//private RomanVillage romanVillage = null;
 
 	public boolean getIsValid() {
 		return isValidMultiblock;
@@ -15,6 +22,8 @@ public class TileEntityRomanVillageForum extends TileEntity {
 
 	public void invalidateMultiblock() {
 		isValidMultiblock = false;
+		//romanVillage = null;
+		
 		/*
 		int metadata = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
 		metadata = metadata & BlockRomanVillageForum.MASK_DIR;
@@ -59,6 +68,13 @@ public class TileEntityRomanVillageForum extends TileEntity {
 				}
 			}
 		}
+		
+		//romanVillage = new RomanVillage();
+		//romanVillage = TickManager.romanVillageCollection.createNewVillage(MathHelper.floor_double(xCoord), MathHelper.floor_double(yCoord), MathHelper.floor_double(zCoord));
+		TickManager.romanVillageCollection.createNewVillage(MathHelper.floor_double(xCoord), MathHelper.floor_double(yCoord), MathHelper.floor_double(zCoord));
+		//TickManager.romanVillageCollection.addVillagerPosition(MathHelper.floor_double(xCoord), MathHelper.floor_double(yCoord), MathHelper.floor_double(zCoord));
+		isValidMultiblock = true;
+		
 		return true;
 	}
 	/*
@@ -144,5 +160,24 @@ public class TileEntityRomanVillageForum extends TileEntity {
 	
 	private static boolean isBlockIdQuartz(int blockId) {
 		return (blockId == Block.blockNetherQuartz.blockID || blockId == Block.stairsNetherQuartz.blockID || blockId == Block.stairsNetherQuartz.blockID);
+	}
+	
+	public void printVillageData(EntityPlayer player) {
+		if (!isValidMultiblock) {
+			player.sendChatToPlayer(ChatMessageComponent.createFromText("Roman Village forum is not formed properly!"));
+		} 
+		
+		RomanVillage romanVillage = TickManager.romanVillageCollection.getVillageAt(MathHelper.floor_double(xCoord), MathHelper.floor_double(yCoord), MathHelper.floor_double(zCoord));
+		
+		if (romanVillage == null) {
+			player.sendChatToPlayer(ChatMessageComponent.createFromText("Roman Village forum is null!"));
+		} else {
+			player.sendChatToPlayer(ChatMessageComponent.createFromText("-- Roman Village Data --"));
+			player.sendChatToPlayer(ChatMessageComponent.createFromText(new String("Village Forum: (" + romanVillage.getVillageForumLocation().posX + ", " + romanVillage.getVillageForumLocation().posY + ", " + romanVillage.getVillageForumLocation().posZ + ")")));
+			player.sendChatToPlayer(ChatMessageComponent.createFromText(new String("Village Center: (" + romanVillage.getCenter().posX + ", " + romanVillage.getCenter().posY + ", " + romanVillage.getCenter().posZ + ")")));
+			player.sendChatToPlayer(ChatMessageComponent.createFromText(new String("Number of doors: " + romanVillage.getNumVillageDoors())));
+			player.sendChatToPlayer(ChatMessageComponent.createFromText(new String("Number of villagers: " + romanVillage.getNumVillagers())));
+			player.sendChatToPlayer(ChatMessageComponent.createFromText(new String("Village radius: " + romanVillage.getVillageRadius())));
+		}
 	}
 }

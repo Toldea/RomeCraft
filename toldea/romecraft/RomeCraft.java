@@ -6,6 +6,7 @@ import toldea.romecraft.managers.CreativeTabsManager;
 import toldea.romecraft.managers.EntityManager;
 import toldea.romecraft.managers.EventManager;
 import toldea.romecraft.managers.ItemManager;
+import toldea.romecraft.managers.TickManager;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.model.ModelBiped;
@@ -59,6 +60,7 @@ public class RomeCraft {
 		BlockManager.registerBlocks();
 		EntityManager.registerEntities();
 		EventManager.registerEvents();
+		TickManager.registerTickHandler();
 	}
 
 	@EventHandler
