@@ -14,15 +14,21 @@ import net.minecraft.util.MathHelper;
 
 public class TileEntityRomanVillageForum extends TileEntity {
 	private boolean isValidMultiblock = false;
-	//private RomanVillage romanVillage = null;
 
 	public boolean getIsValid() {
 		return isValidMultiblock;
 	}
 
 	public void invalidateMultiblock() {
+		// Check if we were a valid multiblock. If so, try to get the accompanying village and flag it for annihilation by the RomanVillageCollection.
+		if (isValidMultiblock) {
+			RomanVillage romanVillage = TickManager.romanVillageCollection.getVillageAt(MathHelper.floor_double(xCoord), MathHelper.floor_double(yCoord), MathHelper.floor_double(zCoord));
+			if (romanVillage != null) {
+				romanVillage.flagForAnnihilation();
+			}
+		}
+		
 		isValidMultiblock = false;
-		//romanVillage = null;
 		
 		/*
 		int metadata = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
@@ -69,10 +75,8 @@ public class TileEntityRomanVillageForum extends TileEntity {
 			}
 		}
 		
-		//romanVillage = new RomanVillage();
-		//romanVillage = TickManager.romanVillageCollection.createNewVillage(MathHelper.floor_double(xCoord), MathHelper.floor_double(yCoord), MathHelper.floor_double(zCoord));
 		TickManager.romanVillageCollection.createNewVillage(MathHelper.floor_double(xCoord), MathHelper.floor_double(yCoord), MathHelper.floor_double(zCoord));
-		//TickManager.romanVillageCollection.addVillagerPosition(MathHelper.floor_double(xCoord), MathHelper.floor_double(yCoord), MathHelper.floor_double(zCoord));
+		
 		isValidMultiblock = true;
 		
 		return true;

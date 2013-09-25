@@ -46,6 +46,7 @@ public class RomanVillage {
 	private int numIronGolems;
 	
 	private ChunkCoordinates villageForumLocation = new ChunkCoordinates(0, 0, 0);
+	private boolean shouldBeAnnihilated = false;
 
 	public RomanVillage() {
 	}
@@ -300,8 +301,12 @@ public class RomanVillage {
 	 * Returns true, if there is not a single village door left. Called by VillageCollection
 	 */
 	public boolean isAnnihilated() {
-		return false; // TODO: Temporarely disabled this for testing..
+		return shouldBeAnnihilated; // TODO: Make sure current solution is working properly in all cases.
 		//return this.villageDoorInfoList.isEmpty();
+	}
+	
+	public void flagForAnnihilation() {
+		this.shouldBeAnnihilated = true;
 	}
 
 	/*

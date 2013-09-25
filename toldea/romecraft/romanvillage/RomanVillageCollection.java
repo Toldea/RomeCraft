@@ -80,7 +80,7 @@ public class RomanVillageCollection extends WorldSavedData {
 
 		this.removeAnnihilatedVillages();
 		//this.dropOldestVillagerPosition();
-		this.addNewDoorsToVillageOrCreateVillage();
+		this.addNewDoorsToVillageOrCreateVillage(); // TODO: Rewrite this so it doesn't recreate villages but only works for existing ones!
 
 		if (this.tickCounter % 400 == 0) {
 			this.markDirty();
