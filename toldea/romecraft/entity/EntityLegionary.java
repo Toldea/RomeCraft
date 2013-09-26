@@ -159,7 +159,8 @@ public class EntityLegionary extends EntityMob implements IRangedAttackMob {
 	public void equipItem(LEGIONARY_EQUIPMENT equipment) {
 		switch (equipment) {
 		case LORICA_SEGMENTATA:
-			equipItemToSlot(Item.plateIron, 3);
+			equipItemToSlot(ItemManager.itemLoricaSegmentata, 3);
+			//equipItemToSlot(Item.plateIron, 3);
 			equipItemToSlot(Item.legsIron, 2);
 			break;
 		case SCUTUM:

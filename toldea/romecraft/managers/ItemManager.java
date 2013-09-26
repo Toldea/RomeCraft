@@ -4,11 +4,14 @@ import toldea.romecraft.client.renderer.CustomItemRenderer;
 import toldea.romecraft.client.renderer.RenderItemPilum;
 import toldea.romecraft.item.GenericItem;
 import toldea.romecraft.item.Gureebu;
+import toldea.romecraft.item.ItemCustomArmor;
 import toldea.romecraft.item.ItemMeleeWeapon;
 import toldea.romecraft.item.ItemPilum;
 import toldea.romecraft.item.ItemScepter;
+import net.minecraft.item.EnumArmorMaterial;
 import net.minecraft.item.EnumToolMaterial;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemArmor;
 import net.minecraftforge.client.MinecraftForgeClient;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 
@@ -17,7 +20,7 @@ public class ItemManager {
 
 	public static Item itemGladius = null;
 	public static Item itemScutum = null;
-	public static Item itemLoricaSegmentata = null;
+	public static ItemArmor itemLoricaSegmentata = null;
 	public static Item itemGalea = null;
 	public static Item itemPilum = null;
 	public static Item itemVerutum = null;
@@ -40,7 +43,8 @@ public class ItemManager {
 		LanguageRegistry.addName(itemScutum, "Scutum");
 		MinecraftForgeClient.registerItemRenderer(itemScutum.itemID, new CustomItemRenderer());
 		// Lorica Segmentata
-		itemLoricaSegmentata = new GenericItem(nextItemID++).setUnlocalizedName("loricaSegmentata").setTextureName("romecraft:loricaSegmentata");
+		itemLoricaSegmentata = (ItemArmor) (new ItemCustomArmor(nextItemID++, EnumArmorMaterial.IRON, 2, 1)).setUnlocalizedName("loricaSegmentata").setTextureName("iron_chestplate");
+		//itemLoricaSegmentata = new GenericItem(nextItemID++).setUnlocalizedName("loricaSegmentata").setTextureName("romecraft:loricaSegmentata");
 		LanguageRegistry.addName(itemLoricaSegmentata, "Lorica Segmentata");
 		// Galea
 		itemGalea = new GenericItem(nextItemID++).setUnlocalizedName("galea").setTextureName("romecraft:galea");
