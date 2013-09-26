@@ -58,17 +58,9 @@ public class RomanVillage {
 	public RomanVillage(World par1World, ChunkCoordinates par2VillageForumLocation) {
 		this.worldObj = par1World;
 		villageForumLocation = par2VillageForumLocation;
-		/*
-		this.centerHelper.posX += villageForumLocation.xCoord;
-		this.centerHelper.posY += villageForumLocation.yCoord;
-		this.centerHelper.posZ += villageForumLocation.zCoord;
-		*/
-		//addVillageDoorInfo(new RomanVillageDoorInfo(villageForumLocation.posX, villageForumLocation.posX, villageForumLocation.posZ, 0, -2, 0));
-		
 		updateVillageRadiusAndCenter();
 	}
 
-	// public void func_82691_a(World par1World)
 	public void linkWorld(World par1World) {
 		this.worldObj = par1World;
 	}

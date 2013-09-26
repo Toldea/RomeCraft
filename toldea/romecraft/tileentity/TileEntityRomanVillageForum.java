@@ -1,5 +1,6 @@
 package toldea.romecraft.tileentity;
 
+import toldea.romecraft.RomeCraft;
 import toldea.romecraft.block.BlockRomanVillageForum;
 import toldea.romecraft.managers.BlockManager;
 import toldea.romecraft.managers.TickManager;
@@ -74,8 +75,9 @@ public class TileEntityRomanVillageForum extends TileEntity {
 				}
 			}
 		}
-		
-		TickManager.romanVillageCollection.createNewVillage(MathHelper.floor_double(xCoord), MathHelper.floor_double(yCoord), MathHelper.floor_double(zCoord));
+		if (!worldObj.isRemote) {
+			TickManager.romanVillageCollection.createNewVillage(MathHelper.floor_double(xCoord), MathHelper.floor_double(yCoord), MathHelper.floor_double(zCoord));
+		}
 		
 		isValidMultiblock = true;
 		
