@@ -1,35 +1,189 @@
 package toldea.romecraft.client.model;
 
+import toldea.romecraft.managers.ItemManager;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 
 public class ModelLoricaSegmentata extends ModelBiped {
-	ModelRenderer loricasegmentata;
+	ModelRenderer lowertorso;
+	ModelRenderer uppertorso;
+	ModelRenderer rightshoulderupper;
+	ModelRenderer rightshouldermiddle;
+	ModelRenderer rightshoulderlower;
+	ModelRenderer leftshoulderupper;
+	ModelRenderer leftshouldermiddle;
+	ModelRenderer leftshoulderlower;
 
 	public ModelLoricaSegmentata() {
 		textureWidth = 64;
 		textureHeight = 32;
 
-		loricasegmentata = new ModelRenderer(this, 0, 0);
-		loricasegmentata.addBox(-5F, -1F, -3F, 10, 14, 6);
-		loricasegmentata.setRotationPoint(0F, 0F, 0F);
-		loricasegmentata.setTextureSize(64, 32);
+		lowertorso = new ModelRenderer(this, 28, 0);
+		lowertorso.addBox(-4.5F, 4F, -2.5F, 9, 7, 5);
+		lowertorso.setRotationPoint(0F, 0F, 0F);
+		lowertorso.setTextureSize(64, 32);
+
+		uppertorso = new ModelRenderer(this, 0, 0);
+		uppertorso.addBox(-3.5F, 0F, -3.5F, 7, 5, 7);
+		uppertorso.setRotationPoint(0F, 0F, 0F);
+		uppertorso.setTextureSize(64, 32);
+
+		rightshoulderupper = new ModelRenderer(this, 0, 12);
+		rightshoulderupper.addBox(-7F, -1.5F, -4F, 3, 7, 8);
+		rightshoulderupper.setRotationPoint(0F, 0F, 0F);
+		rightshoulderupper.setTextureSize(64, 32);
+
+		rightshouldermiddle = new ModelRenderer(this, 22, 12);
+		rightshouldermiddle.addBox(-8F, -1F, -3.5F, 2, 6, 7);
+		rightshouldermiddle.setRotationPoint(0F, 0F, 0F);
+		rightshouldermiddle.setTextureSize(64, 32);
+
+		rightshoulderlower = new ModelRenderer(this, 40, 12);
+		rightshoulderlower.addBox(-9F, -0.5F, -3F, 2, 5, 6);
+		rightshoulderlower.setRotationPoint(0F, 0F, 0F);
+		rightshoulderlower.setTextureSize(64, 32);
+
+		leftshoulderupper = new ModelRenderer(this, 0, 12);
+		leftshoulderupper.addBox(4F, -1.5F, -4F, 3, 7, 8);
+		leftshoulderupper.setRotationPoint(0F, 0F, 0F);
+		leftshoulderupper.setTextureSize(64, 32);
+		leftshoulderupper.mirror = true;
+
+		leftshouldermiddle = new ModelRenderer(this, 22, 12);
+		leftshouldermiddle.addBox(6F, -1F, -3.5F, 2, 6, 7);
+		leftshouldermiddle.setRotationPoint(0F, 0F, 0F);
+		leftshouldermiddle.setTextureSize(64, 32);
+		leftshouldermiddle.mirror = true;
+
+		leftshoulderlower = new ModelRenderer(this, 40, 12);
+		leftshoulderlower.addBox(7F, -0.5F, -3F, 2, 5, 6);
+		leftshoulderlower.setRotationPoint(0F, 0F, 0F);
+		leftshoulderlower.setTextureSize(64, 32);
+		leftshoulderlower.mirror = true;
 	}
 
 	public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
 		this.isSneak = entity.isSneaking();
 		setRotationAngles(f, f1, f2, f3, f4, f5, entity);
-		loricasegmentata.render(f5);
+		uppertorso.render(f5);
+		lowertorso.render(f5);
+		
+		rightshoulderupper.render(f5);
+		rightshouldermiddle.render(f5);
+		rightshoulderlower.render(f5);
+		
+		leftshoulderupper.render(f5);
+		leftshouldermiddle.render(f5);
+		leftshoulderlower.render(f5);
 	}
 
 	@Override
 	public void setRotationAngles(float par1, float par2, float par3, float par4, float par5, float par6, Entity par7Entity) {
-		if (this.isSneak) {
-			loricasegmentata.rotateAngleX = 0.5F;
-		} else {
-			loricasegmentata.rotateAngleX = 0.0F;
+		boolean aimedPilum = false;
+		
+		if (par7Entity instanceof EntityLiving) {
+			ItemStack itemStack = ((EntityLiving)par7Entity).getCurrentItemOrArmor(0);
+			if (itemStack != null) {
+				aimedPilum = (itemStack.itemID == ItemManager.itemPilum.itemID);
+			}
 		}
+		
+		float headAngleX = par5 / (180F / (float) Math.PI);
+		float headAngleY = par4 / (180F / (float) Math.PI);
+
+		float bodyAngleX = .0f;
+
+		float rightArmAngleX = .0f;
+		float rightArmAngleY = .0f;
+		float rightArmAngleZ = .0f;
+
+		float leftArmAngleX = .0f;
+		float leftArmAngleY = .0f;
+		float leftArmAngleZ = .0f;
+
+		float rightLegAngleX = .0f;
+		float rightLegAngleY = .0f;
+		float rightLegAngleZ = .0f;
+
+		float leftLegAngleX = .0f;
+		float leftLegAngleY = .0f;
+		float leftLegAngleZ = .0f;
+
+		rightArmAngleX = MathHelper.cos(par1 * 0.6662F + (float) Math.PI) * 2.0F * par2 * 0.5F;
+		leftArmAngleX = MathHelper.cos(par1 * 0.6662F) * 2.0F * par2 * 0.5F;
+		rightLegAngleX = MathHelper.cos(par1 * 0.6662F) * 1.4F * par2;
+		leftLegAngleX = MathHelper.cos(par1 * 0.6662F + (float) Math.PI) * 1.4F * par2;
+
+		if (this.isRiding) {
+			rightArmAngleX += -((float) Math.PI / 5F);
+			leftArmAngleX += -((float) Math.PI / 5F);
+			rightLegAngleX = -((float) Math.PI * 2F / 5F);
+			leftLegAngleX = -((float) Math.PI * 2F / 5F);
+			rightLegAngleY = ((float) Math.PI / 10F);
+			leftLegAngleY = -((float) Math.PI / 10F);
+		}
+
+		if (this.heldItemLeft != 0) {
+			leftArmAngleX = leftArmAngleX * 0.5F - ((float) Math.PI / 10F) * (float) this.heldItemLeft;
+		}
+		if (this.heldItemRight != 0) {
+			rightArmAngleX = rightArmAngleX * 0.5F - ((float) Math.PI / 10F) * (float) this.heldItemRight;
+		}
+
+		float f6;
+		float f7;
+
+		// if (this.onGround > -9990.0F) {} // Not sure when this is set.
+
+		if (this.isSneak) {
+			bodyAngleX = 0.5F;
+			rightArmAngleX += 0.4F;
+			leftArmAngleX += 0.4F;
+			rightLegAngleZ = 4.0F;
+			leftLegAngleZ = 4.0F;
+			rightLegAngleY = 9.0F;
+			leftLegAngleY = 9.0F;
+			headAngleY = 1.0F;
+		} else {
+			bodyAngleX = 0.0F;
+			rightLegAngleZ = 0.1F;
+			leftLegAngleZ = 0.1F;
+			rightLegAngleY = 12.0F;
+			leftLegAngleY = 12.0F;
+			headAngleY = 0.0F;
+		}
+
+		rightArmAngleZ += MathHelper.cos(par3 * 0.09F) * 0.05F + 0.05F;
+		leftArmAngleZ -= MathHelper.cos(par3 * 0.09F) * 0.05F + 0.05F;
+		rightArmAngleX += MathHelper.sin(par3 * 0.067F) * 0.05F;
+		leftArmAngleX -= MathHelper.sin(par3 * 0.067F) * 0.05F;
+
+		// if (this.aimedBow) {}
+		if (aimedPilum) {
+			/*
+			f6 = 0.0F;
+			f7 = 0.0F;
+			rightArmAngleZ = -((float)Math.PI / 16);
+			rightArmAngleY = -(0.1F - f6 * 0.6F) + this.bipedHead.rotateAngleY;
+			rightArmAngleX = -((float)Math.PI) + this.bipedHead.rotateAngleX;
+			rightArmAngleX -= f6 * 1.2F - f7 * 0.4F;
+			rightArmAngleZ += MathHelper.cos(par3 * 0.09F) * 0.05F + 0.05F;
+			rightArmAngleX += MathHelper.sin(par3 * 0.067F) * 0.05F;
+			*/
+		}
+
+		lowertorso.rotateAngleX = uppertorso.rotateAngleX = bodyAngleX;
+
+		rightshoulderupper.rotateAngleX = rightshouldermiddle.rotateAngleX = rightshoulderlower.rotateAngleX = rightArmAngleX;
+		rightshoulderupper.rotateAngleY = rightshouldermiddle.rotateAngleY = rightshoulderlower.rotateAngleY = rightArmAngleY;
+		rightshoulderupper.rotateAngleZ = rightshouldermiddle.rotateAngleZ = rightshoulderlower.rotateAngleZ = rightArmAngleZ;
+		
+		leftshoulderupper.rotateAngleX = leftshouldermiddle.rotateAngleX = leftshoulderlower.rotateAngleX = leftArmAngleX;
+		leftshoulderupper.rotateAngleY = leftshouldermiddle.rotateAngleY = leftshoulderlower.rotateAngleY = leftArmAngleY;
+		leftshoulderupper.rotateAngleZ = leftshouldermiddle.rotateAngleZ = leftshoulderlower.rotateAngleZ = leftArmAngleZ;
 	}
 }

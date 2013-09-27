@@ -130,8 +130,8 @@ public class EntityLegionary extends EntityMob implements IRangedAttackMob {
 
 		// Give the Legionary it's default equipment.
 		equipItem(LEGIONARY_EQUIPMENT.LORICA_SEGMENTATA);
-		equipItem(LEGIONARY_EQUIPMENT.GALAE);
-		equipItem(LEGIONARY_EQUIPMENT.CALIGAE);
+		//equipItem(LEGIONARY_EQUIPMENT.GALAE);
+		//equipItem(LEGIONARY_EQUIPMENT.CALIGAE);
 
 		//equipItem(LEGIONARY_EQUIPMENT.GLADIUS);
 		//equipItem(LEGIONARY_EQUIPMENT.PILUM);
@@ -160,8 +160,7 @@ public class EntityLegionary extends EntityMob implements IRangedAttackMob {
 		switch (equipment) {
 		case LORICA_SEGMENTATA:
 			equipItemToSlot(ItemManager.itemLoricaSegmentata, 3);
-			//equipItemToSlot(Item.plateIron, 3);
-			equipItemToSlot(Item.legsIron, 2);
+			//equipItemToSlot(Item.legsIron, 2);
 			break;
 		case SCUTUM:
 			break;

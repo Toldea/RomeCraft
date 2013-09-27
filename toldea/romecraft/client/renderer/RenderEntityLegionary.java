@@ -38,6 +38,7 @@ import net.minecraftforge.common.MinecraftForge;
 import org.lwjgl.opengl.GL11;
 
 import toldea.romecraft.client.model.ModelLegionaryBiped;
+import toldea.romecraft.client.model.ModelLoricaSegmentata;
 import toldea.romecraft.entity.EntityLegionary;
 
 import com.google.common.collect.Maps;
@@ -55,7 +56,7 @@ public class RenderEntityLegionary extends RenderLiving {
 	/** List of armor texture filenames. */
 	public static String[] bipedArmorFilenamePrefix = new String[] { "leather", "chainmail", "iron", "diamond", "gold" };
 
-	private static final ResourceLocation steveTextures = new ResourceLocation("textures/entity/steve.png");
+	private static final ResourceLocation steveTextures = new ResourceLocation("romecraft", "textures/entity/pleb.png");
 
 	public RenderEntityLegionary(ModelLegionaryBiped par1ModelBiped, float par2) {
 		this(par1ModelBiped, par2, 1.0F);
