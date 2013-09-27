@@ -25,12 +25,7 @@ public class RomanVillage {
 	/** list of VillageDoorInfo objects */
 	private final List villageDoorInfoList = new ArrayList();
 
-	/**
-	 * This is the sum of all door coordinates and used to calculate the actual village center by dividing by the number of doors.
-	 */
 	//private final ChunkCoordinates centerHelper = new ChunkCoordinates(0, 0, 0);
-
-	/** This is the actual village center. */
 	//private final ChunkCoordinates center = new ChunkCoordinates(0, 0, 0);
 	private int villageRadius;
 	private int lastAddDoorTimestamp;

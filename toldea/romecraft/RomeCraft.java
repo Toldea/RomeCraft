@@ -48,7 +48,6 @@ public class RomeCraft {
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
-		// Stub Method
 	}
 
 	@EventHandler

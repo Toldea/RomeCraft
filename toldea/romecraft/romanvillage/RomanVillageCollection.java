@@ -18,11 +18,6 @@ public class RomanVillageCollection extends WorldSavedData {
 	public static final String key = "romanVillages";
 
 	private World worldObj;
-
-	/**
-	 * This is a black hole. You can add data to this list through a public interface, but you can't query that information in any way and it's not used
-	 * internally either.
-	 */
 	//private final List villagerPositionsList = new ArrayList();
 	private final List newDoors = new ArrayList();
 	private final List villageList = new ArrayList();
@@ -39,6 +34,9 @@ public class RomanVillageCollection extends WorldSavedData {
 		this.markDirty();
 	}
 
+	/**
+	 * Links the world to this RomanVillageCollection and all registered RomanVillage objects.
+	 */
 	public void linkWorld(World par1World) {
 		System.out.println("RomanVillageCollection.linkWorld");
 		this.worldObj = par1World;
@@ -50,10 +48,6 @@ public class RomanVillageCollection extends WorldSavedData {
 		}
 	}
 
-	/**
-	 * This is a black hole. You can add data to this list through a public interface, but you can't query that information in any way and it's not used
-	 * internally either.
-	 */
 	/*
 	public void addVillagerPosition(int par1, int par2, int par3) {
 		System.out.println("RomanVillageCollection.addVillagerPosition");
@@ -73,8 +67,6 @@ public class RomanVillageCollection extends WorldSavedData {
 		while (iterator.hasNext()) {
 			RomanVillage village = (RomanVillage) iterator.next();
 			village.tick(this.tickCounter);
-			
-			//
 			this.addUnassignedWoodenDoorsAroundToNewDoorsList(village.getCenter());
 		}
 		
@@ -91,14 +83,13 @@ public class RomanVillageCollection extends WorldSavedData {
 	}
 
 	private void removeAnnihilatedVillages() {
-		//System.out.println("RomanVillageCollection.removeAnnihilatedVillages");
 		Iterator iterator = this.villageList.iterator();
 
 		while (iterator.hasNext()) {
 			RomanVillage village = (RomanVillage) iterator.next();
 
 			if (village.isAnnihilated()) {
-				System.out.println("RomanVillageCollection.removeAnnihilatedVillages is devouring a village! Ow noes! D:");
+				System.out.println("RomanVillageCollection.removeAnnihilatedVillages is removing an annihilated village.");
 				iterator.remove();
 				this.markDirty();
 				System.out.println("New villageList count: " + villageList.size());

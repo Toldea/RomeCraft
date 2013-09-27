@@ -6,6 +6,7 @@ import toldea.romecraft.client.renderer.RenderEntityLegionary;
 import toldea.romecraft.client.renderer.RenderEntityPilum;
 import toldea.romecraft.entity.EntityLegionary;
 import toldea.romecraft.entity.EntityPilum;
+import toldea.romecraft.entity.EntityPleb;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityEggInfo;
@@ -21,11 +22,15 @@ public class EntityManager {
 	public static void registerEntities() {
 		// Legionary
 		EntityRegistry.registerGlobalEntityID(EntityLegionary.class, "entityLegionary", EntityRegistry.findGlobalUniqueEntityId());
-		EntityRegistry.findGlobalUniqueEntityId();
 		registerEntityEgg(EntityLegionary.class, 0xff0000, 0xf0ff00);
 		LanguageRegistry.instance().addStringLocalization("entity.entityLegionary.name", "Legionary");
+		// Pleb
+		EntityRegistry.registerGlobalEntityID(EntityPleb.class, "entityPleb", EntityRegistry.findGlobalUniqueEntityId());
+		//EntityRegistry.registerModEntity(EntityPleb.class, "entityPleb", EntityRegistry.findGlobalUniqueEntityId(), RomeCraft.instance, 32, 5, true);
+		registerEntityEgg(EntityPleb.class, 0x00ff00, 0x0f00ff);
+		LanguageRegistry.instance().addStringLocalization("entity.entityPleb.name", "Pleb");
 		// Pilum
-		EntityRegistry.registerModEntity(EntityPilum.class, "entityPilum", startEntityModId++, RomeCraft.instance, 32, 5, true);
+		EntityRegistry.registerModEntity(EntityPilum.class, "entityPilum", EntityRegistry.findGlobalUniqueEntityId(), RomeCraft.instance, 32, 5, true);
 	}
 
 	public static int getUniqueEntityId() {

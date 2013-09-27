@@ -180,7 +180,7 @@ public class TileEntityRomanVillageForum extends TileEntity {
 		} else {
 			player.sendChatToPlayer(ChatMessageComponent.createFromText("-- Roman Village Data --"));
 			player.sendChatToPlayer(ChatMessageComponent.createFromText(new String("Village Forum: (" + romanVillage.getVillageForumLocation().posX + ", " + romanVillage.getVillageForumLocation().posY + ", " + romanVillage.getVillageForumLocation().posZ + ")")));
-			player.sendChatToPlayer(ChatMessageComponent.createFromText(new String("Village Center: (" + romanVillage.getCenter().posX + ", " + romanVillage.getCenter().posY + ", " + romanVillage.getCenter().posZ + ")")));
+			//player.sendChatToPlayer(ChatMessageComponent.createFromText(new String("Village Center: (" + romanVillage.getCenter().posX + ", " + romanVillage.getCenter().posY + ", " + romanVillage.getCenter().posZ + ")")));
 			player.sendChatToPlayer(ChatMessageComponent.createFromText(new String("Number of doors: " + romanVillage.getNumVillageDoors())));
 			player.sendChatToPlayer(ChatMessageComponent.createFromText(new String("Number of villagers: " + romanVillage.getNumVillagers())));
 			player.sendChatToPlayer(ChatMessageComponent.createFromText(new String("Village radius: " + romanVillage.getVillageRadius())));

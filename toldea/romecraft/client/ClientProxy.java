@@ -5,6 +5,8 @@ import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import net.minecraft.client.model.ModelBiped;
+import net.minecraft.client.renderer.entity.RenderBiped;
+import net.minecraft.client.renderer.entity.RenderVillager;
 import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
 import toldea.romecraft.CommonProxy;
@@ -12,10 +14,12 @@ import toldea.romecraft.client.model.ModelLegionaryBiped;
 import toldea.romecraft.client.renderer.CustomItemRenderer;
 import toldea.romecraft.client.renderer.RenderEntityLegionary;
 import toldea.romecraft.client.renderer.RenderEntityPilum;
+import toldea.romecraft.client.renderer.RenderEntityPleb;
 import toldea.romecraft.client.renderer.RenderItemPilum;
 import toldea.romecraft.client.renderer.TileEntityBloomeryRenderer;
 import toldea.romecraft.entity.EntityLegionary;
 import toldea.romecraft.entity.EntityPilum;
+import toldea.romecraft.entity.EntityPleb;
 import toldea.romecraft.managers.ItemManager;
 import toldea.romecraft.tileentity.TileEntityBloomery;
 
@@ -27,6 +31,7 @@ public class ClientProxy extends CommonProxy {
 		
 		RenderingRegistry.registerEntityRenderingHandler(EntityLegionary.class, new RenderEntityLegionary(new ModelLegionaryBiped(), .03f));
 		RenderingRegistry.registerEntityRenderingHandler(EntityPilum.class, new RenderEntityPilum());
+		RenderingRegistry.registerEntityRenderingHandler(EntityPleb.class, new RenderEntityPleb(new ModelBiped(), .03f));
 	}
 
 	@Override
