@@ -46,7 +46,6 @@ import static net.minecraftforge.client.IItemRenderer.ItemRenderType.EQUIPPED;
 import static net.minecraftforge.client.IItemRenderer.ItemRendererHelper.BLOCK_3D;
 
 public class RenderEntityLegionary extends RenderLiving {
-	//protected ModelBiped modelBipedMain;
 	protected ModelLegionaryBiped modelBipedMain;
 	protected float field_77070_b;
 	protected ModelLegionaryBiped field_82423_g;

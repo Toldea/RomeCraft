@@ -39,7 +39,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class RenderEntityPleb extends RenderLiving {
-	//protected ModelBiped modelBipedMain;
 	protected ModelBiped modelBipedMain;
 	protected float field_77070_b;
 	protected ModelBiped field_82423_g;
@@ -49,7 +48,7 @@ public class RenderEntityPleb extends RenderLiving {
 	/** List of armor texture filenames. */
 	public static String[] bipedArmorFilenamePrefix = new String[] { "leather", "chainmail", "iron", "diamond", "gold" };
 
-	private static final ResourceLocation steveTextures = new ResourceLocation("textures/entity/steve.png");
+	private static final ResourceLocation steveTextures = new ResourceLocation("romecraft", "textures/entity/pleb.png");
 
 	public RenderEntityPleb(ModelBiped par1ModelBiped, float par2) {
 		this(par1ModelBiped, par2, 1.0F);
