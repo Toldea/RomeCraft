@@ -5,29 +5,34 @@ import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 
-public class ModelLoricaSegmentata extends ModelBiped {
-	ModelRenderer lowertorso;
-	ModelRenderer uppertorso;
+public class ModelLegionaryArmor extends ModelBiped {
+	private boolean renderLoricaSegmentata = false;
+	private boolean renderGalea = false;
+	private boolean aimedPilum = false;
 
-	ModelRenderer rightshoulderupper;
-	ModelRenderer rightshouldermiddle;
-	ModelRenderer rightshoulderlower;
+	private ModelRenderer lowertorso;
+	private ModelRenderer uppertorso;
 
-	ModelRenderer leftshoulderupper;
-	ModelRenderer leftshouldermiddle;
-	ModelRenderer leftshoulderlower;
+	private ModelRenderer rightshoulderupper;
+	private ModelRenderer rightshouldermiddle;
+	private ModelRenderer rightshoulderlower;
 
-	ModelRenderer galea1;
-	ModelRenderer galea2;
-	ModelRenderer galea3;
+	private ModelRenderer leftshoulderupper;
+	private ModelRenderer leftshouldermiddle;
+	private ModelRenderer leftshoulderlower;
 
-	ModelRenderer crestholder;
-	ModelRenderer crest;
+	private ModelRenderer galea1;
+	private ModelRenderer galea2;
+	private ModelRenderer galea3;
 
-	public ModelLoricaSegmentata() {
+	private ModelRenderer crestholder;
+	private ModelRenderer crest;
+
+	public ModelLegionaryArmor() {
 		textureWidth = 128;
 		textureHeight = 64;
 
@@ -100,37 +105,55 @@ public class ModelLoricaSegmentata extends ModelBiped {
 		crest.setTextureSize(128, 64);
 	}
 
+	/**
+	 * Returns true or false depending on if parsed Entity's itemStack contains an object with the specified itemId in the specified item slot.
+	 * 
+	 * @return
+	 */
+	private boolean isItemIdEquippedInSlot(Entity entity, int slot, int itemId) {
+		if (entity instanceof EntityLivingBase) {
+			ItemStack itemStack = ((EntityLivingBase) entity).getCurrentItemOrArmor(slot);
+			if (itemStack != null) {
+				return (itemStack.itemID == itemId);
+			}
+		}
+		return false;
+	}
+
 	public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
+		aimedPilum = isItemIdEquippedInSlot(entity, 0, ItemManager.itemPilum.itemID);
+		renderLoricaSegmentata = isItemIdEquippedInSlot(entity, 3, ItemManager.itemLoricaSegmentata.itemID);
+		renderGalea = isItemIdEquippedInSlot(entity, 4, ItemManager.itemGalea.itemID);
+
 		this.isSneak = entity.isSneaking();
 		setRotationAngles(f, f1, f2, f3, f4, f5, entity);
 
-		uppertorso.render(f5);
-		lowertorso.render(f5);
-		
-		rightshoulderupper.render(f5);
-		rightshouldermiddle.render(f5);
-		rightshoulderlower.render(f5);
+		if (renderLoricaSegmentata) {
+			uppertorso.render(f5);
+			lowertorso.render(f5);
 
-		leftshoulderupper.render(f5);
-		leftshouldermiddle.render(f5);
-		leftshoulderlower.render(f5);
+			rightshoulderupper.render(f5);
+			rightshouldermiddle.render(f5);
+			rightshoulderlower.render(f5);
 
-		galea1.render(f5);
-		galea2.render(f5);
-		galea3.render(f5);
-		crestholder.render(f5);
-		crest.render(f5);
+			leftshoulderupper.render(f5);
+			leftshouldermiddle.render(f5);
+			leftshoulderlower.render(f5);
+		}
+
+		if (renderGalea) {
+			galea1.render(f5);
+			galea2.render(f5);
+			galea3.render(f5);
+			crestholder.render(f5);
+			crest.render(f5);
+		}
 	}
 
 	@Override
 	public void setRotationAngles(float par1, float par2, float par3, float par4, float par5, float par6, Entity par7Entity) {
-		boolean aimedPilum = false;
-
-		if (par7Entity instanceof EntityLiving) {
-			ItemStack itemStack = ((EntityLiving) par7Entity).getCurrentItemOrArmor(0);
-			if (itemStack != null) {
-				aimedPilum = (itemStack.itemID == ItemManager.itemPilum.itemID);
-			}
+		if (!renderLoricaSegmentata && !renderGalea) {
+			return;
 		}
 
 		float headAngleX = par5 / (180F / (float) Math.PI);
@@ -212,17 +235,20 @@ public class ModelLoricaSegmentata extends ModelBiped {
 			 */
 		}
 
-		lowertorso.rotateAngleX = uppertorso.rotateAngleX = bodyAngleX;
+		if (renderLoricaSegmentata) {
+			lowertorso.rotateAngleX = uppertorso.rotateAngleX = bodyAngleX;
 
-		rightshoulderupper.rotateAngleX = rightshouldermiddle.rotateAngleX = rightshoulderlower.rotateAngleX = rightArmAngleX;
-		rightshoulderupper.rotateAngleY = rightshouldermiddle.rotateAngleY = rightshoulderlower.rotateAngleY = rightArmAngleY;
-		rightshoulderupper.rotateAngleZ = rightshouldermiddle.rotateAngleZ = rightshoulderlower.rotateAngleZ = rightArmAngleZ;
+			rightshoulderupper.rotateAngleX = rightshouldermiddle.rotateAngleX = rightshoulderlower.rotateAngleX = rightArmAngleX;
+			rightshoulderupper.rotateAngleY = rightshouldermiddle.rotateAngleY = rightshoulderlower.rotateAngleY = rightArmAngleY;
+			rightshoulderupper.rotateAngleZ = rightshouldermiddle.rotateAngleZ = rightshoulderlower.rotateAngleZ = rightArmAngleZ;
 
-		leftshoulderupper.rotateAngleX = leftshouldermiddle.rotateAngleX = leftshoulderlower.rotateAngleX = leftArmAngleX;
-		leftshoulderupper.rotateAngleY = leftshouldermiddle.rotateAngleY = leftshoulderlower.rotateAngleY = leftArmAngleY;
-		leftshoulderupper.rotateAngleZ = leftshouldermiddle.rotateAngleZ = leftshoulderlower.rotateAngleZ = leftArmAngleZ;
-
-		galea1.rotateAngleX = galea2.rotateAngleX = galea3.rotateAngleX = crestholder.rotateAngleX = crest.rotateAngleX = headAngleX;
-		galea1.rotateAngleY = galea2.rotateAngleY = galea3.rotateAngleY = crestholder.rotateAngleY = crest.rotateAngleY = headAngleY;
+			leftshoulderupper.rotateAngleX = leftshouldermiddle.rotateAngleX = leftshoulderlower.rotateAngleX = leftArmAngleX;
+			leftshoulderupper.rotateAngleY = leftshouldermiddle.rotateAngleY = leftshoulderlower.rotateAngleY = leftArmAngleY;
+			leftshoulderupper.rotateAngleZ = leftshouldermiddle.rotateAngleZ = leftshoulderlower.rotateAngleZ = leftArmAngleZ;
+		}
+		if (renderGalea) {
+			galea1.rotateAngleX = galea2.rotateAngleX = galea3.rotateAngleX = crestholder.rotateAngleX = crest.rotateAngleX = headAngleX;
+			galea1.rotateAngleY = galea2.rotateAngleY = galea3.rotateAngleY = crestholder.rotateAngleY = crest.rotateAngleY = headAngleY;
+		}
 	}
 }

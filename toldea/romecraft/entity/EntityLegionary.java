@@ -48,7 +48,7 @@ import net.minecraftforge.event.Event.Result;
 
 public class EntityLegionary extends EntityMob implements IRangedAttackMob {
 	public enum LEGIONARY_EQUIPMENT {
-		LORICA_SEGMENTATA, SCUTUM, GALAE, PILUM, VERUTUM, GLADIUS, PUGIO, CALIGAE, SARCINA, SUDIS, SHOVEL, WATERSKIN
+		LORICA_SEGMENTATA, SCUTUM, GALEA, PILUM, VERUTUM, GLADIUS, PUGIO, CALIGAE, SARCINA, SUDIS, SHOVEL, WATERSKIN
 	}
 
 	private static final EntitySelectorLegionary enemySelector = EntitySelectorLegionary.instance;
@@ -130,7 +130,7 @@ public class EntityLegionary extends EntityMob implements IRangedAttackMob {
 
 		// Give the Legionary it's default equipment.
 		equipItem(LEGIONARY_EQUIPMENT.LORICA_SEGMENTATA);
-		//equipItem(LEGIONARY_EQUIPMENT.GALAE);
+		equipItem(LEGIONARY_EQUIPMENT.GALEA);
 		//equipItem(LEGIONARY_EQUIPMENT.CALIGAE);
 
 		//equipItem(LEGIONARY_EQUIPMENT.GLADIUS);
@@ -164,8 +164,8 @@ public class EntityLegionary extends EntityMob implements IRangedAttackMob {
 			break;
 		case SCUTUM:
 			break;
-		case GALAE:
-			equipItemToSlot(Item.helmetIron, 4);
+		case GALEA:
+			equipItemToSlot(ItemManager.itemGalea, 4);
 			break;
 		case PILUM:
 			equipItemToSlot(ItemManager.itemPilum, 0);

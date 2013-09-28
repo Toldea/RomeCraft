@@ -20,8 +20,8 @@ public class ItemManager {
 
 	public static Item itemGladius = null;
 	public static Item itemScutum = null;
+	public static ItemArmor itemGalea = null;
 	public static ItemArmor itemLoricaSegmentata = null;
-	public static Item itemGalea = null;
 	public static Item itemPilum = null;
 	public static Item itemVerutum = null;
 	public static Item itemPugio = null;
@@ -47,7 +47,8 @@ public class ItemManager {
 		//itemLoricaSegmentata = new GenericItem(nextItemID++).setUnlocalizedName("loricaSegmentata").setTextureName("romecraft:loricaSegmentata");
 		LanguageRegistry.addName(itemLoricaSegmentata, "Lorica Segmentata");
 		// Galea
-		itemGalea = new GenericItem(nextItemID++).setUnlocalizedName("galea").setTextureName("romecraft:galea");
+		itemGalea = (ItemArmor) (new ItemCustomArmor(nextItemID++, EnumArmorMaterial.IRON, 2, 0)).setUnlocalizedName("galea").setTextureName("iron_helmet");
+		//itemGalea = new GenericItem(nextItemID++).setUnlocalizedName("galea").setTextureName("romecraft:galea");
 		LanguageRegistry.addName(itemGalea, "Galea");
 		// Pilum
 		itemPilum = new ItemPilum(nextItemID++).setUnlocalizedName("pilum").setTextureName("romecraft:pilum");

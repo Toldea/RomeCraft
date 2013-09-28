@@ -1,6 +1,7 @@
 package toldea.romecraft.item;
 
-import toldea.romecraft.client.model.ModelLoricaSegmentata;
+import toldea.romecraft.client.model.ModelLegionaryArmor;
+import toldea.romecraft.managers.CreativeTabsManager;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.model.ModelBiped;
@@ -18,7 +19,8 @@ public class ItemCustomArmor extends ItemArmor {
 
 	public ItemCustomArmor(int par1, EnumArmorMaterial par2EnumArmorMaterial, int par3, int par4) {
 		super(par1, par2EnumArmorMaterial, par3, par4);
-		armorModel = new ModelLoricaSegmentata();
+		armorModel = new ModelLegionaryArmor();
+		this.setCreativeTab(CreativeTabsManager.tabRomeCraft);
 	}
 
 	@Override
