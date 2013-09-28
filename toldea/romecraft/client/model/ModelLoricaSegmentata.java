@@ -11,87 +11,128 @@ import net.minecraft.util.MathHelper;
 public class ModelLoricaSegmentata extends ModelBiped {
 	ModelRenderer lowertorso;
 	ModelRenderer uppertorso;
+
 	ModelRenderer rightshoulderupper;
 	ModelRenderer rightshouldermiddle;
 	ModelRenderer rightshoulderlower;
+
 	ModelRenderer leftshoulderupper;
 	ModelRenderer leftshouldermiddle;
 	ModelRenderer leftshoulderlower;
 
+	ModelRenderer galea1;
+	ModelRenderer galea2;
+	ModelRenderer galea3;
+
+	ModelRenderer crestholder;
+	ModelRenderer crest;
+
 	public ModelLoricaSegmentata() {
-		textureWidth = 64;
-		textureHeight = 32;
+		textureWidth = 128;
+		textureHeight = 64;
 
 		lowertorso = new ModelRenderer(this, 28, 0);
 		lowertorso.addBox(-4.5F, 4F, -2.5F, 9, 7, 5);
 		lowertorso.setRotationPoint(0F, 0F, 0F);
-		lowertorso.setTextureSize(64, 32);
+		lowertorso.setTextureSize(128, 64);
 
 		uppertorso = new ModelRenderer(this, 0, 0);
 		uppertorso.addBox(-3.5F, 0F, -3.5F, 7, 5, 7);
 		uppertorso.setRotationPoint(0F, 0F, 0F);
-		uppertorso.setTextureSize(64, 32);
+		uppertorso.setTextureSize(128, 64);
 
 		rightshoulderupper = new ModelRenderer(this, 0, 12);
 		rightshoulderupper.addBox(-7F, -1.5F, -4F, 3, 7, 8);
 		rightshoulderupper.setRotationPoint(0F, 0F, 0F);
-		rightshoulderupper.setTextureSize(64, 32);
+		rightshoulderupper.setTextureSize(128, 64);
 
 		rightshouldermiddle = new ModelRenderer(this, 22, 12);
 		rightshouldermiddle.addBox(-8F, -1F, -3.5F, 2, 6, 7);
 		rightshouldermiddle.setRotationPoint(0F, 0F, 0F);
-		rightshouldermiddle.setTextureSize(64, 32);
+		rightshouldermiddle.setTextureSize(128, 64);
 
 		rightshoulderlower = new ModelRenderer(this, 40, 12);
 		rightshoulderlower.addBox(-9F, -0.5F, -3F, 2, 5, 6);
 		rightshoulderlower.setRotationPoint(0F, 0F, 0F);
-		rightshoulderlower.setTextureSize(64, 32);
+		rightshoulderlower.setTextureSize(128, 64);
 
 		leftshoulderupper = new ModelRenderer(this, 0, 12);
 		leftshoulderupper.addBox(4F, -1.5F, -4F, 3, 7, 8);
 		leftshoulderupper.setRotationPoint(0F, 0F, 0F);
-		leftshoulderupper.setTextureSize(64, 32);
+		leftshoulderupper.setTextureSize(128, 64);
 		leftshoulderupper.mirror = true;
 
 		leftshouldermiddle = new ModelRenderer(this, 22, 12);
 		leftshouldermiddle.addBox(6F, -1F, -3.5F, 2, 6, 7);
 		leftshouldermiddle.setRotationPoint(0F, 0F, 0F);
-		leftshouldermiddle.setTextureSize(64, 32);
+		leftshouldermiddle.setTextureSize(128, 64);
 		leftshouldermiddle.mirror = true;
 
 		leftshoulderlower = new ModelRenderer(this, 40, 12);
 		leftshoulderlower.addBox(7F, -0.5F, -3F, 2, 5, 6);
 		leftshoulderlower.setRotationPoint(0F, 0F, 0F);
-		leftshoulderlower.setTextureSize(64, 32);
+		leftshoulderlower.setTextureSize(128, 64);
 		leftshoulderlower.mirror = true;
+
+		galea1 = new ModelRenderer(this, 0, 36);
+		galea1.addBox(-4.5F, -8.5F, -5.5F, 9, 9, 10);
+		galea1.setRotationPoint(0F, 0F, 0F);
+		galea1.setTextureSize(128, 64);
+
+		galea2 = new ModelRenderer(this, 0, 55);
+		galea2.addBox(-3.5F, -9.5F, -4.5F, 7, 1, 8);
+		galea2.setRotationPoint(0F, 0F, 0F);
+		galea2.setTextureSize(128, 64);
+
+		galea3 = new ModelRenderer(this, 30, 55);
+		galea3.addBox(-2.5F, -10.5F, -3.5F, 5, 1, 6);
+		galea3.setRotationPoint(0F, 0F, 0F);
+		galea3.setTextureSize(128, 64);
+
+		crestholder = new ModelRenderer(this, 52, 55);
+		crestholder.addBox(-0.5F, -12.5F, -1F, 1, 2, 1);
+		crestholder.setRotationPoint(0F, 0F, 0F);
+		crestholder.setTextureSize(128, 64);
+
+		crest = new ModelRenderer(this, 38, 35);
+		crest.addBox(-0.5F, -16.5F, -7.5F, 1, 6, 14);
+		crest.setRotationPoint(0F, 0F, 0F);
+		crest.setTextureSize(128, 64);
 	}
 
 	public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
 		this.isSneak = entity.isSneaking();
 		setRotationAngles(f, f1, f2, f3, f4, f5, entity);
+
 		uppertorso.render(f5);
 		lowertorso.render(f5);
 		
 		rightshoulderupper.render(f5);
 		rightshouldermiddle.render(f5);
 		rightshoulderlower.render(f5);
-		
+
 		leftshoulderupper.render(f5);
 		leftshouldermiddle.render(f5);
 		leftshoulderlower.render(f5);
+
+		galea1.render(f5);
+		galea2.render(f5);
+		galea3.render(f5);
+		crestholder.render(f5);
+		crest.render(f5);
 	}
 
 	@Override
 	public void setRotationAngles(float par1, float par2, float par3, float par4, float par5, float par6, Entity par7Entity) {
 		boolean aimedPilum = false;
-		
+
 		if (par7Entity instanceof EntityLiving) {
-			ItemStack itemStack = ((EntityLiving)par7Entity).getCurrentItemOrArmor(0);
+			ItemStack itemStack = ((EntityLiving) par7Entity).getCurrentItemOrArmor(0);
 			if (itemStack != null) {
 				aimedPilum = (itemStack.itemID == ItemManager.itemPilum.itemID);
 			}
 		}
-		
+
 		float headAngleX = par5 / (180F / (float) Math.PI);
 		float headAngleY = par4 / (180F / (float) Math.PI);
 
@@ -165,15 +206,10 @@ public class ModelLoricaSegmentata extends ModelBiped {
 		// if (this.aimedBow) {}
 		if (aimedPilum) {
 			/*
-			f6 = 0.0F;
-			f7 = 0.0F;
-			rightArmAngleZ = -((float)Math.PI / 16);
-			rightArmAngleY = -(0.1F - f6 * 0.6F) + this.bipedHead.rotateAngleY;
-			rightArmAngleX = -((float)Math.PI) + this.bipedHead.rotateAngleX;
-			rightArmAngleX -= f6 * 1.2F - f7 * 0.4F;
-			rightArmAngleZ += MathHelper.cos(par3 * 0.09F) * 0.05F + 0.05F;
-			rightArmAngleX += MathHelper.sin(par3 * 0.067F) * 0.05F;
-			*/
+			 * f6 = 0.0F; f7 = 0.0F; rightArmAngleZ = -((float)Math.PI / 16); rightArmAngleY = -(0.1F - f6 * 0.6F) + this.bipedHead.rotateAngleY; rightArmAngleX
+			 * = -((float)Math.PI) + this.bipedHead.rotateAngleX; rightArmAngleX -= f6 * 1.2F - f7 * 0.4F; rightArmAngleZ += MathHelper.cos(par3 * 0.09F) *
+			 * 0.05F + 0.05F; rightArmAngleX += MathHelper.sin(par3 * 0.067F) * 0.05F;
+			 */
 		}
 
 		lowertorso.rotateAngleX = uppertorso.rotateAngleX = bodyAngleX;
@@ -181,9 +217,12 @@ public class ModelLoricaSegmentata extends ModelBiped {
 		rightshoulderupper.rotateAngleX = rightshouldermiddle.rotateAngleX = rightshoulderlower.rotateAngleX = rightArmAngleX;
 		rightshoulderupper.rotateAngleY = rightshouldermiddle.rotateAngleY = rightshoulderlower.rotateAngleY = rightArmAngleY;
 		rightshoulderupper.rotateAngleZ = rightshouldermiddle.rotateAngleZ = rightshoulderlower.rotateAngleZ = rightArmAngleZ;
-		
+
 		leftshoulderupper.rotateAngleX = leftshouldermiddle.rotateAngleX = leftshoulderlower.rotateAngleX = leftArmAngleX;
 		leftshoulderupper.rotateAngleY = leftshouldermiddle.rotateAngleY = leftshoulderlower.rotateAngleY = leftArmAngleY;
 		leftshoulderupper.rotateAngleZ = leftshouldermiddle.rotateAngleZ = leftshoulderlower.rotateAngleZ = leftArmAngleZ;
+
+		galea1.rotateAngleX = galea2.rotateAngleX = galea3.rotateAngleX = crestholder.rotateAngleX = crest.rotateAngleX = headAngleX;
+		galea1.rotateAngleY = galea2.rotateAngleY = galea3.rotateAngleY = crestholder.rotateAngleY = crest.rotateAngleY = headAngleY;
 	}
 }
