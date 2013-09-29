@@ -44,11 +44,9 @@ public class ItemManager {
 		MinecraftForgeClient.registerItemRenderer(itemScutum.itemID, new CustomItemRenderer());
 		// Lorica Segmentata
 		itemLoricaSegmentata = (ItemArmor) (new ItemCustomArmor(nextItemID++, EnumArmorMaterial.IRON, 2, 1)).setUnlocalizedName("loricaSegmentata").setTextureName("iron_chestplate");
-		//itemLoricaSegmentata = new GenericItem(nextItemID++).setUnlocalizedName("loricaSegmentata").setTextureName("romecraft:loricaSegmentata");
 		LanguageRegistry.addName(itemLoricaSegmentata, "Lorica Segmentata");
 		// Galea
 		itemGalea = (ItemArmor) (new ItemCustomArmor(nextItemID++, EnumArmorMaterial.IRON, 2, 0)).setUnlocalizedName("galea").setTextureName("iron_helmet");
-		//itemGalea = new GenericItem(nextItemID++).setUnlocalizedName("galea").setTextureName("romecraft:galea");
 		LanguageRegistry.addName(itemGalea, "Galea");
 		// Pilum
 		itemPilum = new ItemPilum(nextItemID++).setUnlocalizedName("pilum").setTextureName("romecraft:pilum");
@@ -61,7 +59,8 @@ public class ItemManager {
 		itemPugio = new GenericItem(nextItemID++).setUnlocalizedName("pugio").setTextureName("romecraft:pugio");
 		LanguageRegistry.addName(itemPugio, "Pugio");
 		// Caligae
-		itemCaligae = new GenericItem(nextItemID++).setUnlocalizedName("galigae").setTextureName("romecraft:caligae");
+		//itemCaligae = new GenericItem(nextItemID++).setUnlocalizedName("galigae").setTextureName("romecraft:caligae");
+		itemCaligae = (ItemArmor) (new ItemCustomArmor(nextItemID++, EnumArmorMaterial.IRON, 2, 3)).setUnlocalizedName("caligae").setTextureName("iron_boots");
 		LanguageRegistry.addName(itemCaligae, "Caligae");
 		// Sarcina
 		itemSarcina = new GenericItem(nextItemID++).setUnlocalizedName("sarcina").setTextureName("romecraft:sarcina");

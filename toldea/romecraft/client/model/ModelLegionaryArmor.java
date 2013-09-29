@@ -10,8 +10,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 
 public class ModelLegionaryArmor extends ModelBiped {
-	private boolean renderLoricaSegmentata = false;
 	private boolean renderGalea = false;
+	private boolean renderLoricaSegmentata = false;
+	private boolean renderCaligae = false;
 	private boolean aimedPilum = false;
 
 	private ModelRenderer lowertorso;
@@ -32,77 +33,97 @@ public class ModelLegionaryArmor extends ModelBiped {
 	private ModelRenderer crestholder;
 	private ModelRenderer crest;
 
+	private ModelRenderer rightcaligae;
+	private ModelRenderer leftcaligae;
+
 	public ModelLegionaryArmor() {
 		textureWidth = 128;
 		textureHeight = 64;
 
+		/* Plate Chestplate (Lorica Segmentata) */
+
 		lowertorso = new ModelRenderer(this, 28, 0);
 		lowertorso.addBox(-4.5F, 4F, -2.5F, 9, 7, 5);
 		lowertorso.setRotationPoint(0F, 0F, 0F);
-		lowertorso.setTextureSize(128, 64);
+		lowertorso.setTextureSize(textureWidth, textureHeight);
 
 		uppertorso = new ModelRenderer(this, 0, 0);
 		uppertorso.addBox(-3.5F, 0F, -3.5F, 7, 5, 7);
 		uppertorso.setRotationPoint(0F, 0F, 0F);
-		uppertorso.setTextureSize(128, 64);
+		uppertorso.setTextureSize(textureWidth, textureHeight);
 
 		rightshoulderupper = new ModelRenderer(this, 0, 12);
 		rightshoulderupper.addBox(-7F, -1.5F, -4F, 3, 7, 8);
 		rightshoulderupper.setRotationPoint(0F, 0F, 0F);
-		rightshoulderupper.setTextureSize(128, 64);
+		rightshoulderupper.setTextureSize(textureWidth, textureHeight);
 
 		rightshouldermiddle = new ModelRenderer(this, 22, 12);
 		rightshouldermiddle.addBox(-8F, -1F, -3.5F, 2, 6, 7);
 		rightshouldermiddle.setRotationPoint(0F, 0F, 0F);
-		rightshouldermiddle.setTextureSize(128, 64);
+		rightshouldermiddle.setTextureSize(textureWidth, textureHeight);
 
 		rightshoulderlower = new ModelRenderer(this, 40, 12);
 		rightshoulderlower.addBox(-9F, -0.5F, -3F, 2, 5, 6);
 		rightshoulderlower.setRotationPoint(0F, 0F, 0F);
-		rightshoulderlower.setTextureSize(128, 64);
+		rightshoulderlower.setTextureSize(textureWidth, textureHeight);
 
 		leftshoulderupper = new ModelRenderer(this, 0, 12);
 		leftshoulderupper.addBox(4F, -1.5F, -4F, 3, 7, 8);
 		leftshoulderupper.setRotationPoint(0F, 0F, 0F);
-		leftshoulderupper.setTextureSize(128, 64);
+		leftshoulderupper.setTextureSize(textureWidth, textureHeight);
 		leftshoulderupper.mirror = true;
 
 		leftshouldermiddle = new ModelRenderer(this, 22, 12);
 		leftshouldermiddle.addBox(6F, -1F, -3.5F, 2, 6, 7);
 		leftshouldermiddle.setRotationPoint(0F, 0F, 0F);
-		leftshouldermiddle.setTextureSize(128, 64);
+		leftshouldermiddle.setTextureSize(textureWidth, textureHeight);
 		leftshouldermiddle.mirror = true;
 
 		leftshoulderlower = new ModelRenderer(this, 40, 12);
 		leftshoulderlower.addBox(7F, -0.5F, -3F, 2, 5, 6);
 		leftshoulderlower.setRotationPoint(0F, 0F, 0F);
-		leftshoulderlower.setTextureSize(128, 64);
+		leftshoulderlower.setTextureSize(textureWidth, textureHeight);
 		leftshoulderlower.mirror = true;
+
+		/* Helmet (Galea) */
 
 		galea1 = new ModelRenderer(this, 0, 36);
 		galea1.addBox(-4.5F, -8.5F, -5.5F, 9, 9, 10);
 		galea1.setRotationPoint(0F, 0F, 0F);
-		galea1.setTextureSize(128, 64);
+		galea1.setTextureSize(textureWidth, textureHeight);
 
 		galea2 = new ModelRenderer(this, 0, 55);
 		galea2.addBox(-3.5F, -9.5F, -4.5F, 7, 1, 8);
 		galea2.setRotationPoint(0F, 0F, 0F);
-		galea2.setTextureSize(128, 64);
+		galea2.setTextureSize(textureWidth, textureHeight);
 
 		galea3 = new ModelRenderer(this, 30, 55);
 		galea3.addBox(-2.5F, -10.5F, -3.5F, 5, 1, 6);
 		galea3.setRotationPoint(0F, 0F, 0F);
-		galea3.setTextureSize(128, 64);
+		galea3.setTextureSize(textureWidth, textureHeight);
 
 		crestholder = new ModelRenderer(this, 52, 55);
 		crestholder.addBox(-0.5F, -12.5F, -1F, 1, 2, 1);
 		crestholder.setRotationPoint(0F, 0F, 0F);
-		crestholder.setTextureSize(128, 64);
+		crestholder.setTextureSize(textureWidth, textureHeight);
 
 		crest = new ModelRenderer(this, 38, 35);
 		crest.addBox(-0.5F, -16.5F, -7.5F, 1, 6, 14);
 		crest.setRotationPoint(0F, 0F, 0F);
-		crest.setTextureSize(128, 64);
+		crest.setTextureSize(textureWidth, textureHeight);
+
+		/* Sandals (Caligae) */
+
+		rightcaligae = new ModelRenderer(this, 28, 36);
+		rightcaligae.addBox(-2.5F, 7.5F, -2.5F, 5, 5, 5);
+		rightcaligae.setRotationPoint(-2F, 12F, 0F);
+		rightcaligae.setTextureSize(textureWidth, textureHeight);
+
+		leftcaligae = new ModelRenderer(this, 28, 36);
+		leftcaligae.addBox(-2.5F, 7.5F, -2.5F, 5, 5, 5);
+		leftcaligae.setRotationPoint(3F, 12F, 0F);
+		leftcaligae.setTextureSize(textureWidth, textureHeight);
+		leftcaligae.mirror = true;
 	}
 
 	/**
@@ -124,6 +145,7 @@ public class ModelLegionaryArmor extends ModelBiped {
 		aimedPilum = isItemIdEquippedInSlot(entity, 0, ItemManager.itemPilum.itemID);
 		renderLoricaSegmentata = isItemIdEquippedInSlot(entity, 3, ItemManager.itemLoricaSegmentata.itemID);
 		renderGalea = isItemIdEquippedInSlot(entity, 4, ItemManager.itemGalea.itemID);
+		renderCaligae = isItemIdEquippedInSlot(entity, 1, ItemManager.itemCaligae.itemID);
 
 		this.isSneak = entity.isSneaking();
 		setRotationAngles(f, f1, f2, f3, f4, f5, entity);
@@ -148,11 +170,16 @@ public class ModelLegionaryArmor extends ModelBiped {
 			crestholder.render(f5);
 			crest.render(f5);
 		}
+		
+		if (renderCaligae) {
+			rightcaligae.render(f5);
+			leftcaligae.render(f5);
+		}
 	}
 
 	@Override
 	public void setRotationAngles(float par1, float par2, float par3, float par4, float par5, float par6, Entity par7Entity) {
-		if (!renderLoricaSegmentata && !renderGalea) {
+		if (!renderLoricaSegmentata && !renderGalea && !renderCaligae) {
 			return;
 		}
 
@@ -249,6 +276,15 @@ public class ModelLegionaryArmor extends ModelBiped {
 		if (renderGalea) {
 			galea1.rotateAngleX = galea2.rotateAngleX = galea3.rotateAngleX = crestholder.rotateAngleX = crest.rotateAngleX = headAngleX;
 			galea1.rotateAngleY = galea2.rotateAngleY = galea3.rotateAngleY = crestholder.rotateAngleY = crest.rotateAngleY = headAngleY;
+		}
+		if (renderCaligae) {
+			rightcaligae.rotateAngleX = rightLegAngleX;
+			rightcaligae.rotateAngleY = rightLegAngleY;
+			rightcaligae.rotateAngleZ = rightLegAngleZ;
+			
+			leftcaligae.rotateAngleX = leftLegAngleX;
+			leftcaligae.rotateAngleY = leftLegAngleY;
+			leftcaligae.rotateAngleZ = leftLegAngleZ;
 		}
 	}
 }
