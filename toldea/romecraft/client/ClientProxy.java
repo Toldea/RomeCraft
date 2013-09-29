@@ -16,6 +16,7 @@ import toldea.romecraft.client.renderer.RenderEntityLegionary;
 import toldea.romecraft.client.renderer.RenderEntityPilum;
 import toldea.romecraft.client.renderer.RenderEntityPleb;
 import toldea.romecraft.client.renderer.RenderItemPilum;
+import toldea.romecraft.client.renderer.RenderScutum;
 import toldea.romecraft.client.renderer.TileEntityBloomeryRenderer;
 import toldea.romecraft.entity.EntityLegionary;
 import toldea.romecraft.entity.EntityPilum;
@@ -28,6 +29,9 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void registerRenderers() {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBloomery.class, new TileEntityBloomeryRenderer());
+		
+		//MinecraftForgeClient.registerItemRenderer(ItemManager.itemScutum.itemID, new RenderScutum());
+		MinecraftForgeClient.registerItemRenderer(ItemManager.itemScutum.itemID, new RenderScutum());
 		
 		RenderingRegistry.registerEntityRenderingHandler(EntityLegionary.class, new RenderEntityLegionary(new ModelLegionaryBiped(), .03f));
 		RenderingRegistry.registerEntityRenderingHandler(EntityPilum.class, new RenderEntityPilum());

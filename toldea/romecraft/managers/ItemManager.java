@@ -29,7 +29,6 @@ public class ItemManager {
 	public static Item itemPugio = null;
 	public static Item itemSarcina = null;
 	public static Item itemSudis = null;
-	public static Item itemTestScutum = null;
 	public static Item itemScepter = null;
 	public static Item itemGureebu = null;
 
@@ -38,9 +37,8 @@ public class ItemManager {
 		itemGladius = new ItemMeleeWeapon(nextItemID++, EnumToolMaterial.IRON).setUnlocalizedName("gladius").setTextureName("romecraft:gladius");
 		LanguageRegistry.addName(itemGladius, "Gladius");
 		// Scutum
-		itemScutum = new GenericItem(nextItemID++).setUnlocalizedName("scutum").setTextureName("romecraft:scutum");
+		itemScutum = new GenericItem(nextItemID++).setUnlocalizedName("scutum").setTextureName("romecraft:scutum").setFull3D();
 		LanguageRegistry.addName(itemScutum, "Scutum");
-		MinecraftForgeClient.registerItemRenderer(itemScutum.itemID, new CustomItemRenderer());
 		// Lorica Segmentata
 		itemLoricaSegmentata = (ItemArmor) (new ItemCustomArmor(nextItemID++, EnumArmorMaterial.IRON, 2, 1)).setUnlocalizedName("loricaSegmentata")
 				.setTextureName("iron_chestplate");
@@ -71,10 +69,6 @@ public class ItemManager {
 		// Sudis
 		itemSudis = new GenericItem(nextItemID++).setUnlocalizedName("sudis").setTextureName("romecraft:sudis");
 		LanguageRegistry.addName(itemSudis, "Sudis");
-
-		// TestScutum
-		itemTestScutum = new GenericItem(nextItemID++).setUnlocalizedName("testScutum").setTextureName("romecraft:scutum");
-		LanguageRegistry.addName(itemTestScutum, "Test Scutum");
 
 		// Scepter
 		itemScepter = new ItemScepter(nextItemID++).setUnlocalizedName("scepter").setTextureName("romecraft:scepter");

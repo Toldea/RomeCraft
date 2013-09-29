@@ -38,7 +38,6 @@ import net.minecraftforge.common.MinecraftForge;
 import org.lwjgl.opengl.GL11;
 
 import toldea.romecraft.client.model.ModelLegionaryBiped;
-import toldea.romecraft.client.model.ModelLegionaryArmor;
 import toldea.romecraft.entity.EntityLegionary;
 
 import com.google.common.collect.Maps;

@@ -52,14 +52,14 @@ public class RomeCraft {
 
 	@EventHandler
 	public void load(FMLInitializationEvent event) {
-		proxy.registerRenderers();
-
 		CreativeTabsManager.registerCreativeTabs();
 		ItemManager.registerItems();
 		BlockManager.registerBlocks();
 		EntityManager.registerEntities();
 		EventManager.registerEvents();
 		TickManager.registerTickHandler();
+		
+		proxy.registerRenderers();
 	}
 
 	@EventHandler
