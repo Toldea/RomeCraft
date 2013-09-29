@@ -13,15 +13,14 @@ public class ModelLegionaryArmor extends ModelBiped {
 	private boolean renderGalea = false;
 	private boolean renderLoricaSegmentata = false;
 	private boolean renderCaligae = false;
+	private boolean renderCingulum = false;
 	private boolean aimedPilum = false;
 
 	private ModelRenderer lowertorso;
 	private ModelRenderer uppertorso;
-
 	private ModelRenderer rightshoulderupper;
 	private ModelRenderer rightshouldermiddle;
 	private ModelRenderer rightshoulderlower;
-
 	private ModelRenderer leftshoulderupper;
 	private ModelRenderer leftshouldermiddle;
 	private ModelRenderer leftshoulderlower;
@@ -29,9 +28,11 @@ public class ModelLegionaryArmor extends ModelBiped {
 	private ModelRenderer galea1;
 	private ModelRenderer galea2;
 	private ModelRenderer galea3;
-
 	private ModelRenderer crestholder;
 	private ModelRenderer crest;
+
+	private ModelRenderer cingulum;
+	private ModelRenderer cingulumapron;
 
 	private ModelRenderer rightcaligae;
 	private ModelRenderer leftcaligae;
@@ -109,6 +110,18 @@ public class ModelLegionaryArmor extends ModelBiped {
 		crest.setRotationPoint(0F, 0F, 0F);
 		crest.setTextureSize(textureWidth, textureHeight);
 
+		/* Belt & Groin Guard (Cingulum) */
+
+		cingulum = new ModelRenderer(this, 17, 25);
+		cingulum.addBox(-4.5F, 11F, -2.5F, 9, 1, 5);
+		cingulum.setRotationPoint(0F, 0F, 0F);
+		cingulum.setTextureSize(textureWidth, textureHeight);
+
+		cingulumapron = new ModelRenderer(this, 17, 31);
+		cingulumapron.addBox(-1F, 0F, -2.4F, 2, 4, 1);
+		cingulumapron.setRotationPoint(0F, 12F, 0f);
+		cingulumapron.setTextureSize(textureWidth, textureHeight);
+
 		/* Sandals (Caligae) */
 
 		rightcaligae = new ModelRenderer(this, 28, 36);
@@ -142,6 +155,7 @@ public class ModelLegionaryArmor extends ModelBiped {
 		renderLoricaSegmentata = isItemIdEquippedInSlot(entity, 3, ItemManager.itemLoricaSegmentata.itemID);
 		renderGalea = isItemIdEquippedInSlot(entity, 4, ItemManager.itemGalea.itemID);
 		renderCaligae = isItemIdEquippedInSlot(entity, 1, ItemManager.itemCaligae.itemID);
+		renderCingulum = isItemIdEquippedInSlot(entity, 2, ItemManager.itemCingulum.itemID);
 
 		this.isSneak = entity.isSneaking();
 		setRotationAngles(f, f1, f2, f3, f4, f5, entity);
@@ -166,6 +180,11 @@ public class ModelLegionaryArmor extends ModelBiped {
 			crestholder.render(f5);
 			crest.render(f5);
 		}
+		
+		if (renderCingulum) {
+			cingulum.render(f5);
+			cingulumapron.render(f5);
+		}
 
 		if (renderCaligae) {
 			rightcaligae.render(f5);
@@ -175,7 +194,7 @@ public class ModelLegionaryArmor extends ModelBiped {
 
 	@Override
 	public void setRotationAngles(float par1, float par2, float par3, float par4, float par5, float par6, Entity par7Entity) {
-		if (!renderLoricaSegmentata && !renderGalea && !renderCaligae) {
+		if (!renderLoricaSegmentata && !renderGalea && !renderCingulum && !renderCaligae) {
 			return;
 		}
 
@@ -311,6 +330,13 @@ public class ModelLegionaryArmor extends ModelBiped {
 			galea1.rotateAngleY = galea2.rotateAngleY = galea3.rotateAngleY = crestholder.rotateAngleY = crest.rotateAngleY = headAngleY;
 
 			galea1.rotationPointY = galea2.rotationPointY = galea3.rotationPointY = crestholder.rotationPointY = crest.rotationPointY = headRotationPointY;
+		}
+		if (renderCingulum) {
+			cingulum.rotateAngleX = bodyAngleX;
+			cingulum.rotateAngleY = bodyAngleY;
+			
+			cingulumapron.rotateAngleX = Math.min(leftLegAngleX, rightLegAngleX);
+			cingulumapron.rotateAngleY = Math.min(leftLegAngleY, rightLegAngleY);
 		}
 		if (renderCaligae) {
 			rightcaligae.rotateAngleX = rightLegAngleX;

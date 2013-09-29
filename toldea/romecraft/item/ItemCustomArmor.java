@@ -15,7 +15,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class ItemCustomArmor extends ItemArmor {
 	private ModelBiped armorModel;
-	ResourceLocation textureLoricaSegmentata = new ResourceLocation("romecraft", "textures/models/armor/loricasegmentata.png");
+	ResourceLocation textureLoricaSegmentata = new ResourceLocation("romecraft", "textures/models/armor/legionaryarmor.png");
 
 	public ItemCustomArmor(int par1, EnumArmorMaterial par2EnumArmorMaterial, int par3, int par4) {
 		super(par1, par2EnumArmorMaterial, par3, par4);

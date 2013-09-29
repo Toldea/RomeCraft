@@ -22,15 +22,14 @@ public class ItemManager {
 	public static Item itemScutum = null;
 	public static ItemArmor itemGalea = null;
 	public static ItemArmor itemLoricaSegmentata = null;
+	public static ItemArmor itemCingulum = null;
+	public static ItemArmor itemCaligae = null;
 	public static Item itemPilum = null;
 	public static Item itemVerutum = null;
 	public static Item itemPugio = null;
-	public static Item itemCaligae = null;
 	public static Item itemSarcina = null;
 	public static Item itemSudis = null;
-
 	public static Item itemTestScutum = null;
-
 	public static Item itemScepter = null;
 	public static Item itemGureebu = null;
 
@@ -43,11 +42,19 @@ public class ItemManager {
 		LanguageRegistry.addName(itemScutum, "Scutum");
 		MinecraftForgeClient.registerItemRenderer(itemScutum.itemID, new CustomItemRenderer());
 		// Lorica Segmentata
-		itemLoricaSegmentata = (ItemArmor) (new ItemCustomArmor(nextItemID++, EnumArmorMaterial.IRON, 2, 1)).setUnlocalizedName("loricaSegmentata").setTextureName("iron_chestplate");
+		itemLoricaSegmentata = (ItemArmor) (new ItemCustomArmor(nextItemID++, EnumArmorMaterial.IRON, 2, 1)).setUnlocalizedName("loricaSegmentata")
+				.setTextureName("iron_chestplate");
 		LanguageRegistry.addName(itemLoricaSegmentata, "Lorica Segmentata");
 		// Galea
 		itemGalea = (ItemArmor) (new ItemCustomArmor(nextItemID++, EnumArmorMaterial.IRON, 2, 0)).setUnlocalizedName("galea").setTextureName("iron_helmet");
 		LanguageRegistry.addName(itemGalea, "Galea");
+		// Cingulum
+		itemCingulum = (ItemArmor) (new ItemCustomArmor(nextItemID++, EnumArmorMaterial.IRON, 2, 2)).setUnlocalizedName("cingulum").setTextureName(
+				"iron_leggings");
+		LanguageRegistry.addName(itemCingulum, "Cingulum");
+		// Caligae
+		itemCaligae = (ItemArmor) (new ItemCustomArmor(nextItemID++, EnumArmorMaterial.IRON, 2, 3)).setUnlocalizedName("caligae").setTextureName("iron_boots");
+		LanguageRegistry.addName(itemCaligae, "Caligae");
 		// Pilum
 		itemPilum = new ItemPilum(nextItemID++).setUnlocalizedName("pilum").setTextureName("romecraft:pilum");
 		LanguageRegistry.addName(itemPilum, "Pilum");
@@ -58,10 +65,6 @@ public class ItemManager {
 		// Pugio
 		itemPugio = new GenericItem(nextItemID++).setUnlocalizedName("pugio").setTextureName("romecraft:pugio");
 		LanguageRegistry.addName(itemPugio, "Pugio");
-		// Caligae
-		//itemCaligae = new GenericItem(nextItemID++).setUnlocalizedName("galigae").setTextureName("romecraft:caligae");
-		itemCaligae = (ItemArmor) (new ItemCustomArmor(nextItemID++, EnumArmorMaterial.IRON, 2, 3)).setUnlocalizedName("caligae").setTextureName("iron_boots");
-		LanguageRegistry.addName(itemCaligae, "Caligae");
 		// Sarcina
 		itemSarcina = new GenericItem(nextItemID++).setUnlocalizedName("sarcina").setTextureName("romecraft:sarcina");
 		LanguageRegistry.addName(itemSarcina, "Sarcina");

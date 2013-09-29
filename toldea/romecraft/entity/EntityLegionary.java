@@ -48,7 +48,7 @@ import net.minecraftforge.event.Event.Result;
 
 public class EntityLegionary extends EntityMob implements IRangedAttackMob {
 	public enum LEGIONARY_EQUIPMENT {
-		LORICA_SEGMENTATA, SCUTUM, GALEA, PILUM, VERUTUM, GLADIUS, PUGIO, CALIGAE, SARCINA, SUDIS, SHOVEL, WATERSKIN
+		LORICA_SEGMENTATA, GALEA, CINGULUM, CALIGAE, GLADIUS, PUGIO, SCUTUM, PILUM, VERUTUM, SARCINA, SUDIS, SHOVEL, WATERSKIN
 	}
 
 	private static final EntitySelectorLegionary enemySelector = EntitySelectorLegionary.instance;
@@ -128,13 +128,14 @@ public class EntityLegionary extends EntityMob implements IRangedAttackMob {
 
 		pilaLeft = 1;
 
-		// Give the Legionary it's default equipment.
+		// Give the Legionary its default equipment.
 		equipItem(LEGIONARY_EQUIPMENT.LORICA_SEGMENTATA);
 		equipItem(LEGIONARY_EQUIPMENT.GALEA);
 		equipItem(LEGIONARY_EQUIPMENT.CALIGAE);
+		equipItem(LEGIONARY_EQUIPMENT.CINGULUM);
 
-		//equipItem(LEGIONARY_EQUIPMENT.GLADIUS);
-		//equipItem(LEGIONARY_EQUIPMENT.PILUM);
+		// equipItem(LEGIONARY_EQUIPMENT.GLADIUS);
+		// equipItem(LEGIONARY_EQUIPMENT.PILUM);
 
 		return par1EntityLivingData;
 	}
@@ -160,25 +161,27 @@ public class EntityLegionary extends EntityMob implements IRangedAttackMob {
 		switch (equipment) {
 		case LORICA_SEGMENTATA:
 			equipItemToSlot(ItemManager.itemLoricaSegmentata, 3);
-			//equipItemToSlot(Item.legsIron, 2);
-			break;
-		case SCUTUM:
 			break;
 		case GALEA:
 			equipItemToSlot(ItemManager.itemGalea, 4);
 			break;
-		case PILUM:
-			equipItemToSlot(ItemManager.itemPilum, 0);
+		case CINGULUM:
+			equipItemToSlot(ItemManager.itemCingulum, 2);
 			break;
-		case VERUTUM:
+		case CALIGAE:
+			equipItemToSlot(ItemManager.itemCaligae, 1);
 			break;
 		case GLADIUS:
 			equipItemToSlot(ItemManager.itemGladius, 0);
 			break;
 		case PUGIO:
 			break;
-		case CALIGAE:
-			equipItemToSlot(ItemManager.itemCaligae, 1);
+		case SCUTUM:
+			break;
+		case PILUM:
+			equipItemToSlot(ItemManager.itemPilum, 0);
+			break;
+		case VERUTUM:
 			break;
 		case SARCINA:
 			break;
