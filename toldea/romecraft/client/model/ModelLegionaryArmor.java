@@ -53,37 +53,34 @@ public class ModelLegionaryArmor extends ModelBiped {
 		uppertorso.setTextureSize(textureWidth, textureHeight);
 
 		rightshoulderupper = new ModelRenderer(this, 0, 12);
-		rightshoulderupper.addBox(-7F, -1.5F, -4F, 3, 7, 8);
-		rightshoulderupper.setRotationPoint(0F, 0F, 0F);
+		rightshoulderupper.addBox(-2F, -3.5F, -4F, 3, 7, 8);
+		rightshoulderupper.setRotationPoint(-5F, 2F, 0F);
 		rightshoulderupper.setTextureSize(textureWidth, textureHeight);
 
 		rightshouldermiddle = new ModelRenderer(this, 22, 12);
-		rightshouldermiddle.addBox(-8F, -1F, -3.5F, 2, 6, 7);
-		rightshouldermiddle.setRotationPoint(0F, 0F, 0F);
+		rightshouldermiddle.addBox(-3F, -3F, -3.5F, 2, 6, 7);
+		rightshouldermiddle.setRotationPoint(-5F, 2F, 0F);
 		rightshouldermiddle.setTextureSize(textureWidth, textureHeight);
 
 		rightshoulderlower = new ModelRenderer(this, 40, 12);
-		rightshoulderlower.addBox(-9F, -0.5F, -3F, 2, 5, 6);
-		rightshoulderlower.setRotationPoint(0F, 0F, 0F);
+		rightshoulderlower.addBox(-4F, -2.5F, -3F, 2, 5, 6);
+		rightshoulderlower.setRotationPoint(-5F, 2F, 0F);
 		rightshoulderlower.setTextureSize(textureWidth, textureHeight);
 
 		leftshoulderupper = new ModelRenderer(this, 0, 12);
-		leftshoulderupper.addBox(4F, -1.5F, -4F, 3, 7, 8);
-		leftshoulderupper.setRotationPoint(0F, 0F, 0F);
+		leftshoulderupper.addBox(-1F, -3.5F, -4F, 3, 7, 8);
+		leftshoulderupper.setRotationPoint(5F, 2F, 0F);
 		leftshoulderupper.setTextureSize(textureWidth, textureHeight);
-		leftshoulderupper.mirror = true;
 
 		leftshouldermiddle = new ModelRenderer(this, 22, 12);
-		leftshouldermiddle.addBox(6F, -1F, -3.5F, 2, 6, 7);
-		leftshouldermiddle.setRotationPoint(0F, 0F, 0F);
+		leftshouldermiddle.addBox(1F, -3F, -3.5F, 2, 6, 7);
+		leftshouldermiddle.setRotationPoint(5F, 2F, 0F);
 		leftshouldermiddle.setTextureSize(textureWidth, textureHeight);
-		leftshouldermiddle.mirror = true;
 
 		leftshoulderlower = new ModelRenderer(this, 40, 12);
-		leftshoulderlower.addBox(7F, -0.5F, -3F, 2, 5, 6);
-		leftshoulderlower.setRotationPoint(0F, 0F, 0F);
+		leftshoulderlower.addBox(2F, -2.5F, -3F, 2, 5, 6);
+		leftshoulderlower.setRotationPoint(5F, 2F, 0F);
 		leftshoulderlower.setTextureSize(textureWidth, textureHeight);
-		leftshoulderlower.mirror = true;
 
 		/* Helmet (Galea) */
 
@@ -121,9 +118,8 @@ public class ModelLegionaryArmor extends ModelBiped {
 
 		leftcaligae = new ModelRenderer(this, 28, 36);
 		leftcaligae.addBox(-2.5F, 7.5F, -2.5F, 5, 5, 5);
-		leftcaligae.setRotationPoint(3F, 12F, 0F);
+		leftcaligae.setRotationPoint(2F, 12F, 0F);
 		leftcaligae.setTextureSize(textureWidth, textureHeight);
-		leftcaligae.mirror = true;
 	}
 
 	/**
@@ -170,7 +166,7 @@ public class ModelLegionaryArmor extends ModelBiped {
 			crestholder.render(f5);
 			crest.render(f5);
 		}
-		
+
 		if (renderCaligae) {
 			rightcaligae.render(f5);
 			leftcaligae.render(f5);
@@ -186,28 +182,36 @@ public class ModelLegionaryArmor extends ModelBiped {
 		float headAngleX = par5 / (180F / (float) Math.PI);
 		float headAngleY = par4 / (180F / (float) Math.PI);
 
+		float headRotationPointY = .0f;
+
 		float bodyAngleX = .0f;
+		float bodyAngleY = .0f;
 
-		float rightArmAngleX = .0f;
-		float rightArmAngleY = .0f;
-		float rightArmAngleZ = .0f;
+		float rightArmAngleX = MathHelper.cos(par1 * 0.6662F + (float) Math.PI) * 2.0F * par2 * 0.5F;
+		float rightArmAngleY = 0.0F;
+		float rightArmAngleZ = 0.0F;
 
-		float leftArmAngleX = .0f;
-		float leftArmAngleY = .0f;
-		float leftArmAngleZ = .0f;
+		float rightArmRotationPointX = .0f;
+		float rightArmRotationPointZ = .0f;
 
-		float rightLegAngleX = .0f;
-		float rightLegAngleY = .0f;
-		float rightLegAngleZ = .0f;
+		float leftArmAngleX = MathHelper.cos(par1 * 0.6662F) * 2.0F * par2 * 0.5F;
+		float leftArmAngleY = 0.0F;
+		float leftArmAngleZ = 0.0F;
 
-		float leftLegAngleX = .0f;
-		float leftLegAngleY = .0f;
-		float leftLegAngleZ = .0f;
+		float leftArmRotationPointX = .0f;
+		float leftArmRotationPointZ = .0f;
 
-		rightArmAngleX = MathHelper.cos(par1 * 0.6662F + (float) Math.PI) * 2.0F * par2 * 0.5F;
-		leftArmAngleX = MathHelper.cos(par1 * 0.6662F) * 2.0F * par2 * 0.5F;
-		rightLegAngleX = MathHelper.cos(par1 * 0.6662F) * 1.4F * par2;
-		leftLegAngleX = MathHelper.cos(par1 * 0.6662F + (float) Math.PI) * 1.4F * par2;
+		float rightLegAngleX = MathHelper.cos(par1 * 0.6662F) * 1.4F * par2;
+		float rightLegAngleY = 0.0F;
+
+		float rightLegRotationPointY = .0f;
+		float rightLegRotationPointZ = .0f;
+
+		float leftLegAngleX = MathHelper.cos(par1 * 0.6662F + (float) Math.PI) * 1.4F * par2;
+		float leftLegAngleY = 0.0F;
+
+		float leftLegRotationPointY = .0f;
+		float leftLegRotationPointZ = .0f;
 
 		if (this.isRiding) {
 			rightArmAngleX += -((float) Math.PI / 5F);
@@ -221,6 +225,7 @@ public class ModelLegionaryArmor extends ModelBiped {
 		if (this.heldItemLeft != 0) {
 			leftArmAngleX = leftArmAngleX * 0.5F - ((float) Math.PI / 10F) * (float) this.heldItemLeft;
 		}
+
 		if (this.heldItemRight != 0) {
 			rightArmAngleX = rightArmAngleX * 0.5F - ((float) Math.PI / 10F) * (float) this.heldItemRight;
 		}
@@ -228,24 +233,43 @@ public class ModelLegionaryArmor extends ModelBiped {
 		float f6;
 		float f7;
 
-		// if (this.onGround > -9990.0F) {} // Not sure when this is set.
+		if (this.onGround > -9990.0F) {
+			f6 = this.onGround;
+			bodyAngleY = MathHelper.sin(MathHelper.sqrt_float(f6) * (float) Math.PI * 2.0F) * 0.2F;
+			rightArmRotationPointZ = MathHelper.sin(bodyAngleY) * 5.0F;
+			rightArmRotationPointX = -MathHelper.cos(bodyAngleY) * 5.0F;
+			leftArmRotationPointZ = -MathHelper.sin(bodyAngleY) * 5.0F;
+			leftArmRotationPointX = MathHelper.cos(bodyAngleY) * 5.0F;
+			rightArmAngleY += bodyAngleY;
+			leftArmAngleY += bodyAngleY;
+			leftArmAngleX += bodyAngleY;
+			f6 = 1.0F - this.onGround;
+			f6 *= f6;
+			f6 *= f6;
+			f6 = 1.0F - f6;
+			f7 = MathHelper.sin(f6 * (float) Math.PI);
+			float f8 = MathHelper.sin(this.onGround * (float) Math.PI) * -(headAngleX - 0.7F) * 0.75F;
+			rightArmAngleX = (float) ((double) rightArmAngleX - ((double) f7 * 1.2D + (double) f8));
+			rightArmAngleY += bodyAngleY * 2.0F;
+			rightArmAngleZ = MathHelper.sin(this.onGround * (float) Math.PI) * -0.4F;
+		}
 
 		if (this.isSneak) {
 			bodyAngleX = 0.5F;
 			rightArmAngleX += 0.4F;
 			leftArmAngleX += 0.4F;
-			rightLegAngleZ = 4.0F;
-			leftLegAngleZ = 4.0F;
-			rightLegAngleY = 9.0F;
-			leftLegAngleY = 9.0F;
-			headAngleY = 1.0F;
+			rightLegRotationPointZ = 4.0F;
+			leftLegRotationPointZ = 4.0F;
+			rightLegRotationPointY = 9.0F;
+			leftLegRotationPointY = 9.0F;
+			headRotationPointY = 1.0F;
 		} else {
 			bodyAngleX = 0.0F;
-			rightLegAngleZ = 0.1F;
-			leftLegAngleZ = 0.1F;
-			rightLegAngleY = 12.0F;
-			leftLegAngleY = 12.0F;
-			headAngleY = 0.0F;
+			rightLegRotationPointZ = 0.1F;
+			leftLegRotationPointZ = 0.1F;
+			rightLegRotationPointY = 12.0F;
+			leftLegRotationPointY = 12.0F;
+			headRotationPointY = 0.0F;
 		}
 
 		rightArmAngleZ += MathHelper.cos(par3 * 0.09F) * 0.05F + 0.05F;
@@ -253,38 +277,53 @@ public class ModelLegionaryArmor extends ModelBiped {
 		rightArmAngleX += MathHelper.sin(par3 * 0.067F) * 0.05F;
 		leftArmAngleX -= MathHelper.sin(par3 * 0.067F) * 0.05F;
 
-		// if (this.aimedBow) {}
 		if (aimedPilum) {
-			/*
-			 * f6 = 0.0F; f7 = 0.0F; rightArmAngleZ = -((float)Math.PI / 16); rightArmAngleY = -(0.1F - f6 * 0.6F) + this.bipedHead.rotateAngleY; rightArmAngleX
-			 * = -((float)Math.PI) + this.bipedHead.rotateAngleX; rightArmAngleX -= f6 * 1.2F - f7 * 0.4F; rightArmAngleZ += MathHelper.cos(par3 * 0.09F) *
-			 * 0.05F + 0.05F; rightArmAngleX += MathHelper.sin(par3 * 0.067F) * 0.05F;
-			 */
+			f6 = 0.0F;
+			f7 = 0.0F;
+			rightArmAngleZ = -((float) Math.PI / 16);
+			rightArmAngleY = -(0.1F - f6 * 0.6F) + headAngleY;
+			rightArmAngleX = -((float) Math.PI) + headAngleX;
+			rightArmAngleX -= f6 * 1.2F - f7 * 0.4F;
+			rightArmAngleZ += MathHelper.cos(par3 * 0.09F) * 0.05F + 0.05F;
+			rightArmAngleX += MathHelper.sin(par3 * 0.067F) * 0.05F;
 		}
 
 		if (renderLoricaSegmentata) {
 			lowertorso.rotateAngleX = uppertorso.rotateAngleX = bodyAngleX;
+			lowertorso.rotateAngleY = uppertorso.rotateAngleY = bodyAngleY;
 
 			rightshoulderupper.rotateAngleX = rightshouldermiddle.rotateAngleX = rightshoulderlower.rotateAngleX = rightArmAngleX;
 			rightshoulderupper.rotateAngleY = rightshouldermiddle.rotateAngleY = rightshoulderlower.rotateAngleY = rightArmAngleY;
 			rightshoulderupper.rotateAngleZ = rightshouldermiddle.rotateAngleZ = rightshoulderlower.rotateAngleZ = rightArmAngleZ;
 
+			rightshoulderupper.rotationPointX = rightshouldermiddle.rotationPointX = rightshoulderlower.rotationPointX = rightArmRotationPointX;
+			rightshoulderupper.rotationPointZ = rightshouldermiddle.rotationPointZ = rightshoulderlower.rotationPointZ = rightArmRotationPointZ;
+
 			leftshoulderupper.rotateAngleX = leftshouldermiddle.rotateAngleX = leftshoulderlower.rotateAngleX = leftArmAngleX;
 			leftshoulderupper.rotateAngleY = leftshouldermiddle.rotateAngleY = leftshoulderlower.rotateAngleY = leftArmAngleY;
 			leftshoulderupper.rotateAngleZ = leftshouldermiddle.rotateAngleZ = leftshoulderlower.rotateAngleZ = leftArmAngleZ;
+
+			leftshoulderupper.rotationPointX = leftshouldermiddle.rotationPointX = leftshoulderlower.rotationPointX = leftArmRotationPointX;
+			leftshoulderupper.rotationPointZ = leftshouldermiddle.rotationPointZ = leftshoulderlower.rotationPointZ = leftArmRotationPointZ;
 		}
 		if (renderGalea) {
 			galea1.rotateAngleX = galea2.rotateAngleX = galea3.rotateAngleX = crestholder.rotateAngleX = crest.rotateAngleX = headAngleX;
 			galea1.rotateAngleY = galea2.rotateAngleY = galea3.rotateAngleY = crestholder.rotateAngleY = crest.rotateAngleY = headAngleY;
+
+			galea1.rotationPointY = galea2.rotationPointY = galea3.rotationPointY = crestholder.rotationPointY = crest.rotationPointY = headRotationPointY;
 		}
 		if (renderCaligae) {
 			rightcaligae.rotateAngleX = rightLegAngleX;
 			rightcaligae.rotateAngleY = rightLegAngleY;
-			rightcaligae.rotateAngleZ = rightLegAngleZ;
-			
+
+			rightcaligae.rotationPointY = rightLegRotationPointY;
+			rightcaligae.rotationPointZ = rightLegRotationPointZ;
+
 			leftcaligae.rotateAngleX = leftLegAngleX;
 			leftcaligae.rotateAngleY = leftLegAngleY;
-			leftcaligae.rotateAngleZ = leftLegAngleZ;
+
+			leftcaligae.rotationPointY = leftLegRotationPointY;
+			leftcaligae.rotationPointZ = leftLegRotationPointZ;
 		}
 	}
 }

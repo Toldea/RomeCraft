@@ -56,7 +56,7 @@ public class RenderEntityLegionary extends RenderLiving {
 	/** List of armor texture filenames. */
 	public static String[] bipedArmorFilenamePrefix = new String[] { "leather", "chainmail", "iron", "diamond", "gold" };
 
-	private static final ResourceLocation steveTextures = new ResourceLocation("romecraft", "textures/entity/pleb.png");
+	private static final ResourceLocation steveTextures = new ResourceLocation("romecraft", "textures/entity/legionary.png");
 
 	public RenderEntityLegionary(ModelLegionaryBiped par1ModelBiped, float par2) {
 		this(par1ModelBiped, par2, 1.0F);
