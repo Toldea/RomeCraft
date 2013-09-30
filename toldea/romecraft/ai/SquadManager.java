@@ -116,4 +116,8 @@ public class SquadManager implements IExtendedEntityProperties {
 	@Override
 	public void init(Entity entity, World world) {
 	}
+
+	public static void onWorldUnload() {
+		contuberniumMap.clear();
+	}
 }
