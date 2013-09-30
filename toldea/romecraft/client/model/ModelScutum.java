@@ -1,14 +1,17 @@
 package toldea.romecraft.client.model;
 
+import toldea.romecraft.managers.ItemManager;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.MathHelper;
 
-public class ModelScutum extends ModelBiped {
-	ModelRenderer Scutum;
-	ModelRenderer ScutumDetail;
+public class ModelScutum extends CustomArmorModel {
+	private boolean renderScutum = false;
+	
+	private ModelRenderer Scutum;
+	private ModelRenderer ScutumDetail;
 
 	public ModelScutum() {
 		textureWidth = 32;
@@ -26,10 +29,15 @@ public class ModelScutum extends ModelBiped {
 	}
 
 	public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
+		renderScutum = isItemIdEquippedInSlot(entity, 0, ItemManager.itemScutum.itemID);
+		System.out.println("Holding Scutum: " + isItemIdEquippedInSlot(entity, 0, ItemManager.itemScutum.itemID));
 		this.isSneak = entity.isSneaking();
-		//this.setRotationAngles(f, f1, f2, f3, f4, f5, entity);
-		Scutum.render(f5);
-		ScutumDetail.render(f5);
+		setRotationAngles(f, f1, f2, f3, f4, f5, entity);
+
+		if (renderScutum) {
+			Scutum.render(f5);
+			ScutumDetail.render(f5);
+		}
 	}
 
 	@Override

@@ -45,7 +45,7 @@ public class RenderScutum extends Render implements IItemRenderer {
 
 	@Override
 	public boolean handleRenderType(ItemStack item, ItemRenderType type) {
-		return (type == ItemRenderType.EQUIPPED || type == ItemRenderType.EQUIPPED_FIRST_PERSON);
+		return false;//(type == ItemRenderType.EQUIPPED_FIRST_PERSON);
 	}
 
 	@Override
@@ -55,7 +55,7 @@ public class RenderScutum extends Render implements IItemRenderer {
 
 	@Override
 	public void renderItem(ItemRenderType type, ItemStack item, Object... data) {
-		if (type == ItemRenderType.EQUIPPED || type == ItemRenderType.EQUIPPED_FIRST_PERSON) {
+		if (type == ItemRenderType.EQUIPPED_FIRST_PERSON) {
 			//renderScutum((Entity)data[1]);
 		}
 	}

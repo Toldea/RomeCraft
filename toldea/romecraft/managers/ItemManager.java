@@ -41,17 +41,18 @@ public class ItemManager {
 		LanguageRegistry.addName(itemScutum, "Scutum");
 		// Lorica Segmentata
 		itemLoricaSegmentata = (ItemArmor) (new ItemCustomArmor(nextItemID++, EnumArmorMaterial.IRON, 2, 1)).setUnlocalizedName("loricaSegmentata")
-				.setTextureName("iron_chestplate");
+				.setTextureName("romecraft:loricasegmentata");
 		LanguageRegistry.addName(itemLoricaSegmentata, "Lorica Segmentata");
 		// Galea
-		itemGalea = (ItemArmor) (new ItemCustomArmor(nextItemID++, EnumArmorMaterial.IRON, 2, 0)).setUnlocalizedName("galea").setTextureName("iron_helmet");
+		itemGalea = (ItemArmor) (new ItemCustomArmor(nextItemID++, EnumArmorMaterial.IRON, 2, 0)).setUnlocalizedName("galea").setTextureName("romecraft:galea");
 		LanguageRegistry.addName(itemGalea, "Galea");
 		// Cingulum
 		itemCingulum = (ItemArmor) (new ItemCustomArmor(nextItemID++, EnumArmorMaterial.IRON, 2, 2)).setUnlocalizedName("cingulum").setTextureName(
-				"iron_leggings");
+				"romecraft:cingulum");
 		LanguageRegistry.addName(itemCingulum, "Cingulum");
 		// Caligae
-		itemCaligae = (ItemArmor) (new ItemCustomArmor(nextItemID++, EnumArmorMaterial.IRON, 2, 3)).setUnlocalizedName("caligae").setTextureName("iron_boots");
+		itemCaligae = (ItemArmor) (new ItemCustomArmor(nextItemID++, EnumArmorMaterial.IRON, 2, 3)).setUnlocalizedName("caligae").setTextureName(
+				"romecraft:caligae");
 		LanguageRegistry.addName(itemCaligae, "Caligae");
 		// Pilum
 		itemPilum = new ItemPilum(nextItemID++).setUnlocalizedName("pilum").setTextureName("romecraft:pilum");

@@ -9,7 +9,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 
-public class ModelLegionaryArmor extends ModelBiped {
+public class ModelLegionaryArmor extends CustomArmorModel {
 	private boolean renderGalea = false;
 	private boolean renderLoricaSegmentata = false;
 	private boolean renderCaligae = false;
@@ -133,21 +133,6 @@ public class ModelLegionaryArmor extends ModelBiped {
 		leftcaligae.addBox(-2.5F, 7.5F, -2.5F, 5, 5, 5);
 		leftcaligae.setRotationPoint(2F, 12F, 0F);
 		leftcaligae.setTextureSize(textureWidth, textureHeight);
-	}
-
-	/**
-	 * Returns true or false depending on if parsed Entity's itemStack contains an object with the specified itemId in the specified item slot.
-	 * 
-	 * @return
-	 */
-	private boolean isItemIdEquippedInSlot(Entity entity, int slot, int itemId) {
-		if (entity instanceof EntityLivingBase) {
-			ItemStack itemStack = ((EntityLivingBase) entity).getCurrentItemOrArmor(slot);
-			if (itemStack != null) {
-				return (itemStack.itemID == itemId);
-			}
-		}
-		return false;
 	}
 
 	public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
