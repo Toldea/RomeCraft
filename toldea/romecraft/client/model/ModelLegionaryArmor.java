@@ -337,6 +337,10 @@ public class ModelLegionaryArmor extends ModelBiped {
 			
 			cingulumapron.rotateAngleX = Math.min(leftLegAngleX, rightLegAngleX);
 			cingulumapron.rotateAngleY = Math.min(leftLegAngleY, rightLegAngleY);
+			
+			// Set the rotation point for the apron only. Right and left legs are the same in this so doesn't matter which one we use here.
+			cingulumapron.rotationPointY = rightLegRotationPointY;
+			cingulumapron.rotationPointZ = rightLegRotationPointZ;
 		}
 		if (renderCaligae) {
 			rightcaligae.rotateAngleX = rightLegAngleX;

@@ -62,6 +62,9 @@ public class Contubernium {
 			squadMembersList.remove(squadMember);
 		}
 	}
+	public void removeAllSquadMembers() {
+		squadMembersList.clear();
+	}
 
 	public void validateSquadMembers() {
 		int size = squadMembersList.size();

@@ -17,10 +17,10 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
 
 public class SquadManager implements IExtendedEntityProperties {
-	private static HashMap<Integer, Contubernium> contuberniumMap = new HashMap<Integer, Contubernium>();
-
 	public static SquadManager instance = new SquadManager();
-
+	
+	private static HashMap<Integer, Contubernium> contuberniumMap = new HashMap<Integer, Contubernium>();
+	
 	private SquadManager() {
 	}
 
@@ -118,6 +118,8 @@ public class SquadManager implements IExtendedEntityProperties {
 	}
 
 	public static void onWorldUnload() {
-		contuberniumMap.clear();
+		for (Contubernium contubernium : contuberniumMap.values()) {
+			contubernium.removeAllSquadMembers();
+		}
 	}
 }
