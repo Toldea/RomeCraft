@@ -101,28 +101,31 @@ public class EntityPleb extends EntityAgeable implements INpc //IMerchant, INpc
 
 		this.setSize(0.6F, 1.8F);
 
-		/*
-        this.setProfession(par2);
+        //this.setProfession(par2);
+        
         this.getNavigator().setBreakDoors(true);
         this.getNavigator().setAvoidsWater(true);
+        
         this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(1, new EntityAIAvoidEntity(this, EntityZombie.class, 8.0F, 0.6D, 0.6D));
-        this.tasks.addTask(1, new EntityAITradePlayer(this));
-        this.tasks.addTask(1, new EntityAILookAtTradePlayer(this));
+        
+		//this.tasks.addTask(1, new EntityAITradePlayer(this));
+        //this.tasks.addTask(1, new EntityAILookAtTradePlayer(this));
+        
         this.tasks.addTask(2, new EntityAIMoveIndoors(this));
         this.tasks.addTask(3, new EntityAIRestrictOpenDoor(this));
         this.tasks.addTask(4, new EntityAIOpenDoor(this, true));
         this.tasks.addTask(5, new EntityAIMoveTowardsRestriction(this, 0.6D));
-		 */
+		 
 		this.tasks.addTask(6, new EntityAIPlebMate(this));
-		/*
-        this.tasks.addTask(7, new EntityAIFollowGolem(this));
-        this.tasks.addTask(8, new EntityAIPlay(this, 0.32D));
-        this.tasks.addTask(9, new EntityAIWatchClosest2(this, EntityPlayer.class, 3.0F, 1.0F));
-        this.tasks.addTask(9, new EntityAIWatchClosest2(this, EntityVillager.class, 5.0F, 0.02F));
+        
+		//this.tasks.addTask(7, new EntityAIFollowGolem(this));
+        //this.tasks.addTask(8, new EntityAIPlay(this, 0.32D));
+        
+		this.tasks.addTask(9, new EntityAIWatchClosest2(this, EntityPlayer.class, 3.0F, 1.0F));
+        this.tasks.addTask(9, new EntityAIWatchClosest2(this, EntityPleb.class, 5.0F, 0.02F));
         this.tasks.addTask(9, new EntityAIWander(this, 0.6D));
         this.tasks.addTask(10, new EntityAIWatchClosest(this, EntityLiving.class, 8.0F));
-		 */
 	}
 
 	protected void applyEntityAttributes()
