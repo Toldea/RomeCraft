@@ -1,12 +1,12 @@
 package toldea.romecraft.managers;
 
 import toldea.romecraft.RomeCraft;
-import toldea.romecraft.ai.Contubernium;
 import toldea.romecraft.client.renderer.RenderEntityLegionary;
 import toldea.romecraft.client.renderer.RenderEntityPilum;
 import toldea.romecraft.entity.EntityLegionary;
 import toldea.romecraft.entity.EntityPilum;
 import toldea.romecraft.entity.EntityPleb;
+import toldea.romecraft.entity.ai.Contubernium;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityEggInfo;

@@ -1,10 +1,10 @@
-package toldea.romecraft.ai;
+package toldea.romecraft.entity.ai;
 
 import java.io.Console;
 import java.util.List;
 
-import toldea.romecraft.ai.Contubernium.Facing;
 import toldea.romecraft.entity.EntityLegionary;
+import toldea.romecraft.entity.ai.Contubernium.Facing;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.IEntitySelector;

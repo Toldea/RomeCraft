@@ -71,8 +71,11 @@ public class RomanVillage {
 		this.removeDeadAndOutOfRangeDoors();
 		// this.removeDeadAndOldAgressors();
 
+		if (par1 % 2000 == 0) {
+			this.trySpawnPlebs();
+		}
+		
 		if (par1 % 20 == 0) {
-			this.spawnPlebs();
 			this.updateNumPlebs();
 		}
 		/*
@@ -100,8 +103,14 @@ public class RomanVillage {
 		return (int)((double)((float)this.getNumVillageDoors()) * 0.35D);
 	}
 
-	private void spawnPlebs() {
-		if (this.getNumVillagers() < getMaxNumberOfPlebs()) {
+	/**
+	 * Try and spawn a new Pleb if there are less than 4 in the village and there are enough doors to house them.
+	 * Any villager past 4 should be created through breeding. 
+	 */
+	private void trySpawnPlebs() {
+		int numPlebs = getNumPlebs();
+		int maxNumPlebs = getMaxNumberOfPlebs();
+		if (numPlebs < 4 && numPlebs < maxNumPlebs) {
 			Vec3 spawnLocation = tryGetPlebSpawningLocation(MathHelper.floor_float((float) this.villageForumLocation.posX),
 					MathHelper.floor_float((float) this.villageForumLocation.posY), MathHelper.floor_float((float) this.villageForumLocation.posZ), 1, 2, 1);
 			if (spawnLocation != null) {
@@ -113,6 +122,8 @@ public class RomanVillage {
 				entityPleb.setLocationAndAngles(spawnLocation.xCoord, spawnLocation.yCoord, spawnLocation.zCoord, 0.0F, 0.0F);
 				this.worldObj.spawnEntityInWorld(entityPleb);
 				this.worldObj.setEntityState(entityPleb, (byte)12);
+				
+				this.updateNumPlebs();
 			}
 		}
 	}
@@ -220,7 +231,7 @@ public class RomanVillage {
 		return this.tickCounter - this.lastAddDoorTimestamp;
 	}
 
-	public int getNumVillagers() {
+	public int getNumPlebs() {
 		return this.numPlebs;
 	}
 

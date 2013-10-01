@@ -1,4 +1,4 @@
-package toldea.romecraft.ai;
+package toldea.romecraft.entity.ai;
 
 import java.util.Collections;
 import java.util.List;

@@ -1,7 +1,7 @@
-package toldea.romecraft.ai;
+package toldea.romecraft.entity.ai;
 
-import toldea.romecraft.ai.Contubernium.Facing;
 import toldea.romecraft.entity.EntityLegionary;
+import toldea.romecraft.entity.ai.Contubernium.Facing;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;

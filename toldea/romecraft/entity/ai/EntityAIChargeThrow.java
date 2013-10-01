@@ -1,4 +1,4 @@
-package toldea.romecraft.ai;
+package toldea.romecraft.entity.ai;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;

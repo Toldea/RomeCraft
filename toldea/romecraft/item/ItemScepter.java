@@ -5,8 +5,8 @@ import java.util.List;
 import org.lwjgl.input.Keyboard;
 
 import toldea.romecraft.RayTracer;
-import toldea.romecraft.ai.SquadManager;
 import toldea.romecraft.command.EntitySelectorLegionary;
+import toldea.romecraft.entity.ai.SquadManager;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;

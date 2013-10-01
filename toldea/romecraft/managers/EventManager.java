@@ -1,7 +1,7 @@
 package toldea.romecraft.managers;
 
-import toldea.romecraft.ai.SquadManager;
 import toldea.romecraft.client.renderer.RenderScutum;
+import toldea.romecraft.entity.ai.SquadManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.IItemRenderer.ItemRenderType;

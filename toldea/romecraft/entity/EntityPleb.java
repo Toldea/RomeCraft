@@ -6,6 +6,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
 
+import toldea.romecraft.entity.ai.EntityAIPlebMate;
+
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentData;
@@ -55,51 +57,51 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class EntityPleb extends EntityAgeable implements INpc //IMerchant, INpc
 {
-    private int randomTickDivider;
-    private boolean isMating;
-    private boolean isPlaying;
-    Village villageObj;
+	private int randomTickDivider;
+	private boolean isMating;
+	private boolean isPlaying;
+	Village villageObj;
 
-    /** This villager's current customer. */
-    private EntityPlayer buyingPlayer;
+	/** This villager's current customer. */
+	private EntityPlayer buyingPlayer;
 
-    /** Initialises the MerchantRecipeList.java */
-    private MerchantRecipeList buyingList;
-    private int timeUntilReset;
+	/** Initialises the MerchantRecipeList.java */
+	private MerchantRecipeList buyingList;
+	private int timeUntilReset;
 
-    /** addDefaultEquipmentAndRecipies is called if this is true */
-    private boolean needsInitilization;
-    private int wealth;
+	/** addDefaultEquipmentAndRecipies is called if this is true */
+	private boolean needsInitilization;
+	private int wealth;
 
-    /** Last player to trade with this villager, used for aggressivity. */
-    private String lastBuyingPlayer;
-    private boolean field_82190_bM;
-    private float field_82191_bN;
+	/** Last player to trade with this villager, used for aggressivity. */
+	private String lastBuyingPlayer;
+	private boolean field_82190_bM;
+	private float field_82191_bN;
 
-    /**
-     * a villagers recipe list is intialized off this list ; the 2 params are min/max amount they will trade for 1
-     * emerald
-     */
-    public static final Map villagerStockList = new HashMap();
+	/**
+	 * a villagers recipe list is intialized off this list ; the 2 params are min/max amount they will trade for 1
+	 * emerald
+	 */
+	public static final Map villagerStockList = new HashMap();
 
-    /**
-     * Selling list of Blacksmith items. negative numbers mean 1 emerald for n items, positive numbers are n emeralds
-     * for 1 item
-     */
-    public static final Map blacksmithSellingList = new HashMap();
+	/**
+	 * Selling list of Blacksmith items. negative numbers mean 1 emerald for n items, positive numbers are n emeralds
+	 * for 1 item
+	 */
+	public static final Map blacksmithSellingList = new HashMap();
 
-    public EntityPleb(World par1World)
-    {
-        this(par1World, 0);
-    }
+	public EntityPleb(World par1World)
+	{
+		this(par1World, 0);
+	}
 
-    public EntityPleb(World par1World, int par2)
-    {
-        super(par1World);
-        
-        this.setSize(0.6F, 1.8F);
-        
-        /*
+	public EntityPleb(World par1World, int par2)
+	{
+		super(par1World);
+
+		this.setSize(0.6F, 1.8F);
+
+		/*
         this.setProfession(par2);
         this.getNavigator().setBreakDoors(true);
         this.getNavigator().setAvoidsWater(true);
@@ -111,102 +113,104 @@ public class EntityPleb extends EntityAgeable implements INpc //IMerchant, INpc
         this.tasks.addTask(3, new EntityAIRestrictOpenDoor(this));
         this.tasks.addTask(4, new EntityAIOpenDoor(this, true));
         this.tasks.addTask(5, new EntityAIMoveTowardsRestriction(this, 0.6D));
-        this.tasks.addTask(6, new EntityAIVillagerMate(this));
+		 */
+		this.tasks.addTask(6, new EntityAIPlebMate(this));
+		/*
         this.tasks.addTask(7, new EntityAIFollowGolem(this));
         this.tasks.addTask(8, new EntityAIPlay(this, 0.32D));
         this.tasks.addTask(9, new EntityAIWatchClosest2(this, EntityPlayer.class, 3.0F, 1.0F));
         this.tasks.addTask(9, new EntityAIWatchClosest2(this, EntityVillager.class, 5.0F, 0.02F));
         this.tasks.addTask(9, new EntityAIWander(this, 0.6D));
         this.tasks.addTask(10, new EntityAIWatchClosest(this, EntityLiving.class, 8.0F));
-        */
-    }
+		 */
+	}
 
-    protected void applyEntityAttributes()
-    {
-        super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.5D);
-    }
+	protected void applyEntityAttributes()
+	{
+		super.applyEntityAttributes();
+		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.5D);
+	}
 
-    /**
-     * Returns true if the newer Entity AI code should be run
-     */
-    public boolean isAIEnabled()
-    {
-        return true;
-    }
+	/**
+	 * Returns true if the newer Entity AI code should be run
+	 */
+	public boolean isAIEnabled()
+	{
+		return true;
+	}
 
-    /**
-     * main AI tick function, replaces updateEntityActionState
-     */
-    protected void updateAITick()
-    {
-        if (--this.randomTickDivider <= 0)
-        {
-            this.worldObj.villageCollectionObj.addVillagerPosition(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ));
-            this.randomTickDivider = 70 + this.rand.nextInt(50);
-            this.villageObj = this.worldObj.villageCollectionObj.findNearestVillage(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ), 32);
+	/**
+	 * main AI tick function, replaces updateEntityActionState
+	 */
+	protected void updateAITick()
+	{
+		if (--this.randomTickDivider <= 0)
+		{
+			this.worldObj.villageCollectionObj.addVillagerPosition(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ));
+			this.randomTickDivider = 70 + this.rand.nextInt(50);
+			this.villageObj = this.worldObj.villageCollectionObj.findNearestVillage(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ), 32);
 
-            if (this.villageObj == null)
-            {
-                this.detachHome();
-            }
-            else
-            {
-                ChunkCoordinates chunkcoordinates = this.villageObj.getCenter();
-                this.setHomeArea(chunkcoordinates.posX, chunkcoordinates.posY, chunkcoordinates.posZ, (int)((float)this.villageObj.getVillageRadius() * 0.6F));
+			if (this.villageObj == null)
+			{
+				this.detachHome();
+			}
+			else
+			{
+				ChunkCoordinates chunkcoordinates = this.villageObj.getCenter();
+				this.setHomeArea(chunkcoordinates.posX, chunkcoordinates.posY, chunkcoordinates.posZ, (int)((float)this.villageObj.getVillageRadius() * 0.6F));
 
-                if (this.field_82190_bM)
-                {
-                    this.field_82190_bM = false;
-                    this.villageObj.func_82683_b(5);
-                }
-            }
-        }
+				if (this.field_82190_bM)
+				{
+					this.field_82190_bM = false;
+					this.villageObj.func_82683_b(5);
+				}
+			}
+		}
 
-        if (!this.isTrading() && this.timeUntilReset > 0)
-        {
-            --this.timeUntilReset;
+		if (!this.isTrading() && this.timeUntilReset > 0)
+		{
+			--this.timeUntilReset;
 
-            if (this.timeUntilReset <= 0)
-            {
-                if (this.needsInitilization)
-                {
-                    if (this.buyingList.size() > 1)
-                    {
-                        Iterator iterator = this.buyingList.iterator();
+			if (this.timeUntilReset <= 0)
+			{
+				if (this.needsInitilization)
+				{
+					if (this.buyingList.size() > 1)
+					{
+						Iterator iterator = this.buyingList.iterator();
 
-                        while (iterator.hasNext())
-                        {
-                            MerchantRecipe merchantrecipe = (MerchantRecipe)iterator.next();
+						while (iterator.hasNext())
+						{
+							MerchantRecipe merchantrecipe = (MerchantRecipe)iterator.next();
 
-                            if (merchantrecipe.func_82784_g())
-                            {
-                                merchantrecipe.func_82783_a(this.rand.nextInt(6) + this.rand.nextInt(6) + 2);
-                            }
-                        }
-                    }
+							if (merchantrecipe.func_82784_g())
+							{
+								merchantrecipe.func_82783_a(this.rand.nextInt(6) + this.rand.nextInt(6) + 2);
+							}
+						}
+					}
 
-                    this.addDefaultEquipmentAndRecipies(1);
-                    this.needsInitilization = false;
+					this.addDefaultEquipmentAndRecipies(1);
+					this.needsInitilization = false;
 
-                    if (this.villageObj != null && this.lastBuyingPlayer != null)
-                    {
-                        this.worldObj.setEntityState(this, (byte)14);
-                        this.villageObj.setReputationForPlayer(this.lastBuyingPlayer, 1);
-                    }
-                }
+					if (this.villageObj != null && this.lastBuyingPlayer != null)
+					{
+						this.worldObj.setEntityState(this, (byte)14);
+						this.villageObj.setReputationForPlayer(this.lastBuyingPlayer, 1);
+					}
+				}
 
-                this.addPotionEffect(new PotionEffect(Potion.regeneration.id, 200, 0));
-            }
-        }
+				this.addPotionEffect(new PotionEffect(Potion.regeneration.id, 200, 0));
+			}
+		}
 
-        super.updateAITick();
-    }
+		super.updateAITick();
+	}
 
-    /**
-     * Called when a player interacts with a mob. e.g. gets milk from a cow, gets into the saddle on a pig.
-     */
-    /*
+	/**
+	 * Called when a player interacts with a mob. e.g. gets milk from a cow, gets into the saddle on a pig.
+	 */
+	/*
     public boolean interact(EntityPlayer par1EntityPlayer)
     {
         ItemStack itemstack = par1EntityPlayer.inventory.getCurrentItem();
@@ -227,252 +231,252 @@ public class EntityPleb extends EntityAgeable implements INpc //IMerchant, INpc
             return super.interact(par1EntityPlayer);
         }
     }
-	*/
-    protected void entityInit()
-    {
-        super.entityInit();
-        this.dataWatcher.addObject(16, Integer.valueOf(0));
-    }
+	 */
+	protected void entityInit()
+	{
+		super.entityInit();
+		this.dataWatcher.addObject(16, Integer.valueOf(0));
+	}
 
-    /**
-     * (abstract) Protected helper method to write subclass entity data to NBT.
-     */
-    public void writeEntityToNBT(NBTTagCompound par1NBTTagCompound)
-    {
-        super.writeEntityToNBT(par1NBTTagCompound);
-        par1NBTTagCompound.setInteger("Profession", this.getProfession());
-        par1NBTTagCompound.setInteger("Riches", this.wealth);
+	/**
+	 * (abstract) Protected helper method to write subclass entity data to NBT.
+	 */
+	public void writeEntityToNBT(NBTTagCompound par1NBTTagCompound)
+	{
+		super.writeEntityToNBT(par1NBTTagCompound);
+		par1NBTTagCompound.setInteger("Profession", this.getProfession());
+		par1NBTTagCompound.setInteger("Riches", this.wealth);
 
-        if (this.buyingList != null)
-        {
-            par1NBTTagCompound.setCompoundTag("Offers", this.buyingList.getRecipiesAsTags());
-        }
-    }
+		if (this.buyingList != null)
+		{
+			par1NBTTagCompound.setCompoundTag("Offers", this.buyingList.getRecipiesAsTags());
+		}
+	}
 
-    /**
-     * (abstract) Protected helper method to read subclass entity data from NBT.
-     */
-    public void readEntityFromNBT(NBTTagCompound par1NBTTagCompound)
-    {
-        super.readEntityFromNBT(par1NBTTagCompound);
-        this.setProfession(par1NBTTagCompound.getInteger("Profession"));
-        this.wealth = par1NBTTagCompound.getInteger("Riches");
+	/**
+	 * (abstract) Protected helper method to read subclass entity data from NBT.
+	 */
+	public void readEntityFromNBT(NBTTagCompound par1NBTTagCompound)
+	{
+		super.readEntityFromNBT(par1NBTTagCompound);
+		this.setProfession(par1NBTTagCompound.getInteger("Profession"));
+		this.wealth = par1NBTTagCompound.getInteger("Riches");
 
-        if (par1NBTTagCompound.hasKey("Offers"))
-        {
-            NBTTagCompound nbttagcompound1 = par1NBTTagCompound.getCompoundTag("Offers");
-            this.buyingList = new MerchantRecipeList(nbttagcompound1);
-        }
-    }
+		if (par1NBTTagCompound.hasKey("Offers"))
+		{
+			NBTTagCompound nbttagcompound1 = par1NBTTagCompound.getCompoundTag("Offers");
+			this.buyingList = new MerchantRecipeList(nbttagcompound1);
+		}
+	}
 
-    /**
-     * Determines if an entity can be despawned, used on idle far away entities
-     */
-    protected boolean canDespawn()
-    {
-        return false;
-    }
+	/**
+	 * Determines if an entity can be despawned, used on idle far away entities
+	 */
+	protected boolean canDespawn()
+	{
+		return false;
+	}
 
-    /**
-     * Returns the sound this mob makes while it's alive.
-     */
-    protected String getLivingSound()
-    {
-        return this.isTrading() ? "mob.villager.haggle" : "mob.villager.idle";
-    }
+	/**
+	 * Returns the sound this mob makes while it's alive.
+	 */
+	protected String getLivingSound()
+	{
+		return this.isTrading() ? "mob.villager.haggle" : "mob.villager.idle";
+	}
 
-    /**
-     * Returns the sound this mob makes when it is hurt.
-     */
-    protected String getHurtSound()
-    {
-        return "mob.villager.hit";
-    }
+	/**
+	 * Returns the sound this mob makes when it is hurt.
+	 */
+	protected String getHurtSound()
+	{
+		return "mob.villager.hit";
+	}
 
-    /**
-     * Returns the sound this mob makes on death.
-     */
-    protected String getDeathSound()
-    {
-        return "mob.villager.death";
-    }
+	/**
+	 * Returns the sound this mob makes on death.
+	 */
+	protected String getDeathSound()
+	{
+		return "mob.villager.death";
+	}
 
-    public void setProfession(int par1)
-    {
-        this.dataWatcher.updateObject(16, Integer.valueOf(par1));
-    }
+	public void setProfession(int par1)
+	{
+		this.dataWatcher.updateObject(16, Integer.valueOf(par1));
+	}
 
-    public int getProfession()
-    {
-        return this.dataWatcher.getWatchableObjectInt(16);
-    }
+	public int getProfession()
+	{
+		return this.dataWatcher.getWatchableObjectInt(16);
+	}
 
-    public boolean isMating()
-    {
-        return this.isMating;
-    }
+	public boolean isMating()
+	{
+		return this.isMating;
+	}
 
-    public void setMating(boolean par1)
-    {
-        this.isMating = par1;
-    }
+	public void setMating(boolean par1)
+	{
+		this.isMating = par1;
+	}
 
-    public void setPlaying(boolean par1)
-    {
-        this.isPlaying = par1;
-    }
+	public void setPlaying(boolean par1)
+	{
+		this.isPlaying = par1;
+	}
 
-    public boolean isPlaying()
-    {
-        return this.isPlaying;
-    }
+	public boolean isPlaying()
+	{
+		return this.isPlaying;
+	}
 
-    public void setRevengeTarget(EntityLivingBase par1EntityLivingBase)
-    {
-        super.setRevengeTarget(par1EntityLivingBase);
+	public void setRevengeTarget(EntityLivingBase par1EntityLivingBase)
+	{
+		super.setRevengeTarget(par1EntityLivingBase);
 
-        if (this.villageObj != null && par1EntityLivingBase != null)
-        {
-            this.villageObj.addOrRenewAgressor(par1EntityLivingBase);
+		if (this.villageObj != null && par1EntityLivingBase != null)
+		{
+			this.villageObj.addOrRenewAgressor(par1EntityLivingBase);
 
-            if (par1EntityLivingBase instanceof EntityPlayer)
-            {
-                byte b0 = -1;
+			if (par1EntityLivingBase instanceof EntityPlayer)
+			{
+				byte b0 = -1;
 
-                if (this.isChild())
-                {
-                    b0 = -3;
-                }
+				if (this.isChild())
+				{
+					b0 = -3;
+				}
 
-                this.villageObj.setReputationForPlayer(((EntityPlayer)par1EntityLivingBase).getCommandSenderName(), b0);
+				this.villageObj.setReputationForPlayer(((EntityPlayer)par1EntityLivingBase).getCommandSenderName(), b0);
 
-                if (this.isEntityAlive())
-                {
-                    this.worldObj.setEntityState(this, (byte)13);
-                }
-            }
-        }
-    }
+				if (this.isEntityAlive())
+				{
+					this.worldObj.setEntityState(this, (byte)13);
+				}
+			}
+		}
+	}
 
-    /**
-     * Called when the mob's health reaches 0.
-     */
-    public void onDeath(DamageSource par1DamageSource)
-    {
-        if (this.villageObj != null)
-        {
-            Entity entity = par1DamageSource.getEntity();
+	/**
+	 * Called when the mob's health reaches 0.
+	 */
+	 public void onDeath(DamageSource par1DamageSource)
+	{
+		if (this.villageObj != null)
+		{
+			Entity entity = par1DamageSource.getEntity();
 
-            if (entity != null)
-            {
-                if (entity instanceof EntityPlayer)
-                {
-                    this.villageObj.setReputationForPlayer(((EntityPlayer)entity).getCommandSenderName(), -2);
-                }
-                else if (entity instanceof IMob)
-                {
-                    this.villageObj.endMatingSeason();
-                }
-            }
-            else if (entity == null)
-            {
-                EntityPlayer entityplayer = this.worldObj.getClosestPlayerToEntity(this, 16.0D);
+			if (entity != null)
+			{
+				if (entity instanceof EntityPlayer)
+				{
+					this.villageObj.setReputationForPlayer(((EntityPlayer)entity).getCommandSenderName(), -2);
+				}
+				else if (entity instanceof IMob)
+				{
+					this.villageObj.endMatingSeason();
+				}
+			}
+			else if (entity == null)
+			{
+				EntityPlayer entityplayer = this.worldObj.getClosestPlayerToEntity(this, 16.0D);
 
-                if (entityplayer != null)
-                {
-                    this.villageObj.endMatingSeason();
-                }
-            }
-        }
+				if (entityplayer != null)
+				{
+					this.villageObj.endMatingSeason();
+				}
+			}
+		}
 
-        super.onDeath(par1DamageSource);
-    }
+		super.onDeath(par1DamageSource);
+	}
 
-    public void setCustomer(EntityPlayer par1EntityPlayer)
-    {
-        this.buyingPlayer = par1EntityPlayer;
-    }
+	 public void setCustomer(EntityPlayer par1EntityPlayer)
+	 {
+		 this.buyingPlayer = par1EntityPlayer;
+	 }
 
-    public EntityPlayer getCustomer()
-    {
-        return this.buyingPlayer;
-    }
+	 public EntityPlayer getCustomer()
+	 {
+		 return this.buyingPlayer;
+	 }
 
-    public boolean isTrading()
-    {
-        return this.buyingPlayer != null;
-    }
+	 public boolean isTrading()
+	 {
+		 return this.buyingPlayer != null;
+	 }
 
-    public void useRecipe(MerchantRecipe par1MerchantRecipe)
-    {
-        par1MerchantRecipe.incrementToolUses();
-        this.livingSoundTime = -this.getTalkInterval();
-        this.playSound("mob.villager.yes", this.getSoundVolume(), this.getSoundPitch());
+	 public void useRecipe(MerchantRecipe par1MerchantRecipe)
+	 {
+		 par1MerchantRecipe.incrementToolUses();
+		 this.livingSoundTime = -this.getTalkInterval();
+		 this.playSound("mob.villager.yes", this.getSoundVolume(), this.getSoundPitch());
 
-        if (par1MerchantRecipe.hasSameIDsAs((MerchantRecipe)this.buyingList.get(this.buyingList.size() - 1)))
-        {
-            this.timeUntilReset = 40;
-            this.needsInitilization = true;
+		 if (par1MerchantRecipe.hasSameIDsAs((MerchantRecipe)this.buyingList.get(this.buyingList.size() - 1)))
+		 {
+			 this.timeUntilReset = 40;
+			 this.needsInitilization = true;
 
-            if (this.buyingPlayer != null)
-            {
-                this.lastBuyingPlayer = this.buyingPlayer.getCommandSenderName();
-            }
-            else
-            {
-                this.lastBuyingPlayer = null;
-            }
-        }
+			 if (this.buyingPlayer != null)
+			 {
+				 this.lastBuyingPlayer = this.buyingPlayer.getCommandSenderName();
+			 }
+			 else
+			 {
+				 this.lastBuyingPlayer = null;
+			 }
+		 }
 
-        if (par1MerchantRecipe.getItemToBuy().itemID == Item.emerald.itemID)
-        {
-            this.wealth += par1MerchantRecipe.getItemToBuy().stackSize;
-        }
-    }
+		 if (par1MerchantRecipe.getItemToBuy().itemID == Item.emerald.itemID)
+		 {
+			 this.wealth += par1MerchantRecipe.getItemToBuy().stackSize;
+		 }
+	 }
 
-    public void func_110297_a_(ItemStack par1ItemStack)
-    {
-        if (!this.worldObj.isRemote && this.livingSoundTime > -this.getTalkInterval() + 20)
-        {
-            this.livingSoundTime = -this.getTalkInterval();
+	 public void func_110297_a_(ItemStack par1ItemStack)
+	 {
+		 if (!this.worldObj.isRemote && this.livingSoundTime > -this.getTalkInterval() + 20)
+		 {
+			 this.livingSoundTime = -this.getTalkInterval();
 
-            if (par1ItemStack != null)
-            {
-                this.playSound("mob.villager.yes", this.getSoundVolume(), this.getSoundPitch());
-            }
-            else
-            {
-                this.playSound("mob.villager.no", this.getSoundVolume(), this.getSoundPitch());
-            }
-        }
-    }
+			 if (par1ItemStack != null)
+			 {
+				 this.playSound("mob.villager.yes", this.getSoundVolume(), this.getSoundPitch());
+			 }
+			 else
+			 {
+				 this.playSound("mob.villager.no", this.getSoundVolume(), this.getSoundPitch());
+			 }
+		 }
+	 }
 
-    public MerchantRecipeList getRecipes(EntityPlayer par1EntityPlayer)
-    {
-        if (this.buyingList == null)
-        {
-            this.addDefaultEquipmentAndRecipies(1);
-        }
+	 public MerchantRecipeList getRecipes(EntityPlayer par1EntityPlayer)
+	 {
+		 if (this.buyingList == null)
+		 {
+			 this.addDefaultEquipmentAndRecipies(1);
+		 }
 
-        return this.buyingList;
-    }
+		 return this.buyingList;
+	 }
 
-    /**
-     * Adjusts the probability of obtaining a given recipe being offered by a villager
-     */
-    private float adjustProbability(float par1)
-    {
-        float f1 = par1 + this.field_82191_bN;
-        return f1 > 0.9F ? 0.9F - (f1 - 0.9F) : f1;
-    }
+	 /**
+	  * Adjusts the probability of obtaining a given recipe being offered by a villager
+	  */
+	 private float adjustProbability(float par1)
+	 {
+		 float f1 = par1 + this.field_82191_bN;
+		 return f1 > 0.9F ? 0.9F - (f1 - 0.9F) : f1;
+	 }
 
-    /**
-     * based on the villagers profession add items, equipment, and recipies adds par1 random items to the list of things
-     * that the villager wants to buy. (at most 1 of each wanted type is added)
-     */
-    private void addDefaultEquipmentAndRecipies(int par1)
-    {
-    	/*
+	 /**
+	  * based on the villagers profession add items, equipment, and recipies adds par1 random items to the list of things
+	  * that the villager wants to buy. (at most 1 of each wanted type is added)
+	  */
+	 private void addDefaultEquipmentAndRecipies(int par1)
+	 {
+		 /*
         if (this.buyingList != null)
         {
             this.field_82191_bN = MathHelper.sqrt_float((float)this.buyingList.size()) * 0.2F;
@@ -612,132 +616,132 @@ public class EntityPleb extends EntityAgeable implements INpc //IMerchant, INpc
         {
             this.buyingList.addToListWithCheck((MerchantRecipe)merchantrecipelist.get(j1));
         }
-        */
-    }
+		  */
+	 }
 
-    @SideOnly(Side.CLIENT)
-    public void setRecipes(MerchantRecipeList par1MerchantRecipeList) {}
+	 @SideOnly(Side.CLIENT)
+	 public void setRecipes(MerchantRecipeList par1MerchantRecipeList) {}
 
-    /**
-     * each recipie takes a random stack from villagerStockList and offers it for 1 emerald
-     */
-    public static void addMerchantItem(MerchantRecipeList par0MerchantRecipeList, int par1, Random par2Random, float par3)
-    {
-        if (par2Random.nextFloat() < par3)
-        {
-            par0MerchantRecipeList.add(new MerchantRecipe(getRandomSizedStack(par1, par2Random), Item.emerald));
-        }
-    }
+	 /**
+	  * each recipie takes a random stack from villagerStockList and offers it for 1 emerald
+	  */
+	 public static void addMerchantItem(MerchantRecipeList par0MerchantRecipeList, int par1, Random par2Random, float par3)
+	 {
+		 if (par2Random.nextFloat() < par3)
+		 {
+			 par0MerchantRecipeList.add(new MerchantRecipe(getRandomSizedStack(par1, par2Random), Item.emerald));
+		 }
+	 }
 
-    private static ItemStack getRandomSizedStack(int par0, Random par1Random)
-    {
-        return new ItemStack(par0, getRandomCountForItem(par0, par1Random), 0);
-    }
+	 private static ItemStack getRandomSizedStack(int par0, Random par1Random)
+	 {
+		 return new ItemStack(par0, getRandomCountForItem(par0, par1Random), 0);
+	 }
 
-    /**
-     * default to 1, and villagerStockList contains a min/max amount for each index
-     */
-    private static int getRandomCountForItem(int par0, Random par1Random)
-    {
-        Tuple tuple = (Tuple)villagerStockList.get(Integer.valueOf(par0));
-        return tuple == null ? 1 : (((Integer)tuple.getFirst()).intValue() >= ((Integer)tuple.getSecond()).intValue() ? ((Integer)tuple.getFirst()).intValue() : ((Integer)tuple.getFirst()).intValue() + par1Random.nextInt(((Integer)tuple.getSecond()).intValue() - ((Integer)tuple.getFirst()).intValue()));
-    }
+	 /**
+	  * default to 1, and villagerStockList contains a min/max amount for each index
+	  */
+	 private static int getRandomCountForItem(int par0, Random par1Random)
+	 {
+		 Tuple tuple = (Tuple)villagerStockList.get(Integer.valueOf(par0));
+		 return tuple == null ? 1 : (((Integer)tuple.getFirst()).intValue() >= ((Integer)tuple.getSecond()).intValue() ? ((Integer)tuple.getFirst()).intValue() : ((Integer)tuple.getFirst()).intValue() + par1Random.nextInt(((Integer)tuple.getSecond()).intValue() - ((Integer)tuple.getFirst()).intValue()));
+	 }
 
-    public static void addBlacksmithItem(MerchantRecipeList par0MerchantRecipeList, int par1, Random par2Random, float par3)
-    {
-        if (par2Random.nextFloat() < par3)
-        {
-            int j = getRandomCountForBlacksmithItem(par1, par2Random);
-            ItemStack itemstack;
-            ItemStack itemstack1;
+	 public static void addBlacksmithItem(MerchantRecipeList par0MerchantRecipeList, int par1, Random par2Random, float par3)
+	 {
+		 if (par2Random.nextFloat() < par3)
+		 {
+			 int j = getRandomCountForBlacksmithItem(par1, par2Random);
+			 ItemStack itemstack;
+			 ItemStack itemstack1;
 
-            if (j < 0)
-            {
-                itemstack = new ItemStack(Item.emerald.itemID, 1, 0);
-                itemstack1 = new ItemStack(par1, -j, 0);
-            }
-            else
-            {
-                itemstack = new ItemStack(Item.emerald.itemID, j, 0);
-                itemstack1 = new ItemStack(par1, 1, 0);
-            }
+			 if (j < 0)
+			 {
+				 itemstack = new ItemStack(Item.emerald.itemID, 1, 0);
+				 itemstack1 = new ItemStack(par1, -j, 0);
+			 }
+			 else
+			 {
+				 itemstack = new ItemStack(Item.emerald.itemID, j, 0);
+				 itemstack1 = new ItemStack(par1, 1, 0);
+			 }
 
-            par0MerchantRecipeList.add(new MerchantRecipe(itemstack, itemstack1));
-        }
-    }
+			 par0MerchantRecipeList.add(new MerchantRecipe(itemstack, itemstack1));
+		 }
+	 }
 
-    private static int getRandomCountForBlacksmithItem(int par0, Random par1Random)
-    {
-        Tuple tuple = (Tuple)blacksmithSellingList.get(Integer.valueOf(par0));
-        return tuple == null ? 1 : (((Integer)tuple.getFirst()).intValue() >= ((Integer)tuple.getSecond()).intValue() ? ((Integer)tuple.getFirst()).intValue() : ((Integer)tuple.getFirst()).intValue() + par1Random.nextInt(((Integer)tuple.getSecond()).intValue() - ((Integer)tuple.getFirst()).intValue()));
-    }
+	 private static int getRandomCountForBlacksmithItem(int par0, Random par1Random)
+	 {
+		 Tuple tuple = (Tuple)blacksmithSellingList.get(Integer.valueOf(par0));
+		 return tuple == null ? 1 : (((Integer)tuple.getFirst()).intValue() >= ((Integer)tuple.getSecond()).intValue() ? ((Integer)tuple.getFirst()).intValue() : ((Integer)tuple.getFirst()).intValue() + par1Random.nextInt(((Integer)tuple.getSecond()).intValue() - ((Integer)tuple.getFirst()).intValue()));
+	 }
 
-    @SideOnly(Side.CLIENT)
-    public void handleHealthUpdate(byte par1)
-    {
-        if (par1 == 12)
-        {
-            this.generateRandomParticles("heart");
-        }
-        else if (par1 == 13)
-        {
-            this.generateRandomParticles("angryVillager");
-        }
-        else if (par1 == 14)
-        {
-            this.generateRandomParticles("happyVillager");
-        }
-        else
-        {
-            super.handleHealthUpdate(par1);
-        }
-    }
+	 @SideOnly(Side.CLIENT)
+	 public void handleHealthUpdate(byte par1)
+	 {
+		 if (par1 == 12)
+		 {
+			 this.generateRandomParticles("heart");
+		 }
+		 else if (par1 == 13)
+		 {
+			 this.generateRandomParticles("angryVillager");
+		 }
+		 else if (par1 == 14)
+		 {
+			 this.generateRandomParticles("happyVillager");
+		 }
+		 else
+		 {
+			 super.handleHealthUpdate(par1);
+		 }
+	 }
 
-    public EntityLivingData onSpawnWithEgg(EntityLivingData par1EntityLivingData)
-    {
-        par1EntityLivingData = super.onSpawnWithEgg(par1EntityLivingData);
-        //VillagerRegistry.applyRandomTrade(this, worldObj.rand);
-        return par1EntityLivingData;
-    }
+	 public EntityLivingData onSpawnWithEgg(EntityLivingData par1EntityLivingData)
+	 {
+		 par1EntityLivingData = super.onSpawnWithEgg(par1EntityLivingData);
+		 //VillagerRegistry.applyRandomTrade(this, worldObj.rand);
+		 return par1EntityLivingData;
+	 }
 
-    @SideOnly(Side.CLIENT)
+	 @SideOnly(Side.CLIENT)
 
-    /**
-     * par1 is the particleName
-     */
-    private void generateRandomParticles(String par1Str)
-    {
-        for (int i = 0; i < 5; ++i)
-        {
-            double d0 = this.rand.nextGaussian() * 0.02D;
-            double d1 = this.rand.nextGaussian() * 0.02D;
-            double d2 = this.rand.nextGaussian() * 0.02D;
-            this.worldObj.spawnParticle(par1Str, this.posX + (double)(this.rand.nextFloat() * this.width * 2.0F) - (double)this.width, this.posY + 1.0D + (double)(this.rand.nextFloat() * this.height), this.posZ + (double)(this.rand.nextFloat() * this.width * 2.0F) - (double)this.width, d0, d1, d2);
-        }
-    }
+	 /**
+	  * par1 is the particleName
+	  */
+	 private void generateRandomParticles(String par1Str)
+	 {
+		 for (int i = 0; i < 5; ++i)
+		 {
+			 double d0 = this.rand.nextGaussian() * 0.02D;
+			 double d1 = this.rand.nextGaussian() * 0.02D;
+			 double d2 = this.rand.nextGaussian() * 0.02D;
+			 this.worldObj.spawnParticle(par1Str, this.posX + (double)(this.rand.nextFloat() * this.width * 2.0F) - (double)this.width, this.posY + 1.0D + (double)(this.rand.nextFloat() * this.height), this.posZ + (double)(this.rand.nextFloat() * this.width * 2.0F) - (double)this.width, d0, d1, d2);
+		 }
+	 }
 
-    public void func_82187_q()
-    {
-        this.field_82190_bM = true;
-    }
+	 public void func_82187_q()
+	 {
+		 this.field_82190_bM = true;
+	 }
 
-    public EntityVillager func_90012_b(EntityAgeable par1EntityAgeable)
-    {
-        EntityVillager entityvillager = new EntityVillager(this.worldObj);
-        entityvillager.onSpawnWithEgg((EntityLivingData)null);
-        return entityvillager;
-    }
+	 public EntityPleb createPlebChild(EntityAgeable par1EntityAgeable)
+	 {
+		 EntityPleb entityPleb = new EntityPleb(this.worldObj);
+		 entityPleb.onSpawnWithEgg((EntityLivingData)null);
+		 return entityPleb;
+	 }
 
-    public boolean allowLeashing()
-    {
-        return false;
-    }
+	 public boolean allowLeashing()
+	 {
+		 return false;
+	 }
 
-    public EntityAgeable createChild(EntityAgeable par1EntityAgeable)
-    {
-        return this.func_90012_b(par1EntityAgeable);
-    }
-    /*
+	 public EntityAgeable createChild(EntityAgeable par1EntityAgeable)
+	 {
+		 return createPlebChild(par1EntityAgeable);
+	 }
+	 /*
     static
     {
         villagerStockList.put(Integer.valueOf(Item.coal.itemID), new Tuple(Integer.valueOf(16), Integer.valueOf(24)));

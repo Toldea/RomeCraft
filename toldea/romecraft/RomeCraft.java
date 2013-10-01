@@ -1,6 +1,6 @@
 package toldea.romecraft;
 
-import toldea.romecraft.ai.Contubernium;
+import toldea.romecraft.entity.ai.Contubernium;
 import toldea.romecraft.managers.BlockManager;
 import toldea.romecraft.managers.CreativeTabsManager;
 import toldea.romecraft.managers.EntityManager;

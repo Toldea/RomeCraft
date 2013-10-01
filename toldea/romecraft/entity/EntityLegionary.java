@@ -1,14 +1,14 @@
 package toldea.romecraft.entity;
 
-import toldea.romecraft.ai.Contubernium;
-import toldea.romecraft.ai.Contubernium.Facing;
-import toldea.romecraft.ai.EntityAIChargeThrow;
-import toldea.romecraft.ai.EntityAIFormationMoveTowardsLocation;
-import toldea.romecraft.ai.EntityAIFormationMoveTowardsEntity;
-import toldea.romecraft.ai.EntityAIMeleeAttack;
-import toldea.romecraft.ai.EntityAIThrowingAttack;
-import toldea.romecraft.ai.SquadManager;
 import toldea.romecraft.command.EntitySelectorLegionary;
+import toldea.romecraft.entity.ai.Contubernium;
+import toldea.romecraft.entity.ai.EntityAIChargeThrow;
+import toldea.romecraft.entity.ai.EntityAIFormationMoveTowardsEntity;
+import toldea.romecraft.entity.ai.EntityAIFormationMoveTowardsLocation;
+import toldea.romecraft.entity.ai.EntityAIMeleeAttack;
+import toldea.romecraft.entity.ai.EntityAIThrowingAttack;
+import toldea.romecraft.entity.ai.SquadManager;
+import toldea.romecraft.entity.ai.Contubernium.Facing;
 import toldea.romecraft.managers.ItemManager;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;

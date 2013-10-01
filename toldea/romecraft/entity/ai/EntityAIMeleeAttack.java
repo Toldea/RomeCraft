@@ -1,4 +1,4 @@
-package toldea.romecraft.ai;
+package toldea.romecraft.entity.ai;
 
 import toldea.romecraft.entity.EntityLegionary;
 import toldea.romecraft.entity.EntityLegionary.LEGIONARY_EQUIPMENT;
