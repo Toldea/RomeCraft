@@ -68,7 +68,7 @@ public class TileEntityRomanVillageForum extends TileEntity {
 						}
 					} 
 					// On the row below us make sure everything is made out of some sort of quartz block.
-					else if (!isBlockIdQuartz(blockId)) {
+					else if (!isBlockQuartz(x, y, z)) {
 						//System.out.println("Block Isn't Quartz! BlockId: " + blockId + " (" + x + ", " + y + ", " + z + ")");
 						return false;
 					}
@@ -164,8 +164,16 @@ public class TileEntityRomanVillageForum extends TileEntity {
 		isValidMultiblock = par1.getBoolean("isValidMultiblock");
 	}
 	
-	private static boolean isBlockIdQuartz(int blockId) {
-		return (blockId == Block.blockNetherQuartz.blockID || blockId == Block.stairsNetherQuartz.blockID || blockId == Block.stairsNetherQuartz.blockID);
+	private boolean isBlockQuartz(int x, int y, int z) {
+		int blockId = worldObj.getBlockId(x, y, z);
+		if (blockId == Block.blockNetherQuartz.blockID || blockId == Block.stairsNetherQuartz.blockID || blockId == Block.stairsNetherQuartz.blockID) {
+			return true;
+		} else if (blockId == Block.stoneSingleSlab.blockID) {
+			int metadata = worldObj.getBlockMetadata(x, y, z);
+			return (metadata == 7);
+		} else {
+			return false;
+		}
 	}
 	
 	public void printVillageData(EntityPlayer player) {
@@ -182,7 +190,7 @@ public class TileEntityRomanVillageForum extends TileEntity {
 			player.sendChatToPlayer(ChatMessageComponent.createFromText(new String("Village Forum: (" + romanVillage.getVillageForumLocation().posX + ", " + romanVillage.getVillageForumLocation().posY + ", " + romanVillage.getVillageForumLocation().posZ + ")")));
 			//player.sendChatToPlayer(ChatMessageComponent.createFromText(new String("Village Center: (" + romanVillage.getCenter().posX + ", " + romanVillage.getCenter().posY + ", " + romanVillage.getCenter().posZ + ")")));
 			player.sendChatToPlayer(ChatMessageComponent.createFromText(new String("Number of doors: " + romanVillage.getNumVillageDoors())));
-			player.sendChatToPlayer(ChatMessageComponent.createFromText(new String("Number of villagers: " + romanVillage.getNumVillagers())));
+			player.sendChatToPlayer(ChatMessageComponent.createFromText(new String("Number of plebs: " + romanVillage.getNumVillagers() + " / " + romanVillage.getMaxNumberOfPlebs())));
 			player.sendChatToPlayer(ChatMessageComponent.createFromText(new String("Village radius: " + romanVillage.getVillageRadius())));
 		}
 	}
