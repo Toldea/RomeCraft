@@ -11,7 +11,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import toldea.romecraft.tileentity.TileEntityRomanVillageForum;
 
-public class BlockRomanVillageForum extends BlockContainer {
+public class BlockRomanVillageForum extends RomeCraftBlockContainer {
 	/*
 	public static final int META_ISACTIVE = 0x00000008;
 	public static final int MASK_DIR = 0x00000007;

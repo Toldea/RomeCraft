@@ -94,7 +94,6 @@ public class EntityAIPlebMate extends EntityAIBase {
 		if (this.plebObj.getDistanceSqToEntity(this.mate) > 2.25D) {
 			this.plebObj.getNavigator().tryMoveToEntityLiving(this.mate, 0.25D);
 		} else if (this.matingTimeout == 0 && this.mate.isMating()) {
-			System.out.println("ITS HAPPENING! :D");
 			this.giveBirth();
 		}
 

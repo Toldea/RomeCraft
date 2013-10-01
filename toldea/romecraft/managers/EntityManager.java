@@ -16,33 +16,34 @@ import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 
 public class EntityManager {
-	static int startEntityId = 300;
-	static int startEntityModId = 0;
+	static int nextModEntityId = 0;
+	static int nextSpawnEggId = 300;
 
 	public static void registerEntities() {
 		// Legionary
-		EntityRegistry.registerGlobalEntityID(EntityLegionary.class, "entityLegionary", EntityRegistry.findGlobalUniqueEntityId());
+		EntityRegistry.registerModEntity(EntityLegionary.class, "entityLegionary", nextModEntityId++, RomeCraft.instance, 32, 5, true);
 		registerEntityEgg(EntityLegionary.class, 0xff0000, 0xf0ff00);
 		LanguageRegistry.instance().addStringLocalization("entity.entityLegionary.name", "Legionary");
+
 		// Pleb
-		EntityRegistry.registerGlobalEntityID(EntityPleb.class, "entityPleb", EntityRegistry.findGlobalUniqueEntityId());
-		//EntityRegistry.registerModEntity(EntityPleb.class, "entityPleb", EntityRegistry.findGlobalUniqueEntityId(), RomeCraft.instance, 32, 5, true);
-		registerEntityEgg(EntityPleb.class, 0x00ff00, 0x0f00ff);
+		EntityRegistry.registerModEntity(EntityPleb.class, "entityPleb", nextModEntityId++, RomeCraft.instance, 32, 5, true);
+		registerEntityEgg(EntityPleb.class, 0xce272e, 0x780308);
 		LanguageRegistry.instance().addStringLocalization("entity.entityPleb.name", "Pleb");
+
 		// Pilum
-		EntityRegistry.registerModEntity(EntityPilum.class, "entityPilum", EntityRegistry.findGlobalUniqueEntityId(), RomeCraft.instance, 32, 5, true);
+		EntityRegistry.registerModEntity(EntityPilum.class, "entityPilum", nextModEntityId++, RomeCraft.instance, 32, 5, true);
 	}
 
-	public static int getUniqueEntityId() {
-		do {
-			startEntityId++;
-		} while (EntityList.getStringFromID(startEntityId) != null);
-		return startEntityId++;
-	}
-
-	public static void registerEntityEgg(Class<? extends Entity> entity, int primaryColor, int secondaryColor) {
-		int id = getUniqueEntityId();
+	private static void registerEntityEgg(Class<? extends Entity> entity, int primaryColor, int secondaryColor) {
+		int id = getUniqueSpawnEggId();
 		EntityList.IDtoClassMapping.put(id, entity);
 		EntityList.entityEggs.put(id, new EntityEggInfo(id, primaryColor, secondaryColor));
+	}
+
+	private static int getUniqueSpawnEggId() {
+		do {
+			nextSpawnEggId++;
+		} while (EntityList.getStringFromID(nextSpawnEggId) != null);
+		return nextSpawnEggId++;
 	}
 }
