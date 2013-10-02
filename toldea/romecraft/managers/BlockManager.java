@@ -8,6 +8,7 @@ import net.minecraft.item.crafting.CraftingManager;
 import net.minecraftforge.common.MinecraftForge;
 import toldea.romecraft.block.BlockBloomery;
 import toldea.romecraft.block.BlockGag;
+import toldea.romecraft.block.RomeCraftMultiSidedBlock;
 import toldea.romecraft.block.BlockMultiFurnaceCore;
 import toldea.romecraft.block.BlockMultiFurnaceDummy;
 import toldea.romecraft.block.BlockRomanBrickSlab;
@@ -26,6 +27,8 @@ public class BlockManager {
 	public static RomeCraftBlockHalfSlab blockRomanBricksHalfSlab = null;
 	public static RomeCraftBlockHalfSlab blockRomanBricksDoubleSlab = null;
 	public static Block blockRomanBricksStairs = null;
+	
+	public static Block blockMarble = null;
 
 	public static Block romanVillageForum = null;
 
@@ -37,7 +40,7 @@ public class BlockManager {
 	public static void registerBlocks() {
 		// Roman Bricks
 		blockRomanBricks = new RomeCraftBlock(nextBlockID++, Material.rock).setHardness(2.0F).setResistance(10.0F).setStepSound(Block.soundStoneFootstep)
-				.setUnlocalizedName("romanbrick").setTextureName("romecraft:romanbrick");
+				.setUnlocalizedName("blockRomanBricks").setTextureName("romecraft:romanbrick");
 		GameRegistry.registerBlock(blockRomanBricks, "blockRomanBricks");
 		LanguageRegistry.addName(blockRomanBricks, "Roman Bricks");
 
@@ -55,6 +58,12 @@ public class BlockManager {
 		blockRomanBricksStairs = (new RomeCraftBlockStairs(nextBlockID++, blockRomanBricks, 0)).setUnlocalizedName("blockRomanBricksStairs");
 		GameRegistry.registerBlock(blockRomanBricksStairs, "blockRomanBricksStairs");
 		LanguageRegistry.addName(blockRomanBricksStairs, "Roman Brick Stairs");
+		
+		// Marble
+		blockMarble = new RomeCraftMultiSidedBlock(nextBlockID++, Material.rock).setHardness(2.0F).setResistance(10.0F).setStepSound(Block.soundStoneFootstep)
+				.setUnlocalizedName("blockMarble").setTextureName("romecraft:marble_block");
+		GameRegistry.registerBlock(blockMarble, "blockMarble");
+		LanguageRegistry.addName(blockMarble, "Marble");
 		
 		// RomanVillageForum Block
 		romanVillageForum = new BlockRomanVillageForum(nextBlockID++, Material.rock).setUnlocalizedName("romanVillageForum");
