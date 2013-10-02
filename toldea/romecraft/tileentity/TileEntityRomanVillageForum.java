@@ -1,17 +1,13 @@
 package toldea.romecraft.tileentity;
 
-import toldea.romecraft.RomeCraft;
-import toldea.romecraft.block.BlockRomanVillageForum;
-import toldea.romecraft.managers.BlockManager;
-import toldea.romecraft.managers.TickManager;
-import toldea.romecraft.romanvillage.RomanVillage;
-import toldea.romecraft.romanvillage.RomanVillageCollection;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.MathHelper;
+import toldea.romecraft.managers.TickManager;
+import toldea.romecraft.romanvillage.RomanVillage;
 
 public class TileEntityRomanVillageForum extends TileEntity {
 	private boolean isValidMultiblock = false;
@@ -188,9 +184,11 @@ public class TileEntityRomanVillageForum extends TileEntity {
 		} else {
 			player.sendChatToPlayer(ChatMessageComponent.createFromText("-- Roman Village Data --"));
 			player.sendChatToPlayer(ChatMessageComponent.createFromText(new String("Village Forum: (" + romanVillage.getVillageForumLocation().posX + ", " + romanVillage.getVillageForumLocation().posY + ", " + romanVillage.getVillageForumLocation().posZ + ")")));
-			player.sendChatToPlayer(ChatMessageComponent.createFromText(new String("Number of doors: " + romanVillage.getNumVillageDoors())));
-			player.sendChatToPlayer(ChatMessageComponent.createFromText(new String("Number of plebs: " + romanVillage.getNumPlebs() + " / " + romanVillage.getMaxNumberOfPlebs())));
-			player.sendChatToPlayer(ChatMessageComponent.createFromText(new String("Village radius: " + romanVillage.getVillageRadius())));
+			player.sendChatToPlayer(ChatMessageComponent.createFromText(new String("Village Center: (" + romanVillage.getCenter().posX + ", " + romanVillage.getCenter().posY + ", " + romanVillage.getCenter().posZ + ")")));
+			player.sendChatToPlayer(ChatMessageComponent.createFromText(new String("Village Radius: " + romanVillage.getVillageRadius())));
+			player.sendChatToPlayer(ChatMessageComponent.createFromText(new String("Number of Doors: " + romanVillage.getNumVillageDoors())));
+			player.sendChatToPlayer(ChatMessageComponent.createFromText(new String("Number of Plebs: " + romanVillage.getNumPlebs() + " / " + romanVillage.getMaxNumberOfPlebs())));
+			
 		}
 	}
 }

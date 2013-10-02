@@ -5,14 +5,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.TreeMap;
 
-import toldea.romecraft.entity.EntityPleb;
-
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockDoor;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EntityLivingData;
-import net.minecraft.entity.monster.EntityIronGolem;
-import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -21,6 +16,7 @@ import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import toldea.romecraft.entity.EntityPleb;
 
 public class RomanVillage {
 	private World worldObj;
@@ -28,8 +24,10 @@ public class RomanVillage {
 	/** list of VillageDoorInfo objects */
 	private final List plebDoorInfoList = new ArrayList();
 
-	//private final ChunkCoordinates centerHelper = new ChunkCoordinates(0, 0, 0);
-	//private final ChunkCoordinates center = new ChunkCoordinates(0, 0, 0);
+	private final ChunkCoordinates centerHelper = new ChunkCoordinates(0, 0, 0);
+	private final ChunkCoordinates center = new ChunkCoordinates(0, 0, 0);
+	private ChunkCoordinates villageForumLocation = new ChunkCoordinates(0, 0, 0);
+	
 	private int villageRadius;
 	private int lastAddDoorTimestamp;
 	private int tickCounter;
@@ -42,7 +40,6 @@ public class RomanVillage {
 	private TreeMap playerReputation = new TreeMap();
 	private List villageAgressors = new ArrayList();
 
-	private ChunkCoordinates villageForumLocation = new ChunkCoordinates(0, 0, 0);
 	private boolean shouldBeAnnihilated = false;
 
 	public RomanVillage() {
@@ -111,8 +108,8 @@ public class RomanVillage {
 		int numPlebs = getNumPlebs();
 		int maxNumPlebs = getMaxNumberOfPlebs();
 		if (numPlebs < 4 && numPlebs < maxNumPlebs) {
-			Vec3 spawnLocation = tryGetPlebSpawningLocation(MathHelper.floor_float((float) this.villageForumLocation.posX),
-					MathHelper.floor_float((float) this.villageForumLocation.posY), MathHelper.floor_float((float) this.villageForumLocation.posZ), 1, 2, 1);
+			Vec3 spawnLocation = tryGetPlebSpawningLocation(MathHelper.floor_float((float) this.center.posX),
+					MathHelper.floor_float((float) this.center.posY), MathHelper.floor_float((float) this.center.posZ), 1, 2, 1);
 			if (spawnLocation != null) {
 				EntityPleb entityPleb = new EntityPleb(this.worldObj);
 				entityPleb.onSpawnWithEgg((EntityLivingData)null);
@@ -200,9 +197,9 @@ public class RomanVillage {
 		 */
 		List list = this.worldObj.getEntitiesWithinAABB(
 				EntityPleb.class,
-				AxisAlignedBB.getAABBPool().getAABB((double) (this.villageForumLocation.posX - this.villageRadius), (double) (this.villageForumLocation.posY - 4),
-						(double) (this.villageForumLocation.posZ - this.villageRadius), (double) (this.villageForumLocation.posX + this.villageRadius), (double) (this.villageForumLocation.posY + 4),
-						(double) (this.villageForumLocation.posZ + this.villageRadius)));
+				AxisAlignedBB.getAABBPool().getAABB((double) (this.center.posX - this.villageRadius), (double) (this.center.posY - 4),
+						(double) (this.center.posZ - this.villageRadius), (double) (this.center.posX + this.villageRadius), (double) (this.center.posY + 4),
+						(double) (this.center.posZ + this.villageRadius)));
 		this.numPlebs = list.size();
 
 		if (this.numPlebs == 0) {
@@ -211,9 +208,11 @@ public class RomanVillage {
 	}
 
 	public ChunkCoordinates getCenter() {
-		// TODO: fix
-		return this.villageForumLocation;
-		//return this.center;
+		return this.center;
+	}
+	
+	public ChunkCoordinates getVillageForumLocation() {
+		return villageForumLocation;
 	}
 
 	public int getVillageRadius() {
@@ -235,15 +234,11 @@ public class RomanVillage {
 		return this.numPlebs;
 	}
 
-	public ChunkCoordinates getVillageForumLocation() {
-		return villageForumLocation;
-	}
-
 	/**
 	 * Returns true, if the given coordinates are within the bounding box of the village.
 	 */
 	public boolean isInRange(int par1, int par2, int par3) {
-		return this.villageForumLocation.getDistanceSquared(par1, par2, par3) < (float) (this.villageRadius * this.villageRadius);
+		return this.center.getDistanceSquared(par1, par2, par3) < (float) (this.villageRadius * this.villageRadius);
 		//return this.center.getDistanceSquared(par1, par2, par3) < (float) (this.villageRadius * this.villageRadius);
 	}
 
@@ -302,7 +297,7 @@ public class RomanVillage {
 
 	public RomanVillageDoorInfo getVillageDoorAt(int par1, int par2, int par3) {
 		//if (this.center.getDistanceSquared(par1, par2, par3) > (float) (this.villageRadius * this.villageRadius)) {
-		if (this.villageForumLocation.getDistanceSquared(par1, par2, par3) > (float) (this.villageRadius * this.villageRadius)) {
+		if (this.center.getDistanceSquared(par1, par2, par3) > (float) (this.villageRadius * this.villageRadius)) {
 			return null;
 		} else {
 			Iterator iterator = this.plebDoorInfoList.iterator();
@@ -323,11 +318,9 @@ public class RomanVillage {
 	public void addVillageDoorInfo(RomanVillageDoorInfo par1RomanVillageDoorInfo) {
 		System.out.println("RomanVillage.addVillageDoorInfo");
 		this.plebDoorInfoList.add(par1RomanVillageDoorInfo);
-		/*
 		this.centerHelper.posX += par1RomanVillageDoorInfo.posX;
 		this.centerHelper.posY += par1RomanVillageDoorInfo.posY;
 		this.centerHelper.posZ += par1RomanVillageDoorInfo.posZ;
-		 */
 		this.updateVillageRadiusAndCenter();
 
 		this.lastAddDoorTimestamp = par1RomanVillageDoorInfo.lastActivityTimestamp;
@@ -411,11 +404,9 @@ public class RomanVillage {
 
 			if (!this.isBlockDoor(villagedoorinfo.posX, villagedoorinfo.posY, villagedoorinfo.posZ)
 					|| Math.abs(this.tickCounter - villagedoorinfo.lastActivityTimestamp) > 1200) {
-				/*
 				this.centerHelper.posX -= villagedoorinfo.posX;
 				this.centerHelper.posY -= villagedoorinfo.posY;
 				this.centerHelper.posZ -= villagedoorinfo.posZ;
-				 */
 				flag = true;
 				villagedoorinfo.isDetachedFromVillageFlag = true;
 				iterator.remove();
@@ -434,26 +425,23 @@ public class RomanVillage {
 
 	private void updateVillageRadiusAndCenter() {
 		System.out.println("RomanVillage.updateVillageRadiusAndCenter");
-		this.villageRadius = 32;
-		// TODO: Fix this
-		/*
-		int i = this.villageDoorInfoList.size();
+		int i = this.plebDoorInfoList.size();
 
 		if (i == 0) {
-			this.center.set(0, 0, 0);
-			this.villageRadius = 0;
+			this.center.set(villageForumLocation.posX, villageForumLocation.posY, villageForumLocation.posZ);
+			this.villageRadius = 32;
 		} else {
 			this.center.set(this.centerHelper.posX / i, this.centerHelper.posY / i, this.centerHelper.posZ / i);
 			int j = 0;
 			RomanVillageDoorInfo villagedoorinfo;
 
-			for (Iterator iterator = this.villageDoorInfoList.iterator(); iterator.hasNext(); j = Math.max(
+			for (Iterator iterator = this.plebDoorInfoList.iterator(); iterator.hasNext(); j = Math.max(
 					villagedoorinfo.getDistanceSquared(this.center.posX, this.center.posY, this.center.posZ), j)) {
 				villagedoorinfo = (RomanVillageDoorInfo) iterator.next();
 			}
 
 			this.villageRadius = Math.max(32, (int) Math.sqrt((double) j) + 1);
-		}*/
+		}
 	}
 
 	/**
@@ -491,14 +479,12 @@ public class RomanVillage {
 		this.lastAddDoorTimestamp = par1NBTTagCompound.getInteger("Stable");
 		this.tickCounter = par1NBTTagCompound.getInteger("Tick");
 		this.noBreedTicks = par1NBTTagCompound.getInteger("MTick");
-		/*
 		this.center.posX = par1NBTTagCompound.getInteger("CX");
 		this.center.posY = par1NBTTagCompound.getInteger("CY");
 		this.center.posZ = par1NBTTagCompound.getInteger("CZ");
 		this.centerHelper.posX = par1NBTTagCompound.getInteger("ACX");
 		this.centerHelper.posY = par1NBTTagCompound.getInteger("ACY");
 		this.centerHelper.posZ = par1NBTTagCompound.getInteger("ACZ");
-		 */
 		this.villageForumLocation.posX = par1NBTTagCompound.getInteger("FORUM_X");
 		this.villageForumLocation.posY = par1NBTTagCompound.getInteger("FORUM_Y");
 		this.villageForumLocation.posZ = par1NBTTagCompound.getInteger("FORUM_Z");
@@ -530,14 +516,12 @@ public class RomanVillage {
 		par1NBTTagCompound.setInteger("Stable", this.lastAddDoorTimestamp);
 		par1NBTTagCompound.setInteger("Tick", this.tickCounter);
 		par1NBTTagCompound.setInteger("MTick", this.noBreedTicks);
-		/*
 		par1NBTTagCompound.setInteger("CX", this.center.posX);
 		par1NBTTagCompound.setInteger("CY", this.center.posY);
 		par1NBTTagCompound.setInteger("CZ", this.center.posZ);
 		par1NBTTagCompound.setInteger("ACX", this.centerHelper.posX);
 		par1NBTTagCompound.setInteger("ACY", this.centerHelper.posY);
 		par1NBTTagCompound.setInteger("ACZ", this.centerHelper.posZ);
-		 */
 		par1NBTTagCompound.setInteger("FORUM_X", this.villageForumLocation.posX);
 		par1NBTTagCompound.setInteger("FORUM_Y", this.villageForumLocation.posY);
 		par1NBTTagCompound.setInteger("FORUM_Z", this.villageForumLocation.posZ);

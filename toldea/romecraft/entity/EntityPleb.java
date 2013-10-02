@@ -1,42 +1,28 @@
 package toldea.romecraft.entity;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
 
-import toldea.romecraft.entity.ai.EntityAIPlebMate;
-
-import net.minecraft.block.Block;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentData;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EntityLivingData;
-import net.minecraft.entity.IMerchant;
 import net.minecraft.entity.INpc;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAvoidEntity;
-import net.minecraft.entity.ai.EntityAIFollowGolem;
-import net.minecraft.entity.ai.EntityAILookAtTradePlayer;
 import net.minecraft.entity.ai.EntityAIMoveIndoors;
 import net.minecraft.entity.ai.EntityAIMoveTowardsRestriction;
 import net.minecraft.entity.ai.EntityAIOpenDoor;
-import net.minecraft.entity.ai.EntityAIPlay;
 import net.minecraft.entity.ai.EntityAIRestrictOpenDoor;
 import net.minecraft.entity.ai.EntityAISwimming;
-import net.minecraft.entity.ai.EntityAITradePlayer;
-import net.minecraft.entity.ai.EntityAIVillagerMate;
 import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.ai.EntityAIWatchClosest2;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.monster.IMob;
-import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -49,9 +35,10 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.Tuple;
 import net.minecraft.village.MerchantRecipe;
 import net.minecraft.village.MerchantRecipeList;
-import net.minecraft.village.Village;
 import net.minecraft.world.World;
-import cpw.mods.fml.common.registry.VillagerRegistry;
+import toldea.romecraft.entity.ai.EntityAIPlebMate;
+import toldea.romecraft.managers.TickManager;
+import toldea.romecraft.romanvillage.RomanVillage;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -60,7 +47,7 @@ public class EntityPleb extends EntityAgeable implements INpc //IMerchant, INpc
 	private int randomTickDivider;
 	private boolean isMating;
 	private boolean isPlaying;
-	Village villageObj;
+	RomanVillage villageObj;
 
 	/** This villager's current customer. */
 	private EntityPlayer buyingPlayer;
@@ -149,9 +136,9 @@ public class EntityPleb extends EntityAgeable implements INpc //IMerchant, INpc
 	{
 		if (--this.randomTickDivider <= 0)
 		{
-			this.worldObj.villageCollectionObj.addVillagerPosition(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ));
+			TickManager.romanVillageCollection.addVillagerPosition(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ));
 			this.randomTickDivider = 70 + this.rand.nextInt(50);
-			this.villageObj = this.worldObj.villageCollectionObj.findNearestVillage(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ), 32);
+			this.villageObj = TickManager.romanVillageCollection.findNearestVillage(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ), 32);
 
 			if (this.villageObj == null)
 			{
@@ -337,7 +324,7 @@ public class EntityPleb extends EntityAgeable implements INpc //IMerchant, INpc
 	public void setRevengeTarget(EntityLivingBase par1EntityLivingBase)
 	{
 		super.setRevengeTarget(par1EntityLivingBase);
-
+		/*
 		if (this.villageObj != null && par1EntityLivingBase != null)
 		{
 			this.villageObj.addOrRenewAgressor(par1EntityLivingBase);
@@ -358,7 +345,7 @@ public class EntityPleb extends EntityAgeable implements INpc //IMerchant, INpc
 					this.worldObj.setEntityState(this, (byte)13);
 				}
 			}
-		}
+		}*/
 	}
 
 	/**
