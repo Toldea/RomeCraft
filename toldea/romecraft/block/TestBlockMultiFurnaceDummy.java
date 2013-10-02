@@ -3,8 +3,8 @@ package toldea.romecraft.block;
 import java.util.Random;
 
 import toldea.romecraft.managers.CreativeTabsManager;
-import toldea.romecraft.tileentity.TileEntityMultiFurnaceCore;
-import toldea.romecraft.tileentity.TileEntityMultiFurnaceDummy;
+import toldea.romecraft.tileentity.TestTileEntityMultiFurnaceCore;
+import toldea.romecraft.tileentity.TestTileEntityMultiFurnaceDummy;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
@@ -14,9 +14,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
-public class BlockMultiFurnaceDummy extends BlockContainer {
+public class TestBlockMultiFurnaceDummy extends BlockContainer {
 
-	public BlockMultiFurnaceDummy(int blockId) {
+	public TestBlockMultiFurnaceDummy(int blockId) {
 		super(blockId, Material.rock);
 
 		setUnlocalizedName("blockMultiFurnaceDummy");
@@ -32,7 +32,7 @@ public class BlockMultiFurnaceDummy extends BlockContainer {
 
 	@Override
 	public TileEntity createNewTileEntity(World world) {
-		return new TileEntityMultiFurnaceDummy();
+		return new TestTileEntityMultiFurnaceDummy();
 	}
 
 	@Override
@@ -42,7 +42,7 @@ public class BlockMultiFurnaceDummy extends BlockContainer {
 
 	@Override
 	public void breakBlock(World world, int x, int y, int z, int par5, int par6) {
-		TileEntityMultiFurnaceDummy dummy = (TileEntityMultiFurnaceDummy) world.getBlockTileEntity(x, y, z);
+		TestTileEntityMultiFurnaceDummy dummy = (TestTileEntityMultiFurnaceDummy) world.getBlockTileEntity(x, y, z);
 
 		if (dummy != null && dummy.getCore() != null)
 			dummy.getCore().invalidateMultiblock();
@@ -55,10 +55,10 @@ public class BlockMultiFurnaceDummy extends BlockContainer {
 		if (player.isSneaking())
 			return false;
 
-		TileEntityMultiFurnaceDummy dummy = (TileEntityMultiFurnaceDummy) world.getBlockTileEntity(x, y, z);
+		TestTileEntityMultiFurnaceDummy dummy = (TestTileEntityMultiFurnaceDummy) world.getBlockTileEntity(x, y, z);
 
 		if (dummy != null && dummy.getCore() != null) {
-			TileEntityMultiFurnaceCore core = dummy.getCore();
+			TestTileEntityMultiFurnaceCore core = dummy.getCore();
 			return core.getBlockType().onBlockActivated(world, core.xCoord, core.yCoord, core.zCoord, player, par6, par7, par8, par9);
 		}
 

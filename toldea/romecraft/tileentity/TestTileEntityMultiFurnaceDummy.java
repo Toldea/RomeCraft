@@ -3,25 +3,25 @@ package toldea.romecraft.tileentity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 
-public class TileEntityMultiFurnaceDummy extends TileEntity {
-	TileEntityMultiFurnaceCore tileEntityCore;
+public class TestTileEntityMultiFurnaceDummy extends TileEntity {
+	TestTileEntityMultiFurnaceCore tileEntityCore;
 	int coreX;
 	int coreY;
 	int coreZ;
 
-	public TileEntityMultiFurnaceDummy() {
+	public TestTileEntityMultiFurnaceDummy() {
 	}
 
-	public void setCore(TileEntityMultiFurnaceCore core) {
+	public void setCore(TestTileEntityMultiFurnaceCore core) {
 		coreX = core.xCoord;
 		coreY = core.yCoord;
 		coreZ = core.zCoord;
 		tileEntityCore = core;
 	}
 
-	public TileEntityMultiFurnaceCore getCore() {
+	public TestTileEntityMultiFurnaceCore getCore() {
 		if (tileEntityCore == null)
-			tileEntityCore = (TileEntityMultiFurnaceCore) worldObj.getBlockTileEntity(coreX, coreY, coreZ);
+			tileEntityCore = (TestTileEntityMultiFurnaceCore) worldObj.getBlockTileEntity(coreX, coreY, coreZ);
 
 		return tileEntityCore;
 	}

@@ -1,15 +1,15 @@
 package toldea.romecraft.block;
 
-import toldea.romecraft.tileentity.TileEntityGag;
+import toldea.romecraft.tileentity.TestTileEntityGag;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public class BlockGag extends BlockContainer {
+public class TestBlockGag extends BlockContainer {
 
-	public BlockGag(int par1, Material par2Material) {
+	public TestBlockGag(int par1, Material par2Material) {
 		super(par1, par2Material);
 		// register a texture for block for textureloader not to crash the game. This image can be even empty,
 		// cause we are not going to render the gag.
@@ -20,7 +20,7 @@ public class BlockGag extends BlockContainer {
 	@Override
 	public void breakBlock(World world, int i, int j, int k, int par5, int par6) {
 		// Reading the gag's tile entity.
-		TileEntityGag tileEntity = (TileEntityGag) world.getBlockTileEntity(i, j, k);
+		TestTileEntityGag tileEntity = (TestTileEntityGag) world.getBlockTileEntity(i, j, k);
 		// If not make this check, the game may crash if there's no tile entity at i, j, k.
 		if (tileEntity != null) {
 			// Actually destroys primary block.
@@ -36,7 +36,7 @@ public class BlockGag extends BlockContainer {
 	// This method checks if primary block exists.
 	@Override
 	public void onNeighborBlockChange(World world, int i, int j, int k, int par5) {
-		TileEntityGag tileEntity = (TileEntityGag) world.getBlockTileEntity(i, j, k);
+		TestTileEntityGag tileEntity = (TestTileEntityGag) world.getBlockTileEntity(i, j, k);
 		if (tileEntity != null) {
 			// No need to check if block's Id matches the Id of our primary block,
 			// because if a player want to change a block, he needs to brake it first,
@@ -62,7 +62,7 @@ public class BlockGag extends BlockContainer {
 
 	@Override
 	public TileEntity createNewTileEntity(World world) {
-		return new TileEntityGag();
+		return new TestTileEntityGag();
 	}
 
 }

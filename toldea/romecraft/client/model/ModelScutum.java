@@ -7,7 +7,7 @@ import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.MathHelper;
 
-public class ModelScutum extends CustomArmorModel {
+public class ModelScutum extends RomeCraftArmorModel {
 	private boolean renderScutum = false;
 	
 	private ModelRenderer Scutum;

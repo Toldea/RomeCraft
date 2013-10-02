@@ -11,7 +11,7 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
-import toldea.romecraft.client.model.ModelBloomery;
+import toldea.romecraft.client.model.TestModelBloomery;
 import toldea.romecraft.client.model.ModelPilum;
 import toldea.romecraft.entity.EntityPilum;
 

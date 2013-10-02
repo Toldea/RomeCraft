@@ -1,7 +1,7 @@
 package toldea.romecraft.item;
 
 import toldea.romecraft.managers.BlockManager;
-import toldea.romecraft.tileentity.TileEntityGag;
+import toldea.romecraft.tileentity.TestTileEntityGag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
@@ -43,13 +43,13 @@ public class Gureebu extends GenericItem {
 			// If the check was successful
 			if (canPlace) {
 				// 0x02 flag will update neighboring flags, we have to use it, or we'll have some glitches.
-				world.setBlock(x, y, z, BlockManager.blockBloomery.blockID, dir, 0x02);
+				world.setBlock(x, y, z, BlockManager.testBlockBloomery.blockID, dir, 0x02);
 				// This code is placing gags one after another into the coordinates we've set.
 				for (int i = 0; i < gagShift.length; i++) {
 					shift = rotXZByDir(gagShift[i][0], y, gagShift[i][1], dir);
-					world.setBlock(x + shift[0], y + shift[1], z + shift[2], BlockManager.blockGag.blockID, dir, 0x02);
+					world.setBlock(x + shift[0], y + shift[1], z + shift[2], BlockManager.testBlockGag.blockID, dir, 0x02);
 					// For gags to know, where primary block is placed.
-					TileEntityGag tileGag = (TileEntityGag) world.getBlockTileEntity(x + shift[0], y, z + shift[1]);
+					TestTileEntityGag tileGag = (TestTileEntityGag) world.getBlockTileEntity(x + shift[0], y, z + shift[1]);
 					if (tileGag != null) {
 						tileGag.primary_x = x;
 						tileGag.primary_y = y;

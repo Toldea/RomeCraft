@@ -3,7 +3,7 @@ package toldea.romecraft.tileentity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 
-public class TileEntityGag extends TileEntity {
+public class TestTileEntityGag extends TileEntity {
 	// The coordinates of our primary block will be stored in these variables.
 	public int primary_x;
 	public int primary_y;

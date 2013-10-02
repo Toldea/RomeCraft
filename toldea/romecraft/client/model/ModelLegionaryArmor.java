@@ -9,7 +9,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 
-public class ModelLegionaryArmor extends CustomArmorModel {
+public class ModelLegionaryArmor extends RomeCraftArmorModel {
 	private boolean renderGalea = false;
 	private boolean renderLoricaSegmentata = false;
 	private boolean renderCaligae = false;

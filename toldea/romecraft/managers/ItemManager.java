@@ -1,6 +1,10 @@
 package toldea.romecraft.managers;
 
-import toldea.romecraft.client.renderer.CustomItemRenderer;
+import net.minecraft.item.EnumArmorMaterial;
+import net.minecraft.item.EnumToolMaterial;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemArmor;
+import net.minecraftforge.client.MinecraftForgeClient;
 import toldea.romecraft.client.renderer.RenderItemPilum;
 import toldea.romecraft.item.GenericItem;
 import toldea.romecraft.item.Gureebu;
@@ -8,15 +12,10 @@ import toldea.romecraft.item.ItemCustomArmor;
 import toldea.romecraft.item.ItemMeleeWeapon;
 import toldea.romecraft.item.ItemPilum;
 import toldea.romecraft.item.ItemScepter;
-import net.minecraft.item.EnumArmorMaterial;
-import net.minecraft.item.EnumToolMaterial;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemArmor;
-import net.minecraftforge.client.MinecraftForgeClient;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 
 public class ItemManager {
-	private static int nextItemID = 5000;
+	public static int nextItemID = 5000;
 
 	public static Item itemGladius = null;
 	public static Item itemScutum = null;

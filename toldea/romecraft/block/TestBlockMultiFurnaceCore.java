@@ -1,6 +1,6 @@
 package toldea.romecraft.block;
 
-import toldea.romecraft.tileentity.TileEntityMultiFurnaceCore;
+import toldea.romecraft.tileentity.TestTileEntityMultiFurnaceCore;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLiving;
@@ -12,7 +12,7 @@ import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
-public class BlockMultiFurnaceCore extends BlockContainer {
+public class TestBlockMultiFurnaceCore extends BlockContainer {
 	public static final int META_ISACTIVE = 0x00000008;
 	public static final int MASK_DIR = 0x00000007;
 	public static final int META_DIR_NORTH = 0x00000001;
@@ -20,13 +20,13 @@ public class BlockMultiFurnaceCore extends BlockContainer {
 	public static final int META_DIR_EAST = 0x00000003;
 	public static final int META_DIR_WEST = 0x00000000;
 
-	public BlockMultiFurnaceCore(int par1, Material par2Material) {
+	public TestBlockMultiFurnaceCore(int par1, Material par2Material) {
 		super(par1, par2Material);
 	}
 
 	@Override
 	public TileEntity createNewTileEntity(World world) {
-		return new TileEntityMultiFurnaceCore();
+		return new TestTileEntityMultiFurnaceCore();
 	}
 
 	@Override
@@ -34,7 +34,7 @@ public class BlockMultiFurnaceCore extends BlockContainer {
 		if (player.isSneaking())
 			return false;
 
-		TileEntityMultiFurnaceCore tileEntity = (TileEntityMultiFurnaceCore) world.getBlockTileEntity(x, y, z);
+		TestTileEntityMultiFurnaceCore tileEntity = (TestTileEntityMultiFurnaceCore) world.getBlockTileEntity(x, y, z);
 
 		if (tileEntity != null) {
 			// Determine if the Multiblock is currently known to be valid
@@ -77,7 +77,7 @@ public class BlockMultiFurnaceCore extends BlockContainer {
 		metadata |= facing;
 		world.setBlockMetadataWithNotify(x, y, z, metadata, 2);
 		
-		TileEntityMultiFurnaceCore tileEntity = (TileEntityMultiFurnaceCore) world.getBlockTileEntity(x, y, z);
+		TestTileEntityMultiFurnaceCore tileEntity = (TestTileEntityMultiFurnaceCore) world.getBlockTileEntity(x, y, z);
 
 		if (tileEntity != null) {
 			// Determine if the Multiblock is currently known to be valid
@@ -93,7 +93,7 @@ public class BlockMultiFurnaceCore extends BlockContainer {
 
 	@Override
 	public void breakBlock(World world, int x, int y, int z, int par5, int par6) {
-		TileEntityMultiFurnaceCore tileEntity = (TileEntityMultiFurnaceCore) world.getBlockTileEntity(x, y, z);
+		TestTileEntityMultiFurnaceCore tileEntity = (TestTileEntityMultiFurnaceCore) world.getBlockTileEntity(x, y, z);
 
 		if (tileEntity != null)
 			tileEntity.invalidateMultiblock();

@@ -1,12 +1,12 @@
 package toldea.romecraft.tileentity;
 
-import toldea.romecraft.block.BlockMultiFurnaceCore;
+import toldea.romecraft.block.TestBlockMultiFurnaceCore;
 import toldea.romecraft.managers.BlockManager;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 
-public class TileEntityMultiFurnaceCore extends TileEntity {
+public class TestTileEntityMultiFurnaceCore extends TileEntity {
 	private boolean isValidMultiblock = false;
 
 	public boolean getIsValid() {
@@ -17,7 +17,7 @@ public class TileEntityMultiFurnaceCore extends TileEntity {
 		isValidMultiblock = false;
 
 		int metadata = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
-		metadata = metadata & BlockMultiFurnaceCore.MASK_DIR;
+		metadata = metadata & TestBlockMultiFurnaceCore.MASK_DIR;
 		worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, metadata, 2);
 
 		// furnaceBurnTime = 0;
@@ -28,10 +28,10 @@ public class TileEntityMultiFurnaceCore extends TileEntity {
 	}
 
 	public boolean checkIfProperlyFormed() {
-		int dir = (getBlockMetadata() & BlockMultiFurnaceCore.MASK_DIR);
+		int dir = (getBlockMetadata() & TestBlockMultiFurnaceCore.MASK_DIR);
 
-		int depthMultiplier = ((dir == BlockMultiFurnaceCore.META_DIR_NORTH || dir == BlockMultiFurnaceCore.META_DIR_WEST) ? 1 : -1);
-		boolean forwardZ = ((dir == BlockMultiFurnaceCore.META_DIR_NORTH) || (dir == BlockMultiFurnaceCore.META_DIR_SOUTH));
+		int depthMultiplier = ((dir == TestBlockMultiFurnaceCore.META_DIR_NORTH || dir == TestBlockMultiFurnaceCore.META_DIR_WEST) ? 1 : -1);
+		boolean forwardZ = ((dir == TestBlockMultiFurnaceCore.META_DIR_NORTH) || (dir == TestBlockMultiFurnaceCore.META_DIR_SOUTH));
 
 		/*
 		 * FORWARD BACKWARD North: -z +z South: +z -z East: +x -x West: -x +x
@@ -90,10 +90,10 @@ public class TileEntityMultiFurnaceCore extends TileEntity {
 	}
 
 	public void convertDummies() {
-		int dir = (getBlockMetadata() & BlockMultiFurnaceCore.MASK_DIR);
+		int dir = (getBlockMetadata() & TestBlockMultiFurnaceCore.MASK_DIR);
 
-		int depthMultiplier = ((dir == BlockMultiFurnaceCore.META_DIR_NORTH || dir == BlockMultiFurnaceCore.META_DIR_WEST) ? 1 : -1);
-		boolean forwardZ = ((dir == BlockMultiFurnaceCore.META_DIR_NORTH) || (dir == BlockMultiFurnaceCore.META_DIR_SOUTH));
+		int depthMultiplier = ((dir == TestBlockMultiFurnaceCore.META_DIR_NORTH || dir == TestBlockMultiFurnaceCore.META_DIR_WEST) ? 1 : -1);
+		boolean forwardZ = ((dir == TestBlockMultiFurnaceCore.META_DIR_NORTH) || (dir == TestBlockMultiFurnaceCore.META_DIR_SOUTH));
 
 		/*
 		 * FORWARD BACKWARD North: -z +z South: +z -z East: +x -x West: -x +x
@@ -118,9 +118,9 @@ public class TileEntityMultiFurnaceCore extends TileEntity {
 					if (horiz == 0 && vert == 1 && depth == 1)
 						continue;
 
-					worldObj.setBlock(x, y, z, BlockManager.multiFurnaceDummy.blockID);
+					worldObj.setBlock(x, y, z, BlockManager.testMultiFurnaceDummy.blockID);
 					worldObj.markBlockForUpdate(x, y, z);
-					TileEntityMultiFurnaceDummy dummyTE = (TileEntityMultiFurnaceDummy) worldObj.getBlockTileEntity(x, y, z);
+					TestTileEntityMultiFurnaceDummy dummyTE = (TestTileEntityMultiFurnaceDummy) worldObj.getBlockTileEntity(x, y, z);
 					dummyTE.setCore(this);
 				}
 			}
@@ -130,10 +130,10 @@ public class TileEntityMultiFurnaceCore extends TileEntity {
 	}
 
 	private void revertDummies() {
-		int dir = (getBlockMetadata() & BlockMultiFurnaceCore.MASK_DIR);
+		int dir = (getBlockMetadata() & TestBlockMultiFurnaceCore.MASK_DIR);
 
-		int depthMultiplier = ((dir == BlockMultiFurnaceCore.META_DIR_NORTH || dir == BlockMultiFurnaceCore.META_DIR_WEST) ? 1 : -1);
-		boolean forwardZ = ((dir == BlockMultiFurnaceCore.META_DIR_NORTH) || (dir == BlockMultiFurnaceCore.META_DIR_SOUTH));
+		int depthMultiplier = ((dir == TestBlockMultiFurnaceCore.META_DIR_NORTH || dir == TestBlockMultiFurnaceCore.META_DIR_WEST) ? 1 : -1);
+		boolean forwardZ = ((dir == TestBlockMultiFurnaceCore.META_DIR_NORTH) || (dir == TestBlockMultiFurnaceCore.META_DIR_SOUTH));
 
 		/*
 		 * FORWARD BACKWARD North: -z +z South: +z -z East: +x -x West: -x +x
@@ -157,7 +157,7 @@ public class TileEntityMultiFurnaceCore extends TileEntity {
 					if (horiz == 0 && vert == 1 && depth == 1)
 						continue;
 
-					if (blockId != BlockManager.multiFurnaceDummy.blockID)
+					if (blockId != BlockManager.testMultiFurnaceDummy.blockID)
 						continue;
 
 					worldObj.setBlock(x, y, z, Block.brick.blockID);

@@ -2,10 +2,10 @@ package toldea.romecraft.client.renderer;
 
 import org.lwjgl.opengl.GL11;
 
-import toldea.romecraft.client.model.ModelBloomery;
+import toldea.romecraft.client.model.TestModelBloomery;
 import toldea.romecraft.client.model.ModelPilum;
 import toldea.romecraft.managers.BlockManager;
-import toldea.romecraft.tileentity.TileEntityBloomery;
+import toldea.romecraft.tileentity.TestTileEntityBloomery;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.model.ModelChest;
@@ -17,11 +17,11 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
-public class TileEntityBloomeryRenderer extends TileEntitySpecialRenderer {
+public class TestTileEntityBloomeryRenderer extends TileEntitySpecialRenderer {
 //	/private ModelBloomery modelBloomery;
 	private ModelPilum modelBloomery;
 
-	public TileEntityBloomeryRenderer() {
+	public TestTileEntityBloomeryRenderer() {
 		//modelBloomery = new ModelBloomery();
 		modelBloomery = new ModelPilum();
 	}
@@ -32,17 +32,17 @@ public class TileEntityBloomeryRenderer extends TileEntitySpecialRenderer {
 		GL11.glPushMatrix();
 		// This will move our renderer so that it will be on proper place in the world
 		GL11.glTranslatef((float) d, (float) d1, (float) d2);
-		TileEntityBloomery tileEntityBloomery = (TileEntityBloomery) tileEntity;
+		TestTileEntityBloomery tileEntityBloomery = (TestTileEntityBloomery) tileEntity;
 		/*
 		 * Note that true tile entity coordinates (tileEntity.xCoord, etc) do not match to render coordinates (d, etc) that are calculated as [true coordinates]
 		 * - [player coordinates (camera coordinates)]
 		 */
-		renderBlockBloomery(tileEntityBloomery, tileEntity.worldObj, tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord, BlockManager.blockBloomery);
+		renderBlockBloomery(tileEntityBloomery, tileEntity.worldObj, tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord, BlockManager.testBlockBloomery);
 		GL11.glPopMatrix();
 	}
 
 	// And this method actually renders your tile entity
-	public void renderBlockBloomery(TileEntityBloomery tl, World world, int i, int j, int k, Block block) {
+	public void renderBlockBloomery(TestTileEntityBloomery tl, World world, int i, int j, int k, Block block) {
 		Tessellator tessellator = Tessellator.instance;
 		// This will make your block brightness dependent from surroundings lighting.
 		float f = block.getBlockBrightness(world, i, j, k);

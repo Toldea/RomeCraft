@@ -19,23 +19,16 @@ public class TileEntityRomanVillageForum extends TileEntity {
 	public void invalidateMultiblock() {
 		// Check if we were a valid multiblock. If so, try to get the accompanying village and flag it for annihilation by the RomanVillageCollection.
 		if (isValidMultiblock) {
-			RomanVillage romanVillage = TickManager.romanVillageCollection.getVillageAt(MathHelper.floor_double(xCoord), MathHelper.floor_double(yCoord), MathHelper.floor_double(zCoord));
+			RomanVillage romanVillage = TickManager.romanVillageCollection.getVillageAt(MathHelper.floor_double(xCoord), MathHelper.floor_double(yCoord),
+					MathHelper.floor_double(zCoord));
 			if (romanVillage != null) {
 				romanVillage.flagForAnnihilation();
 			}
 		}
-		
-		isValidMultiblock = false;
-		
-		/*
-		int metadata = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
-		metadata = metadata & BlockRomanVillageForum.MASK_DIR;
-		
-		worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, metadata, 2);
-		*/
-		worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, 0, 2);
 
-		//revertDummies();
+		isValidMultiblock = false;
+
+		worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, 0, 2);
 	}
 
 	public boolean checkIfProperlyFormed() {
@@ -56,98 +49,31 @@ public class TileEntityRomanVillageForum extends TileEntity {
 						} else {
 							// Check if the rest of the blocks around us are air, return false if not.
 							if (blockId != 0) {
-								//System.out.println("Block Isn't Air! BlockId: " + blockId + " (" + x + ", " + y + ", " + z + ")");
+								// System.out.println("Block Isn't Air! BlockId: " + blockId + " (" + x + ", " + y + ", " + z + ")");
 								return false;
 							} else {
 								continue;
 							}
 						}
-					} 
+					}
 					// On the row below us make sure everything is made out of some sort of quartz block.
 					else if (!isBlockQuartz(x, y, z)) {
-						//System.out.println("Block Isn't Quartz! BlockId: " + blockId + " (" + x + ", " + y + ", " + z + ")");
+						// System.out.println("Block Isn't Quartz! BlockId: " + blockId + " (" + x + ", " + y + ", " + z + ")");
 						return false;
 					}
 				}
 			}
 		}
 		if (!worldObj.isRemote) {
-			TickManager.romanVillageCollection.createNewVillage(MathHelper.floor_double(xCoord), MathHelper.floor_double(yCoord), MathHelper.floor_double(zCoord));
+			TickManager.romanVillageCollection.createNewVillage(MathHelper.floor_double(xCoord), MathHelper.floor_double(yCoord),
+					MathHelper.floor_double(zCoord));
 		}
-		
+
 		isValidMultiblock = true;
-		
+
 		return true;
 	}
-	/*
-	public void convertDummies() {
-		int dir = (getBlockMetadata() & BlockRomanVillageForum.MASK_DIR);
 
-		int depthMultiplier = ((dir == BlockRomanVillageForum.META_DIR_NORTH || dir == BlockRomanVillageForum.META_DIR_WEST) ? 1 : -1);
-		boolean forwardZ = ((dir == BlockRomanVillageForum.META_DIR_NORTH) || (dir == BlockRomanVillageForum.META_DIR_SOUTH));
-
-		for (int horiz = -1; horiz <= 1; horiz++) // Horizontal (X or Z)
-		{
-			for (int vert = -1; vert <= 1; vert++) // Vertical (Y)
-			{
-				for (int depth = 0; depth <= 2; depth++) // Depth (Z or X)
-				{
-					int x = xCoord + (forwardZ ? horiz : (depth * depthMultiplier));
-					int y = yCoord + vert;
-					int z = zCoord + (forwardZ ? (depth * depthMultiplier) : horiz);
-
-					if (horiz == 0 && vert == 0 && (depth == 0 || depth == 1))
-						continue;
-					if (horiz == 0 && vert == -1 && (depth == 0 || depth == 1))
-						continue;
-					if (horiz == 0 && vert == 1 && depth == 1)
-						continue;
-
-					worldObj.setBlock(x, y, z, BlockManager.multiFurnaceDummy.blockID);
-					worldObj.markBlockForUpdate(x, y, z);
-					TileEntityMultiFurnaceDummy dummyTE = (TileEntityMultiFurnaceDummy) worldObj.getBlockTileEntity(x, y, z);
-					dummyTE.setCore(this);
-				}
-			}
-		}
-
-		isValidMultiblock = true;
-	}
-
-	private void revertDummies() {
-		int dir = (getBlockMetadata() & BlockRomanVillageForum.MASK_DIR);
-
-		int depthMultiplier = ((dir == BlockRomanVillageForum.META_DIR_NORTH || dir == BlockRomanVillageForum.META_DIR_WEST) ? 1 : -1);
-		boolean forwardZ = ((dir == BlockRomanVillageForum.META_DIR_NORTH) || (dir == BlockRomanVillageForum.META_DIR_SOUTH));
-
-		for (int horiz = -1; horiz <= 1; horiz++) { // Horizontal (X or Z)
-			for (int vert = -1; vert <= 1; vert++) { // Vertical (Y)
-				for (int depth = 0; depth <= 2; depth++) { // Depth (Z or X)
-					int x = xCoord + (forwardZ ? horiz : (depth * depthMultiplier));
-					int y = yCoord + vert;
-					int z = zCoord + (forwardZ ? (depth * depthMultiplier) : horiz);
-
-					int blockId = worldObj.getBlockId(x, y, z);
-
-					if (horiz == 0 && vert == 0 && (depth == 0 || depth == 1))
-						continue;
-					if (horiz == 0 && vert == -1 && (depth == 0 || depth == 1))
-						continue;
-					if (horiz == 0 && vert == 1 && depth == 1)
-						continue;
-
-					if (blockId != BlockManager.multiFurnaceDummy.blockID)
-						continue;
-
-					worldObj.setBlock(x, y, z, Block.brick.blockID);
-					worldObj.markBlockForUpdate(x, y, z);
-				}
-			}
-		}
-
-		isValidMultiblock = false;
-	}
-*/
 	@Override
 	public void writeToNBT(NBTTagCompound par1) {
 		super.writeToNBT(par1);
@@ -159,7 +85,7 @@ public class TileEntityRomanVillageForum extends TileEntity {
 		super.readFromNBT(par1);
 		isValidMultiblock = par1.getBoolean("isValidMultiblock");
 	}
-	
+
 	private boolean isBlockQuartz(int x, int y, int z) {
 		int blockId = worldObj.getBlockId(x, y, z);
 		if (blockId == Block.blockNetherQuartz.blockID || blockId == Block.stairsNetherQuartz.blockID || blockId == Block.stairsNetherQuartz.blockID) {
@@ -171,24 +97,28 @@ public class TileEntityRomanVillageForum extends TileEntity {
 			return false;
 		}
 	}
-	
+
 	public void printVillageData(EntityPlayer player) {
 		if (!isValidMultiblock) {
 			player.sendChatToPlayer(ChatMessageComponent.createFromText("Roman Village forum is not formed properly!"));
-		} 
-		
-		RomanVillage romanVillage = TickManager.romanVillageCollection.getVillageAt(MathHelper.floor_double(xCoord), MathHelper.floor_double(yCoord), MathHelper.floor_double(zCoord));
-		
+		}
+
+		RomanVillage romanVillage = TickManager.romanVillageCollection.getVillageAt(MathHelper.floor_double(xCoord), MathHelper.floor_double(yCoord),
+				MathHelper.floor_double(zCoord));
+
 		if (romanVillage == null) {
 			player.sendChatToPlayer(ChatMessageComponent.createFromText("Roman Village forum is null!"));
 		} else {
 			player.sendChatToPlayer(ChatMessageComponent.createFromText("-- Roman Village Data --"));
-			player.sendChatToPlayer(ChatMessageComponent.createFromText(new String("Village Forum: (" + romanVillage.getVillageForumLocation().posX + ", " + romanVillage.getVillageForumLocation().posY + ", " + romanVillage.getVillageForumLocation().posZ + ")")));
-			player.sendChatToPlayer(ChatMessageComponent.createFromText(new String("Village Center: (" + romanVillage.getCenter().posX + ", " + romanVillage.getCenter().posY + ", " + romanVillage.getCenter().posZ + ")")));
+			player.sendChatToPlayer(ChatMessageComponent.createFromText(new String("Village Forum: (" + romanVillage.getVillageForumLocation().posX + ", "
+					+ romanVillage.getVillageForumLocation().posY + ", " + romanVillage.getVillageForumLocation().posZ + ")")));
+			player.sendChatToPlayer(ChatMessageComponent.createFromText(new String("Village Center: (" + romanVillage.getCenter().posX + ", "
+					+ romanVillage.getCenter().posY + ", " + romanVillage.getCenter().posZ + ")")));
 			player.sendChatToPlayer(ChatMessageComponent.createFromText(new String("Village Radius: " + romanVillage.getVillageRadius())));
 			player.sendChatToPlayer(ChatMessageComponent.createFromText(new String("Number of Doors: " + romanVillage.getNumVillageDoors())));
-			player.sendChatToPlayer(ChatMessageComponent.createFromText(new String("Number of Plebs: " + romanVillage.getNumPlebs() + " / " + romanVillage.getMaxNumberOfPlebs())));
-			
+			player.sendChatToPlayer(ChatMessageComponent.createFromText(new String("Number of Plebs: " + romanVillage.getNumPlebs() + " / "
+					+ romanVillage.getMaxNumberOfPlebs())));
+
 		}
 	}
 }
