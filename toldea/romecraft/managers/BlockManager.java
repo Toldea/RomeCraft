@@ -1,35 +1,29 @@
 package toldea.romecraft.managers;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.CraftingManager;
+import net.minecraftforge.common.MinecraftForge;
 import toldea.romecraft.block.BlockBloomery;
 import toldea.romecraft.block.BlockGag;
 import toldea.romecraft.block.BlockMultiFurnaceCore;
 import toldea.romecraft.block.BlockMultiFurnaceDummy;
+import toldea.romecraft.block.BlockRomanBrickSlab;
 import toldea.romecraft.block.BlockRomanVillageForum;
 import toldea.romecraft.block.RomeCraftBlock;
-import toldea.romecraft.block.RomeCraftBlockStep;
-import toldea.romecraft.tileentity.TileEntityBloomery;
-import toldea.romecraft.tileentity.TileEntityGag;
-import toldea.romecraft.tileentity.TileEntityMultiFurnaceCore;
-import toldea.romecraft.tileentity.TileEntityMultiFurnaceDummy;
-import toldea.romecraft.tileentity.TileEntityRomanVillageForum;
+import toldea.romecraft.block.RomeCraftBlockHalfSlab;
+import toldea.romecraft.item.RomeCraftItemSlab;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockHalfSlab;
-import net.minecraft.block.BlockStep;
-import net.minecraft.block.BlockWoodSlab;
-import net.minecraft.block.material.Material;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.CraftingManager;
-import net.minecraftforge.common.MinecraftForge;
 
 public class BlockManager {
 	private static int nextBlockID = 500;
 
 	public static Block blockRomanBricks = null;
-	public static Block blockRomanBricksHalfSlab = null;
-	public static Block blockRomanBricksDoubleSlab = null;
+	public static RomeCraftBlockHalfSlab blockRomanBricksHalfSlab = null;
+	public static RomeCraftBlockHalfSlab blockRomanBricksDoubleSlab = null;
 
 	public static Block romanVillageForum = null;
 
@@ -39,28 +33,22 @@ public class BlockManager {
 	public static Block blockGag = null;
 
 	public static void registerBlocks() {
-		/*
-		 * blockRomanBricksHalfSlab = (BlockHalfSlab) (new RomeCraftBlockStep(nextBlockID++, false)).setHardness(2.0F).setResistance(10.0F)
-		 * .setStepSound(Block.soundStoneFootstep).setUnlocalizedName("blockRomanBricksSlab").setTextureName("romecraft:romanbrick");
-		 * GameRegistry.registerBlock(blockRomanBricksHalfSlab, "blockRomanBricksHalfSlab"); LanguageRegistry.addName(blockRomanBricksHalfSlab,
-		 * "Roman Bricks Slab");
-		 */
-
 		// Roman Bricks
 		blockRomanBricks = new RomeCraftBlock(nextBlockID++, Material.rock).setHardness(2.0F).setResistance(10.0F).setStepSound(Block.soundStoneFootstep)
 				.setUnlocalizedName("romanbrick").setTextureName("romecraft:romanbrick");
 		GameRegistry.registerBlock(blockRomanBricks, "blockRomanBricks");
 		LanguageRegistry.addName(blockRomanBricks, "Roman Bricks");
 
-		blockRomanBricksHalfSlab = ((BlockStep) new RomeCraftBlockStep(nextBlockID++, false)).setHardness(2.0F).setResistance(10.0F)
-				.setStepSound(Block.soundStoneFootstep).setUnlocalizedName("blockRomanBricksHalfSlab").setTextureName("romecraft:romanbrick");
+		blockRomanBricksHalfSlab = (RomeCraftBlockHalfSlab) new BlockRomanBrickSlab(nextBlockID++, false).setHardness(2.0F).setResistance(10.0F)
+				.setStepSound(Block.soundStoneFootstep).setUnlocalizedName("blockRomanBricksSlab").setTextureName("romecraft:romanbrick");
+		blockRomanBricksDoubleSlab = (RomeCraftBlockHalfSlab) new BlockRomanBrickSlab(nextBlockID++, true).setHardness(2.0F).setResistance(10.0F)
+				.setStepSound(Block.soundStoneFootstep).setUnlocalizedName("blockRomanBricksSlab").setTextureName("romecraft:romanbrick");
 		GameRegistry.registerBlock(blockRomanBricksHalfSlab, "blockRomanBricksHalfSlab");
-		LanguageRegistry.addName(blockRomanBricksHalfSlab, "Roman Bricks Slab");
-
-		blockRomanBricksDoubleSlab = ((BlockHalfSlab) new RomeCraftBlockStep(nextBlockID++, true)).setHardness(2.0F).setResistance(10.0F)
-				.setStepSound(Block.soundStoneFootstep).setUnlocalizedName("blockRomanBricksDoubleSlab").setTextureName("romecraft:romanbrick");
 		GameRegistry.registerBlock(blockRomanBricksDoubleSlab, "blockRomanBricksDoubleSlab");
+		LanguageRegistry.instance().addStringLocalization(((BlockRomanBrickSlab)blockRomanBricksHalfSlab).getFullSlabName(0)+".name", "Roman Bricks Slab");
 		LanguageRegistry.addName(blockRomanBricksDoubleSlab, "Roman Bricks Double Slab");
+		Item.itemsList[blockRomanBricksHalfSlab.blockID] = (new RomeCraftItemSlab(blockRomanBricksHalfSlab.blockID - 256,
+				(RomeCraftBlockHalfSlab) blockRomanBricksHalfSlab, (RomeCraftBlockHalfSlab) blockRomanBricksDoubleSlab, false));
 
 		// RomanVillageForum Block
 		romanVillageForum = new BlockRomanVillageForum(nextBlockID++, Material.rock).setUnlocalizedName("romanVillageForum");
