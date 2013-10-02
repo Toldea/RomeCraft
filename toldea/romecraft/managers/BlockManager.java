@@ -14,6 +14,7 @@ import toldea.romecraft.block.BlockRomanBrickSlab;
 import toldea.romecraft.block.BlockRomanVillageForum;
 import toldea.romecraft.block.RomeCraftBlock;
 import toldea.romecraft.block.RomeCraftBlockHalfSlab;
+import toldea.romecraft.block.RomeCraftBlockStairs;
 import toldea.romecraft.item.RomeCraftItemSlab;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
@@ -24,6 +25,7 @@ public class BlockManager {
 	public static Block blockRomanBricks = null;
 	public static RomeCraftBlockHalfSlab blockRomanBricksHalfSlab = null;
 	public static RomeCraftBlockHalfSlab blockRomanBricksDoubleSlab = null;
+	public static Block blockRomanBricksStairs = null;
 
 	public static Block romanVillageForum = null;
 
@@ -49,7 +51,11 @@ public class BlockManager {
 		LanguageRegistry.addName(blockRomanBricksDoubleSlab, "Roman Bricks Double Slab");
 		Item.itemsList[blockRomanBricksHalfSlab.blockID] = (new RomeCraftItemSlab(blockRomanBricksHalfSlab.blockID - 256,
 				(RomeCraftBlockHalfSlab) blockRomanBricksHalfSlab, (RomeCraftBlockHalfSlab) blockRomanBricksDoubleSlab, false));
-
+		
+		blockRomanBricksStairs = (new RomeCraftBlockStairs(nextBlockID++, blockRomanBricks, 0)).setUnlocalizedName("blockRomanBricksStairs");
+		GameRegistry.registerBlock(blockRomanBricksStairs, "blockRomanBricksStairs");
+		LanguageRegistry.addName(blockRomanBricksStairs, "Roman Brick Stairs");
+		
 		// RomanVillageForum Block
 		romanVillageForum = new BlockRomanVillageForum(nextBlockID++, Material.rock).setUnlocalizedName("romanVillageForum");
 		GameRegistry.registerBlock(romanVillageForum, "blockRomanVillageForum");
