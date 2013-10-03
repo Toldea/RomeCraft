@@ -1,24 +1,30 @@
 package toldea.romecraft.block;
 
-import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatMessageComponent;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import toldea.romecraft.tileentity.TileEntityRomanVillageForum;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockRomanVillageForum extends RomeCraftBlockContainer {
+	@SideOnly(Side.CLIENT)
+	private Icon block_side;
+	@SideOnly(Side.CLIENT)
+	private Icon block_top;
+	@SideOnly(Side.CLIENT)
+	private Icon block_bottom;
+
 	/*
-	public static final int META_ISACTIVE = 0x00000008;
-	public static final int MASK_DIR = 0x00000007;
-	public static final int META_DIR_NORTH = 0x00000001;
-	public static final int META_DIR_SOUTH = 0x00000002;
-	public static final int META_DIR_EAST = 0x00000003;
-	public static final int META_DIR_WEST = 0x00000000;
+	 * public static final int META_ISACTIVE = 0x00000008; public static final int MASK_DIR = 0x00000007; public static final int META_DIR_NORTH = 0x00000001;
+	 * public static final int META_DIR_SOUTH = 0x00000002; public static final int META_DIR_EAST = 0x00000003; public static final int META_DIR_WEST =
+	 * 0x00000000;
 	 */
 	public BlockRomanVillageForum(int par1, Material par2Material) {
 		super(par1, par2Material);
@@ -40,7 +46,7 @@ public class BlockRomanVillageForum extends RomeCraftBlockContainer {
 			// Determine if the Multiblock is currently known to be valid
 			if (!tileEntity.getIsValid()) {
 				if (tileEntity.checkIfProperlyFormed()) {
-					//tileEntity.convertDummies();
+					// tileEntity.convertDummies();
 					if (world.isRemote) {
 						player.sendChatToPlayer(ChatMessageComponent.createFromText("Roman Village Forum MultiBlock Created!"));
 					}
@@ -50,7 +56,7 @@ public class BlockRomanVillageForum extends RomeCraftBlockContainer {
 			// Check if the multi-block structure has been formed.
 			if (tileEntity.getIsValid()) {
 				if (world.isRemote) {
-					//player.sendChatToPlayer(ChatMessageComponent.createFromText("Roman Forum is formed correctly!"));
+					// player.sendChatToPlayer(ChatMessageComponent.createFromText("Roman Forum is formed correctly!"));
 					tileEntity.printVillageData(player);
 				}
 				// player.openGui(MultiFurnaceMod.instance, ModConfig.GUIIDs.multiFurnace, world, x, y, z);
@@ -63,22 +69,15 @@ public class BlockRomanVillageForum extends RomeCraftBlockContainer {
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack itemStack) {
 		int metadata = 0;
-		
+
 		/*
-		int facing = META_DIR_WEST;
-
-		int dir = MathHelper.floor_double((double) (entity.rotationYaw * 4f / 360f) + 0.5) & 3;
-		if (dir == 0)
-			facing = META_DIR_NORTH;
-		if (dir == 1)
-			facing = META_DIR_EAST;
-		if (dir == 2)
-			facing = META_DIR_SOUTH;
-		if (dir == 3)
-			facing = META_DIR_WEST;
-
-		metadata |= facing;
-		*/
+		 * int facing = META_DIR_WEST;
+		 * 
+		 * int dir = MathHelper.floor_double((double) (entity.rotationYaw * 4f / 360f) + 0.5) & 3; if (dir == 0) facing = META_DIR_NORTH; if (dir == 1) facing =
+		 * META_DIR_EAST; if (dir == 2) facing = META_DIR_SOUTH; if (dir == 3) facing = META_DIR_WEST;
+		 * 
+		 * metadata |= facing;
+		 */
 		world.setBlockMetadataWithNotify(x, y, z, metadata, 2);
 
 		TileEntityRomanVillageForum tileEntity = (TileEntityRomanVillageForum) world.getBlockTileEntity(x, y, z);
@@ -87,7 +86,7 @@ public class BlockRomanVillageForum extends RomeCraftBlockContainer {
 			// Determine if the Multiblock is currently known to be valid
 			if (!tileEntity.getIsValid()) {
 				if (tileEntity.checkIfProperlyFormed()) {
-					//tileEntity.convertDummies();
+					// tileEntity.convertDummies();
 					if (world.isRemote) {
 					}
 				}
@@ -104,5 +103,33 @@ public class BlockRomanVillageForum extends RomeCraftBlockContainer {
 
 		// dropItems(world, x, y, z);
 		super.breakBlock(world, x, y, z, par5, par6);
+	}
+
+	/**
+	 * From the specified side and block metadata retrieves the blocks texture. Args: side, metadata
+	 */
+	@SideOnly(Side.CLIENT)
+	@Override
+	public Icon getIcon(int par1, int par2) {
+		switch (par1) {
+		case 0:
+			return block_bottom;
+		case 1:
+			return block_top;
+		default:
+			return block_side;
+		}
+	}
+
+	/**
+	 * When this method is called, your block should register all the icons it needs with the given IconRegister. This is the only chance you get to register
+	 * icons.
+	 */
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void registerIcons(IconRegister par1IconRegister) {
+		this.block_side = par1IconRegister.registerIcon(this.getTextureName() + "_" + "side");
+		this.block_top = par1IconRegister.registerIcon(this.getTextureName() + "_" + "top");
+		this.block_bottom = par1IconRegister.registerIcon(this.getTextureName() + "_" + "bottom");
 	}
 }

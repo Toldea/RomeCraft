@@ -53,10 +53,6 @@ public class BlockManager {
 		Item.itemsList[blockRomanBricksHalfSlab.blockID] = (new RomeCraftItemSlab(blockRomanBricksHalfSlab.blockID - 256,
 				(RomeCraftBlockHalfSlab) blockRomanBricksHalfSlab, (RomeCraftBlockHalfSlab) blockRomanBricksDoubleSlab, false));
 		
-		/*
-		Item.itemsList[blockRomanBricksHalfSlab.blockID] = (new RomeCraftItemSlab(blockRomanBricksHalfSlab.blockID - 256,
-				(RomeCraftBlockHalfSlab) blockRomanBricksHalfSlab, (RomeCraftBlockHalfSlab) blockRomanBricksDoubleSlab, false));
-		 */
 		blockRomanBricksStairs = (new RomeCraftBlockStairs(nextBlockID++, blockRomanBricks, 0)).setUnlocalizedName("blockRomanBricksStairs");
 		GameRegistry.registerBlock(blockRomanBricksStairs, "blockRomanBricksStairs");
 		LanguageRegistry.addName(blockRomanBricksStairs, "Roman Brick Stairs");
@@ -68,7 +64,7 @@ public class BlockManager {
 		LanguageRegistry.addName(blockMarble, "Marble");
 
 		// RomanVillageForum Block
-		romanVillageForum = new BlockRomanVillageForum(nextBlockID++, Material.rock).setUnlocalizedName("romanVillageForum");
+		romanVillageForum = new BlockRomanVillageForum(nextBlockID++, Material.rock).setUnlocalizedName("romanVillageForum").setTextureName("romecraft:forum");
 		GameRegistry.registerBlock(romanVillageForum, "blockRomanVillageForum");
 		LanguageRegistry.addName(romanVillageForum, "Forum");
 
