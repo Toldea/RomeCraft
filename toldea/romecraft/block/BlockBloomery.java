@@ -1,5 +1,7 @@
 package toldea.romecraft.block;
 
+import java.util.Random;
+
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
@@ -11,9 +13,11 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import toldea.romecraft.tileentity.TileEntityBloomery;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockBloomery extends RomeCraftBlockContainer {
-	public static final int META_ISACTIVE = 0x00000008;
+	// public static final int META_ISACTIVE = 0x00000008;
 	public static final int MASK_DIR = 0x00000007;
 	public static final int META_DIR_NORTH = 0x00000001;
 	public static final int META_DIR_SOUTH = 0x00000002;
@@ -72,14 +76,18 @@ public class BlockBloomery extends RomeCraftBlockContainer {
 		int facing = META_DIR_WEST;
 
 		int dir = MathHelper.floor_double((double) (entity.rotationYaw * 4f / 360f) + 0.5) & 3;
-		if (dir == 0)
+		if (dir == 0) {
 			facing = META_DIR_NORTH;
-		if (dir == 1)
+		}
+		if (dir == 1) {
 			facing = META_DIR_EAST;
-		if (dir == 2)
+		}
+		if (dir == 2) {
 			facing = META_DIR_SOUTH;
-		if (dir == 3)
+		}
+		if (dir == 3) {
 			facing = META_DIR_WEST;
+		}
 
 		metadata |= facing;
 		world.setBlockMetadataWithNotify(x, y, z, metadata, 2);
@@ -99,16 +107,11 @@ public class BlockBloomery extends RomeCraftBlockContainer {
 	@Override
 	public void breakBlock(World world, int x, int y, int z, int par5, int par6) {
 		TileEntityBloomery tileEntity = (TileEntityBloomery) world.getBlockTileEntity(x, y, z);
-		System.out.println("breakBlock");
 		if (tileEntity != null && tileEntity.getIsValid()) {
-			System.out.println("tileEntity and multiblock valid");
 			// Get any items in the Bloomery block and drop them.
 			for (int i = 0; i < tileEntity.getSizeInventory(); i++) {
-				System.out.println("looping through inventory slots..");
 				ItemStack stack = tileEntity.getStackInSlotOnClosing(i);
-
 				if (stack != null) {
-					System.out.println("preparing to drop stack for slot #" + i);
 					float spawnX = x + world.rand.nextFloat();
 					float spawnY = y + world.rand.nextFloat();
 					float spawnZ = z + world.rand.nextFloat();
@@ -129,5 +132,48 @@ public class BlockBloomery extends RomeCraftBlockContainer {
 		}
 
 		super.breakBlock(world, x, y, z, par5, par6);
+	}
+
+	/**
+	 * A randomly called display update to be able to add particles or other items for display
+	 */
+	@SideOnly(Side.CLIENT)
+	public void randomDisplayTick(World world, int x, int y, int z, Random random) {
+		TileEntityBloomery tileEntity = (TileEntityBloomery) world.getBlockTileEntity(x, y, z);
+		if (tileEntity != null && tileEntity.getIsValid() && tileEntity.getIsMaster() && tileEntity.getIsActive()) {
+			int metadata = world.getBlockMetadata(x, y, z);
+
+			int facing = metadata & MASK_DIR;
+
+			double yMod = (0.3 * random.nextDouble());
+			double xMod = -0.02;
+			double zMod = (0.75 - (0.5 * random.nextDouble()));
+			double temp = 0.0;
+
+			switch (facing) {
+			case META_DIR_EAST:
+				xMod += 1.04;
+				break;
+			case META_DIR_NORTH:
+				temp = xMod;
+				xMod = zMod;
+				zMod = temp;
+				break;
+			case META_DIR_SOUTH:
+				temp = xMod;
+				xMod = zMod;
+				zMod = temp + 1.04;
+				break;
+			default:
+				break;
+			}
+
+			world.spawnParticle("smoke", x + xMod, y + yMod, z + zMod, 0, 0, 0);
+			world.spawnParticle("flame", x + xMod, y + yMod, z + zMod, 0, 0, 0);
+
+			xMod = zMod = .5f;
+			world.spawnParticle("smoke", x + xMod, y + 1.7, z + zMod, 0, .1, 0);
+			world.spawnParticle("smoke", x + xMod, y + 1.7, z + zMod, 0, .1, 0);
+		}
 	}
 }

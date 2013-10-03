@@ -13,11 +13,13 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
+import toldea.romecraft.block.BlockBloomery;
 import toldea.romecraft.managers.BlockManager;
 
 public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 	private boolean isValidBloomeryMultiblock = false;
 	private boolean isMaster = false;
+	private boolean isActive = false;
 
 	private static final int[] slots_invald = new int[] {};
 	private static final int[] slots_bottom = new int[] { 2, 1 };
@@ -36,6 +38,10 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 		return isMaster;
 	}
 
+	public boolean getIsActive() {
+		return isActive;
+	}
+
 	public void invalidateMultiblock() {
 		isValidBloomeryMultiblock = false;
 
@@ -45,9 +51,9 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 		currentItemBurnTime = 0;
 		furnaceCookTime = 0;
 
-		// int metadata = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
-		// metadata = metadata & TestBlockMultiFurnaceCore.MASK_DIR;
-		// worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, metadata, 2);
+		int metadata = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
+		metadata = metadata & BlockBloomery.MASK_DIR;
+		worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, metadata, 2);
 
 		updateValidityOther(false);
 	}
@@ -106,7 +112,6 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 		this.isValidBloomeryMultiblock = isProperlyFormed;
 		this.isMaster = isMaster;
 		if (isMaster && bloomeryItems == null) {
-			System.out.println("Initializing inventory stack slots!");
 			bloomeryItems = new ItemStack[3];
 		}
 		// Notify this block so it knows if it needs to start or stop rendering.
@@ -146,6 +151,7 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 		super.writeToNBT(compound);
 		compound.setBoolean("isValid", isValidBloomeryMultiblock);
 		compound.setBoolean("isMaster", isMaster);
+		compound.setBoolean("isActive", isActive);
 
 		if (isValidBloomeryMultiblock && isMaster) {
 			compound.setShort("BurnTime", (short) furnaceBurnTime);
@@ -171,6 +177,7 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 		super.readFromNBT(compound);
 		isValidBloomeryMultiblock = compound.getBoolean("isValid");
 		isMaster = compound.getBoolean("isMaster");
+		isActive = compound.getBoolean("isActive");
 
 		if (isValidBloomeryMultiblock && isMaster) {
 			NBTTagList itemsTag = compound.getTagList("Items");
@@ -238,7 +245,6 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 		boolean flag = furnaceBurnTime > 0;
 		boolean flag1 = false;
 		int metadata = getBlockMetadata();
-		int isActive = (metadata >> 3);
 
 		if (furnaceBurnTime > 0)
 			furnaceBurnTime--;
@@ -271,13 +277,17 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 				furnaceCookTime = 0;
 			}
 
-			if (isActive == 0 && furnaceBurnTime > 0) {
+			if (furnaceBurnTime > 0) {
 				flag1 = true;
-				metadata = getBlockMetadata();
-				isActive = 1;
-				// metadata = (isActive << 3) | (metadata & BlockMultiFurnaceCore.META_ISACTIVE);
-
+				// metadata = getBlockMetadata();
+				// isActive = 1;
+				// metadata = (isActive << 3) | (metadata & BlockBloomery.META_ISACTIVE);
 				// worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, metadata, 2);
+				this.isActive = true;
+				worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+			} else if (this.isActive) {
+				this.isActive = false;
+				worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 			}
 		}
 
@@ -289,14 +299,11 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 	@Override
 	public int getSizeInventory() {
 		if (!this.isValidBloomeryMultiblock) {
-			System.out.println("getSizeInventory: isValidBloomeryMultiblock is false!");
 			return 0;
 		} else if (this.isMaster) {
 			if (bloomeryItems == null) {
-				System.out.println("getSizeInventory: bloomeryItems is null!");
 				return 0;
 			} else {
-				System.out.println("getSizeInventory: bloomeryItems length: " + bloomeryItems.length);
 				return bloomeryItems.length;
 			}
 		} else {
