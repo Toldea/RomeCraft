@@ -42,14 +42,13 @@ public class BlockBloomery extends RomeCraftBlockContainer {
 			if (!tileEntity.getIsValid()) {
 				if (tileEntity.checkIfProperlyFormed()) {
 					if (world.isRemote) {
-						player.sendChatToPlayer(ChatMessageComponent.createFromText("Bloomery Created!"));
 					}
 				}
 			}
 
 			if (tileEntity.getIsValid()) {
 				if (world.isRemote) {
-					player.sendChatToPlayer(ChatMessageComponent.createFromText("I am the Bloomery " + (tileEntity.getIsMaster() ? " MASTER!" : " slave :(")));
+					player.sendChatToPlayer(ChatMessageComponent.createFromText("I am the Bloomery " + (tileEntity.getIsMaster() ? " master." : " slave.")));
 				}
 				// player.openGui(MultiFurnaceMod.instance, ModConfig.GUIIDs.multiFurnace, world, x, y, z);
 			}
@@ -66,7 +65,6 @@ public class BlockBloomery extends RomeCraftBlockContainer {
 			if (!tileEntity.getIsValid()) {
 				if (tileEntity.checkIfProperlyFormed()) {
 					if (world.isRemote) {
-						((EntityPlayer) entity).sendChatToPlayer(ChatMessageComponent.createFromText("Bloomery Created on block placement :O!"));
 					}
 				}
 			}

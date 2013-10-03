@@ -25,11 +25,6 @@ public class TileEntityBloomery extends TileEntity {
 		// int metadata = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
 		// metadata = metadata & TestBlockMultiFurnaceCore.MASK_DIR;
 		// worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, metadata, 2);
-		// worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, 0, 2);
-
-		// furnaceBurnTime = 0;
-		// currentItemBurnTime = 0;
-		// furnaceCookTime = 0;
 
 		updateValidityOther(false);
 	}
