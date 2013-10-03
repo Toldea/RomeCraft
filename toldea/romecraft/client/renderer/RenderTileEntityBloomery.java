@@ -10,6 +10,7 @@ import net.minecraft.world.World;
 
 import org.lwjgl.opengl.GL11;
 
+import toldea.romecraft.block.BlockBloomery;
 import toldea.romecraft.client.model.ModelBloomery;
 import toldea.romecraft.client.model.ModelBloomeryBlock;
 import toldea.romecraft.managers.BlockManager;
@@ -72,8 +73,27 @@ public class RenderTileEntityBloomery extends TileEntitySpecialRenderer {
 		// Move and rotate the model to the right position and orientation.
 		GL11.glPushMatrix();
 		GL11.glTranslatef(0.5F, 0.5f, 0.5F);
-		GL11.glRotatef(180f, 0F, 1F, 0F);
 		GL11.glRotatef(180f, 0F, 0F, 1F);
+
+		// Get the direction the block should be facing from the metadata and rotate the model appropriately.
+		int dir = (tl.getBlockMetadata() & BlockBloomery.MASK_DIR);
+		switch (dir) {
+		case 0:
+			// East
+			GL11.glRotatef(-90f, 0F, 1F, 0F);
+			break;
+		case 1:
+			// South
+			break;
+		case 2:
+			// North
+			GL11.glRotatef(180f, 0F, 1F, 0F);
+			break;
+		case 3:
+			// West
+			GL11.glRotatef(90f, 0F, 1F, 0F);
+			break;
+		}
 
 		// Bind the texture and render the model.
 		bindTexture(bloomeryTexture);
@@ -98,7 +118,6 @@ public class RenderTileEntityBloomery extends TileEntitySpecialRenderer {
 		// Move and rotate the model to the right position and orientation.
 		GL11.glPushMatrix();
 		GL11.glTranslatef(0.5F, 0.5f, 0.5F);
-		GL11.glRotatef(180f, 0F, 1F, 0F);
 		GL11.glRotatef(180f, 0F, 0F, 1F);
 
 		// Bind the texture and render the model.

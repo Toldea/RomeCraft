@@ -97,11 +97,7 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 		}
 
 		// If we survived all these checks, we are properly formed.
-		isValidBloomeryMultiblock = true;
-		isMaster = !isSlave;
-		if (isMaster) {
-			bloomeryItems = new ItemStack[3];
-		}
+		setIsProperlyFormed(true, !isSlave);
 		updateValidityOther(true);
 		return true;
 	}
@@ -109,6 +105,10 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 	public void setIsProperlyFormed(boolean isProperlyFormed, boolean isMaster) {
 		this.isValidBloomeryMultiblock = isProperlyFormed;
 		this.isMaster = isMaster;
+		if (isMaster && bloomeryItems == null) {
+			System.out.println("Initializing inventory stack slots!");
+			bloomeryItems = new ItemStack[3];
+		}
 		// Notify this block so it knows if it needs to start or stop rendering.
 		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
@@ -147,20 +147,21 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 		compound.setBoolean("isValid", isValidBloomeryMultiblock);
 		compound.setBoolean("isMaster", isMaster);
 
-		if (isMaster) {
+		if (isValidBloomeryMultiblock && isMaster) {
 			compound.setShort("BurnTime", (short) furnaceBurnTime);
 			compound.setShort("CookTime", (short) furnaceCookTime);
 			NBTTagList itemsList = new NBTTagList();
 
-			for (int i = 0; i < bloomeryItems.length; i++) {
-				if (bloomeryItems[i] != null) {
-					NBTTagCompound slotTag = new NBTTagCompound();
-					slotTag.setByte("Slot", (byte) i);
-					bloomeryItems[i].writeToNBT(slotTag);
-					itemsList.appendTag(slotTag);
+			if (bloomeryItems != null) {
+				for (int i = 0; i < bloomeryItems.length; i++) {
+					if (bloomeryItems[i] != null) {
+						NBTTagCompound slotTag = new NBTTagCompound();
+						slotTag.setByte("Slot", (byte) i);
+						bloomeryItems[i].writeToNBT(slotTag);
+						itemsList.appendTag(slotTag);
+					}
+					compound.setTag("Items", itemsList);
 				}
-
-				compound.setTag("Items", itemsList);
 			}
 		}
 	}
@@ -171,7 +172,7 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 		isValidBloomeryMultiblock = compound.getBoolean("isValid");
 		isMaster = compound.getBoolean("isMaster");
 
-		if (isMaster) {
+		if (isValidBloomeryMultiblock && isMaster) {
 			NBTTagList itemsTag = compound.getTagList("Items");
 
 			bloomeryItems = new ItemStack[3];
@@ -215,14 +216,16 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 		if (canSmelt()) {
 			ItemStack itemStack = FurnaceRecipes.smelting().getSmeltingResult(bloomeryItems[0]);
 
-			if (bloomeryItems[2] == null)
+			if (bloomeryItems[2] == null) {
 				bloomeryItems[2] = itemStack.copy();
-			else if (bloomeryItems[2].isItemEqual(itemStack))
+			} else if (bloomeryItems[2].isItemEqual(itemStack)) {
 				bloomeryItems[2].stackSize += itemStack.stackSize;
+			}
 
 			bloomeryItems[0].stackSize--;
-			if (bloomeryItems[0].stackSize <= 0)
+			if (bloomeryItems[0].stackSize <= 0) {
 				bloomeryItems[0] = null;
+			}
 		}
 	}
 
@@ -286,11 +289,14 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 	@Override
 	public int getSizeInventory() {
 		if (!this.isValidBloomeryMultiblock) {
+			System.out.println("getSizeInventory: isValidBloomeryMultiblock is false!");
 			return 0;
 		} else if (this.isMaster) {
 			if (bloomeryItems == null) {
+				System.out.println("getSizeInventory: bloomeryItems is null!");
 				return 0;
 			} else {
+				System.out.println("getSizeInventory: bloomeryItems length: " + bloomeryItems.length);
 				return bloomeryItems.length;
 			}
 		} else {
@@ -335,8 +341,15 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 
 	@Override
 	public ItemStack getStackInSlotOnClosing(int i) {
-		// TODO Auto-generated method stub
-		return null;
+		if (!this.isValidBloomeryMultiblock) {
+			return null;
+		} else if (this.isMaster) {
+			ItemStack item = getStackInSlot(i);
+			setInventorySlotContents(i, null);
+			return item;
+		} else {
+			return getMasterTileEntity().getStackInSlotOnClosing(i);
+		}
 	}
 
 	@Override
