@@ -12,6 +12,7 @@ import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import toldea.romecraft.managers.BlockManager;
 import toldea.romecraft.tileentity.TileEntityBloomery;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -53,6 +54,10 @@ public class BlockBloomery extends RomeCraftBlockContainer {
 
 		if (tileEntity != null) {
 			if (!tileEntity.getIsValid()) {
+				if (player.inventory.getCurrentItem().itemID == BlockManager.blockBloomery.blockID) {
+					return false;
+				}
+				
 				if (tileEntity.checkIfProperlyFormed()) {
 					if (world.isRemote) {
 					}

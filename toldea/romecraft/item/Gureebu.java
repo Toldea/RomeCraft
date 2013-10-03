@@ -7,7 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
-public class Gureebu extends GenericItem {
+public class Gureebu extends RomeCraftItem {
 
 	public Gureebu(int id) {
 		super(id);

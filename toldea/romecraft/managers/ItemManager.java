@@ -6,12 +6,11 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraftforge.client.MinecraftForgeClient;
 import toldea.romecraft.client.renderer.RenderItemPilum;
-import toldea.romecraft.item.GenericItem;
-import toldea.romecraft.item.Gureebu;
 import toldea.romecraft.item.ItemCustomArmor;
 import toldea.romecraft.item.ItemMeleeWeapon;
 import toldea.romecraft.item.ItemPilum;
 import toldea.romecraft.item.ItemScepter;
+import toldea.romecraft.item.RomeCraftItem;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 
 public class ItemManager {
@@ -28,15 +27,17 @@ public class ItemManager {
 	public static Item itemPugio = null;
 	public static Item itemSarcina = null;
 	public static Item itemSudis = null;
+
 	public static Item itemScepter = null;
-	public static Item itemGureebu = null;
+
+	public static Item itemIronBloom = null;
 
 	public static void registerItems() {
 		// Gladius
 		itemGladius = new ItemMeleeWeapon(nextItemID++, EnumToolMaterial.IRON).setUnlocalizedName("gladius").setTextureName("romecraft:gladius");
 		LanguageRegistry.addName(itemGladius, "Gladius");
 		// Scutum
-		itemScutum = new GenericItem(nextItemID++).setUnlocalizedName("scutum").setTextureName("romecraft:scutum").setFull3D();
+		itemScutum = new RomeCraftItem(nextItemID++).setUnlocalizedName("scutum").setTextureName("romecraft:scutum").setFull3D();
 		LanguageRegistry.addName(itemScutum, "Scutum");
 		// Lorica Segmentata
 		itemLoricaSegmentata = (ItemArmor) (new ItemCustomArmor(nextItemID++, EnumArmorMaterial.IRON, 2, 1)).setUnlocalizedName("loricaSegmentata")
@@ -58,21 +59,23 @@ public class ItemManager {
 		LanguageRegistry.addName(itemPilum, "Pilum");
 		MinecraftForgeClient.registerItemRenderer(itemPilum.itemID, new RenderItemPilum());
 		// Verutum
-		itemVerutum = new GenericItem(nextItemID++).setUnlocalizedName("verutum").setTextureName("romecraft:verutum");
+		itemVerutum = new RomeCraftItem(nextItemID++).setUnlocalizedName("verutum").setTextureName("romecraft:verutum");
 		LanguageRegistry.addName(itemVerutum, "Verutum");
 		// Pugio
-		itemPugio = new GenericItem(nextItemID++).setUnlocalizedName("pugio").setTextureName("romecraft:pugio");
+		itemPugio = new RomeCraftItem(nextItemID++).setUnlocalizedName("pugio").setTextureName("romecraft:pugio");
 		LanguageRegistry.addName(itemPugio, "Pugio");
 		// Sarcina
-		itemSarcina = new GenericItem(nextItemID++).setUnlocalizedName("sarcina").setTextureName("romecraft:sarcina");
+		itemSarcina = new RomeCraftItem(nextItemID++).setUnlocalizedName("sarcina").setTextureName("romecraft:sarcina");
 		LanguageRegistry.addName(itemSarcina, "Sarcina");
 		// Sudis
-		itemSudis = new GenericItem(nextItemID++).setUnlocalizedName("sudis").setTextureName("romecraft:sudis");
+		itemSudis = new RomeCraftItem(nextItemID++).setUnlocalizedName("sudis").setTextureName("romecraft:sudis");
 		LanguageRegistry.addName(itemSudis, "Sudis");
 
 		// Scepter
 		itemScepter = new ItemScepter(nextItemID++).setUnlocalizedName("scepter").setTextureName("romecraft:scepter");
-		// Gureebu
-		itemGureebu = new Gureebu(nextItemID++).setUnlocalizedName("gureebu").setTextureName("romecraft:gureebu");
+
+		// Iron Bloom
+		itemIronBloom = new RomeCraftItem(nextItemID++).setUnlocalizedName("itemIronBloom").setTextureName("romecraft:ironbloom");
+		LanguageRegistry.addName(itemIronBloom, "Iron Bloom");
 	}
 }

@@ -18,7 +18,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.ArrowLooseEvent;
 import net.minecraftforge.event.entity.player.ArrowNockEvent;
 
-public class ItemPilum extends GenericItem {
+public class ItemPilum extends RomeCraftItem {
 	// Stone Sword like melee damage
 	private float meleeDamage = 5f;
 

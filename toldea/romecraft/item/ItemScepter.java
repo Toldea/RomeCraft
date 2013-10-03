@@ -20,7 +20,7 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
-public class ItemScepter extends GenericItem {
+public class ItemScepter extends RomeCraftItem {
 	public ItemScepter(int id) {
 		super(id);
 		this.setMaxStackSize(1);

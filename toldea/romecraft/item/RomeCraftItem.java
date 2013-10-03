@@ -4,9 +4,9 @@ import toldea.romecraft.managers.CreativeTabsManager;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 
-public class GenericItem extends Item {
+public class RomeCraftItem extends Item {
 
-	public GenericItem(int id) {
+	public RomeCraftItem(int id) {
 		super(id);
 		this.setCreativeTab(CreativeTabsManager.tabRomeCraft);
 	}

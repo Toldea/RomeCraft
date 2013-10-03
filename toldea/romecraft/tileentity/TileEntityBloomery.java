@@ -5,7 +5,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.INetworkManager;
@@ -14,6 +13,7 @@ import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
 import toldea.romecraft.block.BlockBloomery;
+import toldea.romecraft.item.crafting.BloomeryRecipes;
 import toldea.romecraft.managers.BlockManager;
 
 public class TileEntityBloomery extends TileEntity implements ISidedInventory {
@@ -206,7 +206,7 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 		if (bloomeryItems == null || bloomeryItems[0] == null)
 			return false;
 		else {
-			ItemStack itemStack = FurnaceRecipes.smelting().getSmeltingResult(bloomeryItems[0]);
+			ItemStack itemStack = BloomeryRecipes.smelting().getSmeltingResult(bloomeryItems[0]);
 			if (itemStack == null)
 				return false;
 			if (bloomeryItems[2] == null)
@@ -221,7 +221,7 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 
 	public void smeltItem() {
 		if (canSmelt()) {
-			ItemStack itemStack = FurnaceRecipes.smelting().getSmeltingResult(bloomeryItems[0]);
+			ItemStack itemStack = BloomeryRecipes.smelting().getSmeltingResult(bloomeryItems[0]);
 
 			if (bloomeryItems[2] == null) {
 				bloomeryItems[2] = itemStack.copy();
@@ -395,7 +395,6 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 
 	@Override
 	public boolean isUseableByPlayer(EntityPlayer entityplayer) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
