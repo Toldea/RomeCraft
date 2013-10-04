@@ -60,11 +60,11 @@ public class RenderTileEntityBloomery extends TileEntitySpecialRenderer {
 	/**
 	 * Renders the fully formed Bloomery model.
 	 */
-	public void renderTileEntityBloomery(TileEntityBloomery tl, World world, int i, int j, int k, Block block) {
+	public void renderTileEntityBloomery(TileEntityBloomery tl, World world, int x, int y, int z, Block block) {
 		// Add lighting to the model.
 		Tessellator tessellator = Tessellator.instance;
-		float f = block.getBlockBrightness(world, i, j, k);
-		int l = world.getLightBrightnessForSkyBlocks(i, j, k, 0);
+		float f = block.getBlockBrightness(world, x, y, z);
+		int l = world.getLightBrightnessForSkyBlocks(x, y, z, 0);
 		int l1 = l % 65536;
 		int l2 = l / 65536;
 		tessellator.setColorOpaque_F(f, f, f);

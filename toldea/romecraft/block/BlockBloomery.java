@@ -57,7 +57,7 @@ public class BlockBloomery extends RomeCraftBlockContainer {
 				if (player.inventory.getCurrentItem().itemID == BlockManager.blockBloomery.blockID) {
 					return false;
 				}
-				
+
 				if (tileEntity.checkIfProperlyFormed()) {
 					if (world.isRemote) {
 					}

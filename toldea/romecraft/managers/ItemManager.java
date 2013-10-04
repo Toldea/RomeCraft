@@ -6,8 +6,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraftforge.client.MinecraftForgeClient;
 import toldea.romecraft.client.renderer.RenderItemPilum;
-import toldea.romecraft.item.ItemCustomArmor;
-import toldea.romecraft.item.ItemMeleeWeapon;
+import toldea.romecraft.item.RomeCraftArmor;
+import toldea.romecraft.item.RomeCraftItemMeleeWeapon;
 import toldea.romecraft.item.ItemPilum;
 import toldea.romecraft.item.ItemScepter;
 import toldea.romecraft.item.RomeCraftItem;
@@ -28,30 +28,32 @@ public class ItemManager {
 	public static Item itemSarcina = null;
 	public static Item itemSudis = null;
 
+	public static Item itemLegionaryEquipment = null;
+
 	public static Item itemScepter = null;
 
 	public static Item itemIronBloom = null;
 
 	public static void registerItems() {
 		// Gladius
-		itemGladius = new ItemMeleeWeapon(nextItemID++, EnumToolMaterial.IRON).setUnlocalizedName("gladius").setTextureName("romecraft:gladius");
+		itemGladius = new RomeCraftItemMeleeWeapon(nextItemID++, EnumToolMaterial.IRON).setUnlocalizedName("gladius").setTextureName("romecraft:gladius");
 		LanguageRegistry.addName(itemGladius, "Gladius");
 		// Scutum
 		itemScutum = new RomeCraftItem(nextItemID++).setUnlocalizedName("scutum").setTextureName("romecraft:scutum").setFull3D();
 		LanguageRegistry.addName(itemScutum, "Scutum");
 		// Lorica Segmentata
-		itemLoricaSegmentata = (ItemArmor) (new ItemCustomArmor(nextItemID++, EnumArmorMaterial.IRON, 2, 1)).setUnlocalizedName("loricaSegmentata")
+		itemLoricaSegmentata = (ItemArmor) (new RomeCraftArmor(nextItemID++, EnumArmorMaterial.IRON, 2, 1)).setUnlocalizedName("loricaSegmentata")
 				.setTextureName("romecraft:loricasegmentata");
 		LanguageRegistry.addName(itemLoricaSegmentata, "Lorica Segmentata");
 		// Galea
-		itemGalea = (ItemArmor) (new ItemCustomArmor(nextItemID++, EnumArmorMaterial.IRON, 2, 0)).setUnlocalizedName("galea").setTextureName("romecraft:galea");
+		itemGalea = (ItemArmor) (new RomeCraftArmor(nextItemID++, EnumArmorMaterial.IRON, 2, 0)).setUnlocalizedName("galea").setTextureName("romecraft:galea");
 		LanguageRegistry.addName(itemGalea, "Galea");
 		// Cingulum
-		itemCingulum = (ItemArmor) (new ItemCustomArmor(nextItemID++, EnumArmorMaterial.IRON, 2, 2)).setUnlocalizedName("cingulum").setTextureName(
+		itemCingulum = (ItemArmor) (new RomeCraftArmor(nextItemID++, EnumArmorMaterial.IRON, 2, 2)).setUnlocalizedName("cingulum").setTextureName(
 				"romecraft:cingulum");
 		LanguageRegistry.addName(itemCingulum, "Cingulum");
 		// Caligae
-		itemCaligae = (ItemArmor) (new ItemCustomArmor(nextItemID++, EnumArmorMaterial.IRON, 2, 3)).setUnlocalizedName("caligae").setTextureName(
+		itemCaligae = (ItemArmor) (new RomeCraftArmor(nextItemID++, EnumArmorMaterial.IRON, 2, 3)).setUnlocalizedName("caligae").setTextureName(
 				"romecraft:caligae");
 		LanguageRegistry.addName(itemCaligae, "Caligae");
 		// Pilum
@@ -70,6 +72,10 @@ public class ItemManager {
 		// Sudis
 		itemSudis = new RomeCraftItem(nextItemID++).setUnlocalizedName("sudis").setTextureName("romecraft:sudis");
 		LanguageRegistry.addName(itemSudis, "Sudis");
+
+		// Legionary Equipment
+		itemLegionaryEquipment = new RomeCraftItem(nextItemID++).setUnlocalizedName("itemLegionaryEquipment").setTextureName("romecraft:legionaryequipment");
+		LanguageRegistry.addName(itemLegionaryEquipment, "Legionary Equipment");
 
 		// Scepter
 		itemScepter = new ItemScepter(nextItemID++).setUnlocalizedName("scepter").setTextureName("romecraft:scepter");
