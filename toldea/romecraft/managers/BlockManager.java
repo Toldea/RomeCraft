@@ -30,11 +30,6 @@ public class BlockManager {
 	public static Block blockBloomery = null;
 	public static Block blockBellows = null;
 
-	public static Block testMultiFurnaceCore = null;
-	public static Block testMultiFurnaceDummy = null;
-	public static Block testBlockBloomery = null;
-	public static Block testBlockGag = null;
-
 	public static void registerBlocks() {
 		// Roman Bricks
 		blockRomanBricks = new RomeCraftBlock(nextBlockID++, Material.rock).setHardness(2.0F).setResistance(10.0F).setStepSound(Block.soundStoneFootstep)

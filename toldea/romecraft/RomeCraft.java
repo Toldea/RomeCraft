@@ -5,6 +5,7 @@ import toldea.romecraft.managers.CreativeTabsManager;
 import toldea.romecraft.managers.EntityManager;
 import toldea.romecraft.managers.EventManager;
 import toldea.romecraft.managers.ItemManager;
+import toldea.romecraft.managers.PacketManager;
 import toldea.romecraft.managers.RecipeManager;
 import toldea.romecraft.managers.TickManager;
 import toldea.romecraft.managers.TileEntityManager;
@@ -18,7 +19,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 
 @Mod(modid = "RomeCraftID", name = "RomeCraft", version = "0.0.0")
-@NetworkMod(clientSideRequired = true, serverSideRequired = false, channels = { "ToldeaRC" }, packetHandler = PacketHandler.class)
+@NetworkMod(clientSideRequired = true, serverSideRequired = false, channels = { PacketManager.CHANNEL }, packetHandler = PacketManager.class)
 public class RomeCraft {
 	// The instance of your mod that Forge uses.
 	@Instance(value = "RomeCraftID")

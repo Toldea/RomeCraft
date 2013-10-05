@@ -12,9 +12,11 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
+import net.minecraft.world.World;
 import toldea.romecraft.block.BlockBloomery;
 import toldea.romecraft.item.crafting.BloomeryRecipes;
 import toldea.romecraft.managers.BlockManager;
+import toldea.romecraft.managers.PacketManager;
 
 public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 	private boolean isValidBloomeryMultiblock = false;
@@ -195,6 +197,15 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 			furnaceBurnTime = compound.getShort("BurnTime");
 			furnaceCookTime = compound.getShort("CookTime");
 			currentItemBurnTime = TileEntityFurnace.getItemBurnTime(bloomeryItems[1]);
+		}
+	}
+	
+	public void applyBellowsBoost(World world) {
+		if (world.isRemote) {
+			System.out.println("Applying bellows boost - Sending packet to server!");
+			PacketManager.sendApplyBellowsBoostPacket(this);
+		} else {
+			System.out.println("Receiving bellow boost packet! Server now synced with client.");
 		}
 	}
 

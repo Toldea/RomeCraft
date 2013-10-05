@@ -27,13 +27,15 @@ public class TileEntityBellows extends TileEntity {
 		}
 	}
 
-	public void pushBellows() {
+	public boolean pushBellows() {
 		if (worldObj.isRemote) {
 			if (!recentlyPushed) {
 				contracting = true;
 				recentlyPushed = true;
+				return true;
 			}
 		}
+		return false;
 	}
 
 	public float getBellowsRotation() {

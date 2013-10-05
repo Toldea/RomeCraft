@@ -1,5 +1,7 @@
 package toldea.romecraft.managers;
 
+import net.minecraft.block.Block;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 
@@ -8,8 +10,6 @@ public class RecipeManager {
 	private static final CraftingManager craftingManager = CraftingManager.getInstance();
 	
 	public static void registerCraftingRecipes() {
-		//CraftingManager.getInstance().addRecipe(new ItemStack(BlockManager.testMultiFurnaceCore, 1), "XXX", "X X", "XXX", 'X', Block.brick);
-		
 		craftingManager.addShapelessRecipe(new ItemStack(ItemManager.itemLegionaryEquipment, 1), new Object[] {
 			ItemManager.itemGalea,
 			ItemManager.itemLoricaSegmentata,
@@ -21,5 +21,7 @@ public class RecipeManager {
 			ItemManager.itemSarcina,
 			ItemManager.itemSudis
 			});
+		
+		craftingManager.addRecipe(new ItemStack(BlockManager.blockBellows, 1), "AA ", "BBC", "AA ", 'A', Block.planks, 'B', Item.leather, 'C', Item.ingotIron);
 	}
 }
