@@ -1,20 +1,10 @@
 package toldea.romecraft.entity.ai;
 
-import java.io.Console;
-import java.util.List;
-
-import toldea.romecraft.entity.EntityLegionary;
-import toldea.romecraft.entity.ai.Contubernium.Facing;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.command.IEntitySelector;
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.ai.EntityAIAvoidEntity;
 import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.entity.ai.RandomPositionGenerator;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import toldea.romecraft.entity.EntityLegionary;
+import toldea.romecraft.entity.ai.Contubernium.Facing;
 
 public class EntityAIFormationMoveTowardsLocation extends EntityAIBase {
 	World worldObj;
@@ -82,7 +72,6 @@ public class EntityAIFormationMoveTowardsLocation extends EntityAIBase {
 			if (entityLegionary.getDistanceSq(xPosition, yPosition, zPosition) < 3d) {
 				return false;
 			}
-
 			return true;
 		}
 	}

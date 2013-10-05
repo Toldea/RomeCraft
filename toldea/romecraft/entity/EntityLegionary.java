@@ -1,50 +1,29 @@
 package toldea.romecraft.entity;
 
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.EntityLivingData;
+import net.minecraft.entity.IRangedAttackMob;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
+import net.minecraft.entity.monster.EntityMob;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.DamageSource;
+import net.minecraft.world.World;
 import toldea.romecraft.command.EntitySelectorLegionary;
 import toldea.romecraft.entity.ai.Contubernium;
 import toldea.romecraft.entity.ai.EntityAIChargeThrow;
 import toldea.romecraft.entity.ai.EntityAIFormationMoveTowardsEntity;
 import toldea.romecraft.entity.ai.EntityAIFormationMoveTowardsLocation;
 import toldea.romecraft.entity.ai.EntityAIMeleeAttack;
-import toldea.romecraft.entity.ai.EntityAIThrowingAttack;
 import toldea.romecraft.entity.ai.SquadManager;
-import toldea.romecraft.entity.ai.Contubernium.Facing;
 import toldea.romecraft.managers.ItemManager;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.EntityLivingData;
-import net.minecraft.entity.EnumCreatureAttribute;
-import net.minecraft.entity.IRangedAttackMob;
-import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAIArrowAttack;
-import net.minecraft.entity.ai.EntityAIAttackOnCollide;
-import net.minecraft.entity.ai.EntityAIBreakDoor;
-import net.minecraft.entity.ai.EntityAIHurtByTarget;
-import net.minecraft.entity.ai.EntityAILookIdle;
-import net.minecraft.entity.ai.EntityAIMoveThroughVillage;
-import net.minecraft.entity.ai.EntityAIMoveTowardsRestriction;
-import net.minecraft.entity.ai.EntityAIMoveTowardsTarget;
-import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
-import net.minecraft.entity.ai.EntityAISwimming;
-import net.minecraft.entity.ai.EntityAIWander;
-import net.minecraft.entity.ai.EntityAIWatchClosest;
-import net.minecraft.entity.monster.EntityMob;
-import net.minecraft.entity.monster.IMob;
-import net.minecraft.entity.passive.EntityVillager;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.projectile.EntityArrow;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ChatMessageComponent;
-import net.minecraft.util.DamageSource;
-import net.minecraft.village.MerchantRecipeList;
-import net.minecraft.world.World;
-import net.minecraftforge.event.ForgeEventFactory;
-import net.minecraftforge.event.Event.Result;
 
 public class EntityLegionary extends EntityMob implements IRangedAttackMob {
 	public enum LEGIONARY_EQUIPMENT {
@@ -73,6 +52,7 @@ public class EntityLegionary extends EntityMob implements IRangedAttackMob {
 		// this.setSneaking(true);
 
 		// this.tasks.addTask(1, new EntityAIThrowingAttack(this, 1.0D, 20, 60, pilumRange));
+		
 		this.tasks.addTask(1, new EntityAIChargeThrow(this, 5, pilumChargeRange));
 		this.tasks.addTask(2, new EntityAIMeleeAttack(this));
 		this.tasks.addTask(3, new EntityAIFormationMoveTowardsEntity(this, movementSpeed, 32.0f));

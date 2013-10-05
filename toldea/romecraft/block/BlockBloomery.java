@@ -18,7 +18,6 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockBloomery extends RomeCraftBlockContainer {
-	// public static final int META_ISACTIVE = 0x00000008;
 	public static final int MASK_DIR = 0x00000007;
 	public static final int META_DIR_NORTH = 0x00000001;
 	public static final int META_DIR_SOUTH = 0x00000002;

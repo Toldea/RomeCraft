@@ -3,6 +3,7 @@ package toldea.romecraft.managers;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.Item;
+import toldea.romecraft.block.BlockBellows;
 import toldea.romecraft.block.BlockBloomery;
 import toldea.romecraft.block.BlockRomanBrickSlab;
 import toldea.romecraft.block.BlockRomanVillageForum;
@@ -27,6 +28,7 @@ public class BlockManager {
 	public static Block romanVillageForum = null;
 	
 	public static Block blockBloomery = null;
+	public static Block blockBellows = null;
 
 	public static Block testMultiFurnaceCore = null;
 	public static Block testMultiFurnaceDummy = null;
@@ -74,30 +76,9 @@ public class BlockManager {
 		GameRegistry.registerBlock(blockBloomery, "blockBloomery");
 		LanguageRegistry.addName(blockBloomery, "Bloomery Block");
 		
-		// -- TEST BLOCKS --
-		
-		// Bloomery Block
-		/*
-		testBlockBloomery = new TestBlockBloomery(nextBlockID++, Material.clay).setHardness(0.5F).setStepSound(Block.soundGravelFootstep)
-				.setUnlocalizedName("bloomery").setCreativeTab(CreativeTabsManager.tabRomeCraft).setTextureName("romecraft:bloomery");
-		GameRegistry.registerBlock(testBlockBloomery, "bloomery");
-		LanguageRegistry.addName(testBlockBloomery, "Bloomery Block");
-		MinecraftForge.setBlockHarvestLevel(testBlockBloomery, "shovel", 0);
-
-		// 'Gag' invisable multi block.
-		testBlockGag = new TestBlockGag(nextBlockID++, Material.clay).setHardness(0.5F).setStepSound(Block.soundGravelFootstep).setUnlocalizedName("gag")
-				.setTextureName("romecraft:bloomery");
-		GameRegistry.registerBlock(testBlockGag, "gag");
-
-		// MultiFurnaceCore
-		testMultiFurnaceCore = new TestBlockMultiFurnaceCore(nextBlockID++, Material.rock).setUnlocalizedName("multiFurnaceCore");
-		GameRegistry.registerBlock(testMultiFurnaceCore, "blockMultiFurnaceCore");
-		LanguageRegistry.addName(testMultiFurnaceCore, "Multi-Furnace Core");
-
-		// MultiFurnaceDummy
-		testMultiFurnaceDummy = new TestBlockMultiFurnaceDummy(nextBlockID++).setUnlocalizedName("multiFurnaceDummy");
-		GameRegistry.registerBlock(testMultiFurnaceDummy, "blockMultiFurnaceDummy");
-		LanguageRegistry.addName(testMultiFurnaceDummy, "Multi-Furnace Dummy");
-		 */
+		// Bellows Block
+		blockBellows = new BlockBellows(nextBlockID++, Material.wood).setUnlocalizedName("blockBellows").setTextureName("romecraft:bellows");
+		GameRegistry.registerBlock(blockBellows, "blockBellows");
+		LanguageRegistry.addName(blockBellows, "Bellows");
 	}
 }

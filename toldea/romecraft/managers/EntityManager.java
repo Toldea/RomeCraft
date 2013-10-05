@@ -1,17 +1,12 @@
 package toldea.romecraft.managers;
 
-import toldea.romecraft.RomeCraft;
-import toldea.romecraft.client.renderer.RenderEntityLegionary;
-import toldea.romecraft.client.renderer.RenderEntityPilum;
-import toldea.romecraft.entity.EntityLegionary;
-import toldea.romecraft.entity.EntityPilum;
-import toldea.romecraft.entity.EntityPleb;
-import toldea.romecraft.entity.ai.Contubernium;
-import net.minecraft.client.model.ModelBiped;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityEggInfo;
 import net.minecraft.entity.EntityList;
-import cpw.mods.fml.client.registry.RenderingRegistry;
+import toldea.romecraft.RomeCraft;
+import toldea.romecraft.entity.EntityLegionary;
+import toldea.romecraft.entity.EntityPilum;
+import toldea.romecraft.entity.EntityPleb;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 
