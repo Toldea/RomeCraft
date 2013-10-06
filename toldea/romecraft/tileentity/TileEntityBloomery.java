@@ -31,6 +31,9 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 	public int furnaceBurnTime = 0;
 	public int currentItemBurnTime = 0;
 	public int furnaceCookTime = 0;
+	
+	private int bellowsActiveTime = 0;
+	private int furnaceNotBellowedTime = 0;
 
 	public boolean getIsValid() {
 		return isValidBloomeryMultiblock;
@@ -206,7 +209,13 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 			PacketManager.sendApplyBellowsBoostPacket(this);
 		} else {
 			System.out.println("Receiving bellow boost packet! Server now synced with client.");
+			bellowsActiveTime = TileEntityBellows.ROTATION_TIME;
+			furnaceNotBellowedTime = 0;
 		}
+		
+		
+		
+		System.out.println("Applying a bellows boost for " + bellowsActiveTime + " ticks!");
 	}
 
 	public boolean isBurning() {
@@ -228,6 +237,10 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 			int resultingStackSize = bloomeryItems[2].stackSize + itemStack.stackSize;
 			return (resultingStackSize <= getInventoryStackLimit() && resultingStackSize <= itemStack.getMaxStackSize());
 		}
+	}
+	
+	private boolean isApplyingBellows() {
+		return bellowsActiveTime > 0;
 	}
 
 	public void smeltItem() {
@@ -257,8 +270,13 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 		boolean flag1 = false;
 		int metadata = getBlockMetadata();
 
-		if (furnaceBurnTime > 0)
+		if (furnaceBurnTime > 0) {
 			furnaceBurnTime--;
+		}
+		
+		if (bellowsActiveTime > 0) {
+			bellowsActiveTime--;
+		}
 
 		if (!this.worldObj.isRemote) {
 			if (furnaceBurnTime == 0 && canSmelt()) {
@@ -276,7 +294,7 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 				}
 			}
 
-			if (isBurning() && canSmelt()) {
+			if (isBurning() && canSmelt() && isApplyingBellows()) {
 				furnaceCookTime++;
 
 				if (furnaceCookTime == 100) {
@@ -285,15 +303,15 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 					flag1 = true;
 				}
 			} else {
-				furnaceCookTime = 0;
+				if (furnaceNotBellowedTime < 100) {
+					furnaceNotBellowedTime++;
+				} else {
+					furnaceCookTime = 0;
+				}
 			}
 
 			if (furnaceBurnTime > 0) {
 				flag1 = true;
-				// metadata = getBlockMetadata();
-				// isActive = 1;
-				// metadata = (isActive << 3) | (metadata & BlockBloomery.META_ISACTIVE);
-				// worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, metadata, 2);
 				this.isActive = true;
 				worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 			} else if (this.isActive) {

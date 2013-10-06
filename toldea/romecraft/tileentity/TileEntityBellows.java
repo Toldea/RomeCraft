@@ -3,8 +3,10 @@ package toldea.romecraft.tileentity;
 import net.minecraft.tileentity.TileEntity;
 
 public class TileEntityBellows extends TileEntity {
-	private static float MAX_ROTATION = (float) (30f * Math.PI / 180f);
-	private static float ROTATION_SPEED = .02f;
+	private static final float MAX_ROTATION = (float) (30f * Math.PI / 180f);
+	private static final float ROTATION_SPEED = .02f;
+	
+	public static final int ROTATION_TIME =  (int) (MAX_ROTATION / ROTATION_SPEED * 2);
 
 	private float bellowsRotation = 30f;
 	private boolean contracting = false;
