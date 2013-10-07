@@ -19,6 +19,7 @@ import toldea.romecraft.tileentity.TileEntityBellows;
 public class RenderTileEntityBellows extends TileEntitySpecialRenderer {
 	private final ModelBellows modelBellows;
 	private static final ResourceLocation bellowsTexture = new ResourceLocation("romecraft", "textures/entity/bellows.png");
+	private static final ResourceLocation bellowsBagTexture = new ResourceLocation("romecraft", "textures/entity/derp.png");
 
 	public RenderTileEntityBellows() {
 		modelBellows = new ModelBellows();
@@ -32,10 +33,10 @@ public class RenderTileEntityBellows extends TileEntitySpecialRenderer {
 			GL11.glPushMatrix();
 			GL11.glTranslatef((float) d, (float) d1, (float) d2);
 
-			// renderCube((TileEntityBellows) tileEntity, tileEntity.worldObj, tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord,
-			// BlockManager.blockBellows);
-
 			renderTileEntityBellows((TileEntityBellows) tileEntity, tileEntity.worldObj, tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord,
+					BlockManager.blockBellows);
+
+			renderBellowsBag((TileEntityBellows) tileEntity, tileEntity.worldObj, tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord,
 					BlockManager.blockBellows);
 
 			GL11.glPopMatrix();
@@ -86,7 +87,7 @@ public class RenderTileEntityBellows extends TileEntitySpecialRenderer {
 
 	private static final ResourceLocation derp = new ResourceLocation("romecraft", "textures/entity/derp.png");
 
-	private void renderCube(TileEntityBellows bellows, World world, int x, int y, int z, Block block) {
+	private void renderBellowsBag(TileEntityBellows bellows, World world, int x, int y, int z, Block block) {
 		Tessellator tessellator = Tessellator.instance;
 		float f = block.getBlockBrightness(world, x, y, z);
 		int l = world.getLightBrightnessForSkyBlocks(x, y, z, 0);
@@ -95,45 +96,88 @@ public class RenderTileEntityBellows extends TileEntitySpecialRenderer {
 		tessellator.setColorOpaque_F(f, f, f);
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float) l1, (float) l2);
 
+		float bellowsRotation = bellows.getBellowsRotation();
+		bellowsRotation = TileEntityBellows.MAX_ROTATION / bellowsRotation;
+		if (bellowsRotation == 0f) {
+			bellowsRotation = .001f;
+		}
+
+		GL11.glPushMatrix();
+		GL11.glTranslatef(0.5F, 0.5f, 0.5F);
+
+		// Get the direction the block should be facing from the metadata and rotate the model appropriately.
+		int dir = (bellows.getBlockMetadata() & BlockBloomery.MASK_DIR);
+		switch (dir) {
+		case 0:
+			// East
+			GL11.glRotatef(90f, 0F, 1F, 0F);
+			break;
+		case 1:
+			// South
+			break;
+		case 2:
+			// North
+			GL11.glRotatef(180f, 0F, 1F, 0F);
+			break;
+		case 3:
+			// West
+			GL11.glRotatef(-90f, 0F, 1F, 0F);
+			break;
+		}
+
+		GL11.glTranslatef(-0.5F, -0.5f, -0.5F);
+
+		renderSingleBellowsBagFold(bellowsRotation);
+
+		GL11.glPopMatrix();
+	}
+
+	private void renderSingleBellowsBagFold(float bellowsRotation) {
+		Tessellator tessellator = Tessellator.instance;
+
+		float wf = 6f / 16f; // Width front
+		wf /= 2f;
+		float wb = 2f / 16f; // Width back
+		wb /= 2f;
+		float l = 11f / 16f; // Length
+		l /= 2f;
+		float yo = 4f / 16f; // Y Origin
+		float yt = yo + ((6f / 16f) / bellowsRotation); // Y Top
+		float lt = l - ((2f / 16f) / bellowsRotation); // Length Top
+
 		tessellator.startDrawingQuads();
 
 		// Front
-		tessellator.addVertexWithUV(0, 0, 0, 0, 0);
-		tessellator.addVertexWithUV(0, 1, 0, 0, 0);
-		tessellator.addVertexWithUV(1, 1, 0, 0, 0);
-		tessellator.addVertexWithUV(1, 0, 0, 0, 0);
-
-		// Back
-		tessellator.addVertexWithUV(0, 0, 1, 0, 0);
-		tessellator.addVertexWithUV(1, 0, 1, 0, 0);
-		tessellator.addVertexWithUV(1, 1, 1, 0, 0);
-		tessellator.addVertexWithUV(0, 1, 1, 0, 0);
+		tessellator.addVertexWithUV(.5 - wf, yo, .5 - l, 1, 1);
+		tessellator.addVertexWithUV(.5 - wf, yt, .5 - lt, 1, 0);
+		tessellator.addVertexWithUV(.5 + wf, yt, .5 - lt, 0, 0);
+		tessellator.addVertexWithUV(.5 + wf, yo, .5 - l, 0, 1);
 
 		// Bottom
-		tessellator.addVertexWithUV(0, 0, 0, 0, 0);
-		tessellator.addVertexWithUV(1, 0, 0, 0, 0);
-		tessellator.addVertexWithUV(1, 0, 1, 0, 0);
-		tessellator.addVertexWithUV(0, 0, 1, 0, 0);
+		tessellator.addVertexWithUV(.5 - wf, yo, .5 - l, 0, 0);
+		tessellator.addVertexWithUV(.5 + wf, yo, .5 - l, 1, 0);
+		tessellator.addVertexWithUV(.5 + wb, yo, .5 + l, 1, 1);
+		tessellator.addVertexWithUV(.5 - wb, yo, .5 + l, 0, 1);
 
 		// Top
-		tessellator.addVertexWithUV(0, 1, 0, 0, 0);
-		tessellator.addVertexWithUV(0, 1, 1, 0, 0);
-		tessellator.addVertexWithUV(1, 1, 1, 0, 0);
-		tessellator.addVertexWithUV(1, 1, 0, 0, 0);
+		tessellator.addVertexWithUV(.5 - wf, yt, .5 - lt, 0, 0);
+		tessellator.addVertexWithUV(.5 - wb, yo, .5 + l, 0, 1);
+		tessellator.addVertexWithUV(.5 + wb, yo, .5 + l, 1, 1);
+		tessellator.addVertexWithUV(.5 + wf, yt, .5 - lt, 1, 0);
 
 		// Right
-		tessellator.addVertexWithUV(0, 0, 0, 0, 0);
-		tessellator.addVertexWithUV(0, 0, 1, 0, 0);
-		tessellator.addVertexWithUV(0, 1, 1, 0, 0);
-		tessellator.addVertexWithUV(0, 1, 0, 0, 0);
+		tessellator.addVertexWithUV(.5 - wf, yo, .5 - l, 0, 1);
+		tessellator.addVertexWithUV(.5 - wb, yo, .5 + l, 1, 1);
+		tessellator.addVertexWithUV(.5 - wb, yo, .5 + l, 1, 0);
+		tessellator.addVertexWithUV(.5 - wf, yt, .5 - lt, 0, 0);
 
 		// Left
-		tessellator.addVertexWithUV(1, 0, 0, 0, 0);
-		tessellator.addVertexWithUV(1, 1, 0, 0, 0);
-		tessellator.addVertexWithUV(1, 1, 1, 0, 0);
-		tessellator.addVertexWithUV(1, 0, 1, 0, 0);
+		tessellator.addVertexWithUV(.5 + wf, yo, .5 - l, 1, 1);
+		tessellator.addVertexWithUV(.5 + wf, yt, .5 - lt, 1, 0);
+		tessellator.addVertexWithUV(.5 + wb, yo, .5 + l, 0, 0);
+		tessellator.addVertexWithUV(.5 + wb, yo, .5 + l, 0, 1);
 
-		Minecraft.getMinecraft().renderEngine.bindTexture(derp);
+		Minecraft.getMinecraft().renderEngine.bindTexture(bellowsBagTexture);
 		tessellator.draw();
 	}
 }
