@@ -143,8 +143,8 @@ public class BlockBloomery extends RomeCraftBlockContainer {
 	 */
 	@SideOnly(Side.CLIENT)
 	public void randomDisplayTick(World world, int x, int y, int z, Random random) {
-		TileEntityBloomery tileEntity = (TileEntityBloomery) world.getBlockTileEntity(x, y, z);
-		if (tileEntity != null && tileEntity.getIsValid() && tileEntity.getIsMaster() && tileEntity.getIsActive()) {
+		TileEntityBloomery bloomery = (TileEntityBloomery) world.getBlockTileEntity(x, y, z);
+		if (bloomery != null && bloomery.getIsValid() && bloomery.getIsMaster() && bloomery.getIsActive()) {
 			int metadata = world.getBlockMetadata(x, y, z);
 
 			int facing = metadata & MASK_DIR;
@@ -172,12 +172,21 @@ public class BlockBloomery extends RomeCraftBlockContainer {
 				break;
 			}
 
-			world.spawnParticle("smoke", x + xMod, y + yMod, z + zMod, 0, 0, 0);
-			world.spawnParticle("flame", x + xMod, y + yMod, z + zMod, 0, 0, 0);
+			boolean applyingBellows = bloomery.isApplyingBellows();
+			float upwardsVelocity = applyingBellows ? .05f : 0f;
 
+			// Bloomery bottom hole particles.
+			world.spawnParticle("smoke", x + xMod, y + yMod, z + zMod, 0, upwardsVelocity, 0);
+			if (applyingBellows) {
+				world.spawnParticle("flame", x + xMod, y + yMod, z + zMod, 0, 0, 0);
+			}
+
+			// Bloomery top hole particles.
 			xMod = zMod = .5f;
-			world.spawnParticle("smoke", x + xMod, y + 1.7, z + zMod, 0, .1, 0);
-			world.spawnParticle("smoke", x + xMod, y + 1.7, z + zMod, 0, .1, 0);
+			world.spawnParticle("smoke", x + xMod, y + 1.7, z + zMod, 0, upwardsVelocity, 0);
+			if (applyingBellows) {
+				world.spawnParticle("smoke", x + xMod, y + 1.7, z + zMod, 0, upwardsVelocity, 0);
+			}
 		}
 	}
 }

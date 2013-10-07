@@ -209,11 +209,10 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 			PacketManager.sendApplyBellowsBoostPacket(this);
 		} else {
 			System.out.println("Receiving bellow boost packet! Server now synced with client.");
-			bellowsActiveTime = TileEntityBellows.ROTATION_TIME;
-			furnaceNotBellowedTime = 0;
 		}
 		
-		
+		bellowsActiveTime = TileEntityBellows.ROTATION_TIME;
+		furnaceNotBellowedTime = 0;
 		
 		System.out.println("Applying a bellows boost for " + bellowsActiveTime + " ticks!");
 	}
@@ -239,7 +238,7 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 		}
 	}
 	
-	private boolean isApplyingBellows() {
+	public boolean isApplyingBellows() {
 		return bellowsActiveTime > 0;
 	}
 
