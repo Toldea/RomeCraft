@@ -1,9 +1,11 @@
 package toldea.romecraft.client.renderer;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -41,8 +43,16 @@ public class RenderTileEntityBloomery extends TileEntitySpecialRenderer {
 					GL11.glPushMatrix();
 					// Translate the matrix towards our location.
 					GL11.glTranslatef((float) d, (float) d1, (float) d2);
+
+					// Render the iron ore block if any are inside the bloomery.
+					ItemStack itemstack = tileEntityBloomery.getStackInSlot(0);
+					if (itemstack != null && itemstack.stackSize > 0) {
+						renderOreInsideBloomery(tileEntity.worldObj, tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord, BlockManager.blockBloomery);
+					}
+					
 					renderTileEntityBloomery(tileEntityBloomery, tileEntity.worldObj, tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord,
 							BlockManager.blockBloomery);
+					
 					GL11.glPopMatrix();
 				}
 			} else {
@@ -125,5 +135,61 @@ public class RenderTileEntityBloomery extends TileEntitySpecialRenderer {
 		modelBloomeryBlock.renderBloomery(null, 0f, 0f, 0f, 0f, 0f, .0625f);
 
 		GL11.glPopMatrix();
+	}
+
+	private void renderOreInsideBloomery(World world, int x, int y, int z, Block block) {
+		Tessellator tessellator = Tessellator.instance;
+		float f = block.getBlockBrightness(world, x, y, z);
+		int l = world.getLightBrightnessForSkyBlocks(x, y, z, 0);
+		int l1 = l % 65536;
+		int l2 = l / 65536;
+		tessellator.setColorOpaque_F(f, f, f);
+		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float) l1, (float) l2);
+
+		float oreBlockSize = 10f / 16f;
+		float f1 = oreBlockSize / 2f;
+		float f2 = 0;
+		float f3 = 1 - oreBlockSize;
+
+		tessellator.startDrawingQuads();
+
+		// Front
+		tessellator.addVertexWithUV(f1, f2, f1, 1, 1);
+		tessellator.addVertexWithUV(f1, f3, f1, 1, 0);
+		tessellator.addVertexWithUV(1 - f1, f3, f1, 0, 0);
+		tessellator.addVertexWithUV(1 - f1, f2, f1, 0, 1);
+
+		// Back
+		tessellator.addVertexWithUV(f1, f2, 1 - f1, 0, 1);
+		tessellator.addVertexWithUV(1 - f1, f2, 1 - f1, 1, 1);
+		tessellator.addVertexWithUV(1 - f1, f3, 1 - f1, 1, 0);
+		tessellator.addVertexWithUV(f1, f3, 1 - f1, 0, 0);
+
+		// Bottom
+		tessellator.addVertexWithUV(f1, f2, f1, 0, 0);
+		tessellator.addVertexWithUV(1 - f1, f2, f1, 1, 0);
+		tessellator.addVertexWithUV(1 - f1, f2, 1 - f1, 1, 1);
+		tessellator.addVertexWithUV(f1, f2, 1 - f1, 0, 1);
+
+		// Top
+		tessellator.addVertexWithUV(f1, f3, f1, 0, 0);
+		tessellator.addVertexWithUV(f1, f3, 1 - f1, 0, 1);
+		tessellator.addVertexWithUV(1 - f1, f3, 1 - f1, 1, 1);
+		tessellator.addVertexWithUV(1 - f1, f3, f1, 1, 0);
+
+		// Right
+		tessellator.addVertexWithUV(f1, f2, f1, 0, 1);
+		tessellator.addVertexWithUV(f1, f2, 1 - f1, 1, 1);
+		tessellator.addVertexWithUV(f1, f3, 1 - f1, 1, 0);
+		tessellator.addVertexWithUV(f1, f3, f1, 0, 0);
+
+		// Left
+		tessellator.addVertexWithUV(1 - f1, f2, f1, 1, 1);
+		tessellator.addVertexWithUV(1 - f1, f3, f1, 1, 0);
+		tessellator.addVertexWithUV(1 - f1, f3, 1 - f1, 0, 0);
+		tessellator.addVertexWithUV(1 - f1, f2, 1 - f1, 0, 1);
+
+		Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("textures/blocks/iron_ore.png"));
+		tessellator.draw();
 	}
 }
