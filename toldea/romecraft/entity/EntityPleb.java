@@ -80,12 +80,12 @@ public class EntityPleb extends EntityAgeable implements INpc // IMerchant, INpc
 		this(par1World, 0);
 	}
 
-	public EntityPleb(World par1World, int par2) {
+	public EntityPleb(World par1World, int profession) {
 		super(par1World);
 
 		this.setSize(0.6F, 1.8F);
 
-		// this.setProfession(par2);
+		this.setProfession(profession);
 
 		this.getNavigator().setBreakDoors(true);
 		this.getNavigator().setAvoidsWater(true);

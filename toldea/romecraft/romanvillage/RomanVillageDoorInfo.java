@@ -5,7 +5,6 @@ public class RomanVillageDoorInfo extends RomanVillageObjectInfo {
 	public final int insideDirectionX;
 	public final int insideDirectionZ;
 	public int lastActivityTimestamp;
-	public boolean isDetachedFromVillageFlag;
 	private int doorOpeningRestrictionCounter;
 
 	public RomanVillageDoorInfo(int x, int y, int z, int par4, int par5, int par6) {

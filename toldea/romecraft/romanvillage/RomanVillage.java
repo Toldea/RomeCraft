@@ -403,6 +403,7 @@ public class RomanVillage {
 
 		while (iterator.hasNext()) {
 			RomanVillageObjectInfo villageObjectInfo = (RomanVillageObjectInfo) iterator.next();
+			boolean removeObject = false;
 
 			if (villageObjectInfo instanceof RomanVillageDoorInfo) {
 				RomanVillageDoorInfo villageDoorInfo = (RomanVillageDoorInfo) villageObjectInfo;
@@ -411,19 +412,23 @@ public class RomanVillage {
 				}
 				if (!this.isBlockDoor(villageDoorInfo.posX, villageDoorInfo.posY, villageDoorInfo.posZ)
 						|| Math.abs(this.tickCounter - villageDoorInfo.lastActivityTimestamp) > 1200) {
-					this.centerHelper.posX -= villageDoorInfo.posX;
-					this.centerHelper.posY -= villageDoorInfo.posY;
-					this.centerHelper.posZ -= villageDoorInfo.posZ;
-					flag = true;
-					villageDoorInfo.isDetachedFromVillageFlag = true;
-					iterator.remove();
+					removeObject = true;
 				}
 			} else if (villageObjectInfo instanceof RomanVillageBloomeryInfo) {
 				RomanVillageBloomeryInfo villageBloomeryInfo = (RomanVillageBloomeryInfo) villageObjectInfo;
 				if (!isBlockValidBloomery(villageBloomeryInfo.posX, villageBloomeryInfo.posY, villageBloomeryInfo.posZ)) {
 					System.out.println("Removing invalid Bloomery from village!");
-					iterator.remove();
+					removeObject = true;
 				}
+			}
+
+			if (removeObject) {
+				this.centerHelper.posX -= villageObjectInfo.posX;
+				this.centerHelper.posY -= villageObjectInfo.posY;
+				this.centerHelper.posZ -= villageObjectInfo.posZ;
+				flag = true;
+				villageObjectInfo.isDetachedFromVillageFlag = true;
+				iterator.remove();
 			}
 		}
 
@@ -449,7 +454,7 @@ public class RomanVillage {
 
 	private void updateVillageRadiusAndCenter() {
 		System.out.println("RomanVillage.updateVillageRadiusAndCenter");
-		int i = this.plebDoorInfoList.size();
+		int i = this.plebDoorInfoList.size() + this.bloomeryInfoList.size();
 
 		if (i == 0) {
 			this.center.set(villageForumLocation.posX, villageForumLocation.posY, villageForumLocation.posZ);
@@ -457,11 +462,17 @@ public class RomanVillage {
 		} else {
 			this.center.set(this.centerHelper.posX / i, this.centerHelper.posY / i, this.centerHelper.posZ / i);
 			int j = 0;
-			RomanVillageDoorInfo villagedoorinfo;
+
+			RomanVillageObjectInfo villageObjectInfo;
 
 			for (Iterator iterator = this.plebDoorInfoList.iterator(); iterator.hasNext(); j = Math.max(
-					villagedoorinfo.getDistanceSquared(this.center.posX, this.center.posY, this.center.posZ), j)) {
-				villagedoorinfo = (RomanVillageDoorInfo) iterator.next();
+					villageObjectInfo.getDistanceSquared(this.center.posX, this.center.posY, this.center.posZ), j)) {
+				villageObjectInfo = (RomanVillageObjectInfo) iterator.next();
+			}
+
+			for (Iterator iterator = this.bloomeryInfoList.iterator(); iterator.hasNext(); j = Math.max(
+					villageObjectInfo.getDistanceSquared(this.center.posX, this.center.posY, this.center.posZ), j)) {
+				villageObjectInfo = (RomanVillageObjectInfo) iterator.next();
 			}
 
 			this.villageRadius = Math.max(32, (int) Math.sqrt((double) j) + 1);

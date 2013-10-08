@@ -7,10 +7,7 @@ import java.util.Map;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.model.ModelBiped;
-import net.minecraft.client.model.ModelVillager;
 import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.tileentity.TileEntitySkullRenderer;
 import net.minecraft.entity.Entity;
@@ -20,20 +17,17 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.MinecraftForgeClient;
 
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
+
+import toldea.romecraft.entity.EntityPleb;
 
 import com.google.common.collect.Maps;
 
-import toldea.romecraft.client.model.ModelPilum;
-import toldea.romecraft.entity.EntityPleb;
-import cpw.mods.fml.common.registry.VillagerRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -48,7 +42,8 @@ public class RenderEntityPleb extends RenderLiving {
 	/** List of armor texture filenames. */
 	public static String[] bipedArmorFilenamePrefix = new String[] { "leather", "chainmail", "iron", "diamond", "gold" };
 
-	private static final ResourceLocation steveTextures = new ResourceLocation("romecraft", "textures/entity/pleb.png");
+	private static final ResourceLocation plebTexture = new ResourceLocation("romecraft", "textures/entity/pleb.png");
+	private static final ResourceLocation blacksmithTexture = new ResourceLocation("romecraft", "textures/entity/pleb_blacksmith.png");
 
 	public RenderEntityPleb(ModelBiped par1ModelBiped, float par2) {
 		this(par1ModelBiped, par2, 1.0F);
@@ -165,22 +160,27 @@ public class RenderEntityPleb extends RenderLiving {
 		float f2 = 1.0F;
 		GL11.glColor3f(f2, f2, f2);
 		ItemStack itemstack = par1EntityLiving.getHeldItem();
-		this.setAnimationStatus((EntityPleb)par1EntityLiving, itemstack);
+		this.setAnimationStatus((EntityPleb) par1EntityLiving, itemstack);
 		double d3 = par4 - (double) par1EntityLiving.yOffset;
 
 		if (par1EntityLiving.isSneaking()) {
 			d3 -= 0.125D;
 		}
-		
+
 		super.doRenderLiving(par1EntityLiving, par2, d3, par6, par8, par9);
-		
+
 		this.field_82423_g.aimedBow = this.field_82425_h.aimedBow = this.modelBipedMain.aimedBow = false;
 		this.field_82423_g.isSneak = this.field_82425_h.isSneak = this.modelBipedMain.isSneak = false;
 		this.field_82423_g.heldItemRight = this.field_82425_h.heldItemRight = this.modelBipedMain.heldItemRight = 0;
 	}
 
-	protected ResourceLocation func_110856_a(EntityLiving par1EntityLiving) {
-		return steveTextures;
+	protected ResourceLocation getTexture(EntityPleb entityPleb) {
+		switch (entityPleb.getProfession()) {
+		case 1:
+			return blacksmithTexture;
+		default:
+			return plebTexture;
+		}
 	}
 
 	protected void setAnimationStatus(EntityPleb par1EntityLegionary, ItemStack par2ItemStack) {
@@ -317,7 +317,7 @@ public class RenderEntityPleb extends RenderLiving {
 	 * Returns the location of an entity's texture. Doesn't seem to be called unless you call Render.bindEntityTexture.
 	 */
 	protected ResourceLocation getEntityTexture(Entity par1Entity) {
-		return this.func_110856_a((EntityLiving) par1Entity);
+		return this.getTexture((EntityPleb) par1Entity);
 	}
 
 	/**

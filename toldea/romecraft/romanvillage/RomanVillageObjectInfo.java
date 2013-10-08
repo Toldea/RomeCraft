@@ -5,6 +5,8 @@ public class RomanVillageObjectInfo {
 	public final int posY;
 	public final int posZ;
 	
+	public boolean isDetachedFromVillageFlag;
+	
 	public RomanVillageObjectInfo(int x, int y, int z) {
 		this.posX = x;
 		this.posY = y;
