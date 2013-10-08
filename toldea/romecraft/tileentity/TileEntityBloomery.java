@@ -274,7 +274,7 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 		boolean flag1 = false;
 		int metadata = getBlockMetadata();
 
-		if (furnaceBurnTime > 0) {
+		if (flag) {
 			furnaceBurnTime--;
 		}
 
@@ -301,7 +301,7 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 			if (isBurning() && canSmelt() && isApplyingBellows()) {
 				furnaceCookTime++;
 
-				if (furnaceCookTime == 100) {
+				if (furnaceCookTime == 180) {
 					furnaceCookTime = 0;
 					smeltItem();
 					flag1 = true;
@@ -423,7 +423,7 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 
 	@Override
 	public int getInventoryStackLimit() {
-		return 64;
+		return 1;
 	}
 
 	@Override

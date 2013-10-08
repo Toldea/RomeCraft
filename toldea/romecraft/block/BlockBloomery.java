@@ -2,13 +2,14 @@ package toldea.romecraft.block;
 
 import java.util.Random;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -64,9 +65,45 @@ public class BlockBloomery extends RomeCraftBlockContainer {
 			}
 
 			if (tileEntity.getIsValid()) {
-				if (world.isRemote) {
-					player.sendChatToPlayer(ChatMessageComponent.createFromText("I am the Bloomery " + (tileEntity.getIsMaster() ? " master." : " slave.")));
+				//if (world.isRemote) {
+				//	player.sendChatToPlayer(ChatMessageComponent.createFromText("I am the Bloomery " + (tileEntity.getIsMaster() ? " master." : " slave.")));
+				//}
+
+				ItemStack itemstack = player.getCurrentEquippedItem();
+				if (itemstack != null) {
+					int id = itemstack.itemID;
+					int slot = -1;
+
+					if (id == Item.coal.itemID) {
+						slot = 1;
+					} else if (id == Block.oreIron.blockID) {
+						slot = 0;
+					}
+					
+					if (slot != -1) {
+						ItemStack bloomerySlotStack = tileEntity.getStackInSlot(slot);
+						if (bloomerySlotStack == null) {
+							bloomerySlotStack = itemstack.copy();
+							bloomerySlotStack.stackSize = 1;
+						} else {
+							if (bloomerySlotStack.stackSize < tileEntity.getInventoryStackLimit()) {
+								bloomerySlotStack.stackSize++;
+							} else {
+								return false;
+							}
+						}
+						
+						if (!player.capabilities.isCreativeMode) {
+							--itemstack.stackSize;
+						}
+						tileEntity.setInventorySlotContents(slot, bloomerySlotStack);
+						if (itemstack.stackSize <= 0) {
+							player.inventory.setInventorySlotContents(player.inventory.currentItem, (ItemStack) null);
+						}
+						return true;
+					}
 				}
+
 				// player.openGui(MultiFurnaceMod.instance, ModConfig.GUIIDs.multiFurnace, world, x, y, z);
 			}
 		}

@@ -128,15 +128,19 @@ public class BlockBellows extends RomeCraftBlockContainer {
 		int dx = 0;
 		int dz = 0;
 
+		System.out.println("getNeighbouringTileEntityForDirection - direction: " + direction);
+		
 		switch (direction) {
 		case 0:
 			dx = 1;
 			break;
 		case 1:
-			dz = -1;
+			//dz = -1;
+			dz = 1;
 			break;
 		case 2:
-			dz = 1;
+			//dz = 1;
+			dz = -1;
 			break;
 		case 3:
 			dx = -1;
@@ -155,9 +159,9 @@ public class BlockBellows extends RomeCraftBlockContainer {
 		case 0:
 			return META_DIR_WEST;
 		case 1:
-			return META_DIR_SOUTH;
-		case 2:
 			return META_DIR_NORTH;
+		case 2:
+			return META_DIR_SOUTH;
 		case 3:
 			return META_DIR_EAST;
 		default:

@@ -198,7 +198,7 @@ public class EntityPleb extends EntityAgeable implements INpc // IMerchant, INpc
 					convertToLegionary();
 				}
 			} else if (id == ItemManager.itemBlacksmithEquipment.itemID) {
-				this.setProfession(1);
+				this.convertToProfession(1);
 			}
 
 			if (usedItem) {
@@ -222,6 +222,12 @@ public class EntityPleb extends EntityAgeable implements INpc // IMerchant, INpc
 		this.worldObj.removeEntity(this);
 		this.worldObj.spawnEntityInWorld(entityLegionary);
 		this.worldObj.playAuxSFXAtEntity((EntityPlayer) null, 1017, (int) this.posX, (int) this.posY, (int) this.posZ, 0);
+	}
+	
+	private void convertToProfession(int profession) {
+		if (this.setProfession(profession)) {
+			this.worldObj.playAuxSFXAtEntity((EntityPlayer) null, 1017, (int) this.posX, (int) this.posY, (int) this.posZ, 0);
+		}
 	}
 
 	protected void entityInit() {
@@ -284,8 +290,13 @@ public class EntityPleb extends EntityAgeable implements INpc // IMerchant, INpc
 		return "mob.villager.death";
 	}
 
-	public void setProfession(int par1) {
-		this.dataWatcher.updateObject(16, Integer.valueOf(par1));
+	public boolean setProfession(int par1) {
+		if (getProfession() != par1) {
+			this.dataWatcher.updateObject(16, Integer.valueOf(par1));
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	public int getProfession() {
