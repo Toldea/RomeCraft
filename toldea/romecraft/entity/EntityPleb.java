@@ -186,24 +186,32 @@ public class EntityPleb extends EntityAgeable implements INpc // IMerchant, INpc
 	 */
 	public boolean interact(EntityPlayer par1EntityPlayer) {
 		ItemStack itemstack = par1EntityPlayer.inventory.getCurrentItem();
-		boolean flag = itemstack != null && itemstack.itemID == ItemManager.itemLegionaryEquipment.itemID;
 
-		if (flag && this.isEntityAlive() && !this.isChild()) {
-			if (!par1EntityPlayer.capabilities.isCreativeMode) {
-				--itemstack.stackSize;
+		if (itemstack == null) {
+			return false;
+		} else if (this.isEntityAlive() && !this.isChild()) {
+			int id = itemstack.itemID;
+			boolean usedItem = false;
+
+			if (id == ItemManager.itemLegionaryEquipment.itemID) {
+				if (!this.worldObj.isRemote) {
+					convertToLegionary();
+				}
+			} else if (id == ItemManager.itemBlacksmithEquipment.itemID) {
+				this.setProfession(1);
 			}
 
-			if (itemstack.stackSize <= 0) {
-				par1EntityPlayer.inventory.setInventorySlotContents(par1EntityPlayer.inventory.currentItem, (ItemStack) null);
+			if (usedItem) {
+				if (!par1EntityPlayer.capabilities.isCreativeMode) {
+					--itemstack.stackSize;
+				}
+				if (itemstack.stackSize <= 0) {
+					par1EntityPlayer.inventory.setInventorySlotContents(par1EntityPlayer.inventory.currentItem, (ItemStack) null);
+				}
+				return true;
 			}
-
-			if (!this.worldObj.isRemote) {
-				convertToLegionary();
-			}
-			return true;
-		} else {
-			return super.interact(par1EntityPlayer);
 		}
+		return super.interact(par1EntityPlayer);
 	}
 
 	private void convertToLegionary() {

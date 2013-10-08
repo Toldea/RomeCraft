@@ -6,11 +6,11 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraftforge.client.MinecraftForgeClient;
 import toldea.romecraft.client.renderer.RenderItemPilum;
-import toldea.romecraft.item.RomeCraftArmor;
-import toldea.romecraft.item.RomeCraftItemMeleeWeapon;
 import toldea.romecraft.item.ItemPilum;
 import toldea.romecraft.item.ItemScepter;
+import toldea.romecraft.item.RomeCraftArmor;
 import toldea.romecraft.item.RomeCraftItem;
+import toldea.romecraft.item.RomeCraftItemMeleeWeapon;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 
 public class ItemManager {
@@ -29,6 +29,8 @@ public class ItemManager {
 	public static Item itemSudis = null;
 
 	public static Item itemLegionaryEquipment = null;
+
+	public static Item itemBlacksmithEquipment = null;
 
 	public static Item itemScepter = null;
 
@@ -76,6 +78,10 @@ public class ItemManager {
 		// Legionary Equipment
 		itemLegionaryEquipment = new RomeCraftItem(nextItemID++).setUnlocalizedName("itemLegionaryEquipment").setTextureName("romecraft:legionaryequipment");
 		LanguageRegistry.addName(itemLegionaryEquipment, "Legionary Equipment");
+
+		// Blacksmith Equipment
+		itemBlacksmithEquipment = new RomeCraftItem(nextItemID++).setUnlocalizedName("itemBlacksmithEquipment").setTextureName("romecraft:blacksmithequipment");
+		LanguageRegistry.addName(itemBlacksmithEquipment, "Blacksmith Equipment");
 
 		// Scepter
 		itemScepter = new ItemScepter(nextItemID++).setUnlocalizedName("scepter").setTextureName("romecraft:scepter");
