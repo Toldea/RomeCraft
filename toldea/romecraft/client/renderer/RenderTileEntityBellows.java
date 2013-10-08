@@ -2,7 +2,6 @@ package toldea.romecraft.client.renderer;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
@@ -44,15 +43,6 @@ public class RenderTileEntityBellows extends TileEntitySpecialRenderer {
 	}
 
 	private void renderTileEntityBellows(TileEntityBellows bellows, World world, int x, int y, int z, Block block) {
-		// Add lighting to the model.
-		Tessellator tessellator = Tessellator.instance;
-		float f = block.getBlockBrightness(world, x, y, z);
-		int l = world.getLightBrightnessForSkyBlocks(x, y, z, 0);
-		int l1 = l % 65536;
-		int l2 = l / 65536;
-		tessellator.setColorOpaque_F(f, f, f);
-		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float) l1, (float) l2);
-
 		// Move and rotate the model to the right position and orientation.
 		GL11.glPushMatrix();
 		GL11.glTranslatef(0.5F, 0.5f, 0.5F);
@@ -85,26 +75,9 @@ public class RenderTileEntityBellows extends TileEntitySpecialRenderer {
 		GL11.glPopMatrix();
 	}
 
-	private static final ResourceLocation derp = new ResourceLocation("romecraft", "textures/entity/derp.png");
-
 	private void renderBellowsBag(TileEntityBellows bellows, World world, int x, int y, int z, Block block) {
-		Tessellator tessellator = Tessellator.instance;
-		float f = block.getBlockBrightness(world, x, y, z);
-		int l = world.getLightBrightnessForSkyBlocks(x, y, z, 0);
-		int l1 = l % 65536;
-		int l2 = l / 65536;
-		tessellator.setColorOpaque_F(f, f, f);
-		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float) l1, (float) l2);
-
-		float bellowsRotation = bellows.getBellowsRotation();
-		bellowsRotation = TileEntityBellows.MAX_ROTATION / bellowsRotation;
-		if (bellowsRotation == 0f) {
-			bellowsRotation = .001f;
-		}
-
 		GL11.glPushMatrix();
 		GL11.glTranslatef(0.5F, 0.5f, 0.5F);
-
 		// Get the direction the block should be facing from the metadata and rotate the model appropriately.
 		int dir = (bellows.getBlockMetadata() & BlockBloomery.MASK_DIR);
 		switch (dir) {
@@ -124,16 +97,25 @@ public class RenderTileEntityBellows extends TileEntitySpecialRenderer {
 			GL11.glRotatef(-90f, 0F, 1F, 0F);
 			break;
 		}
-
 		GL11.glTranslatef(-0.5F, -0.5f, -0.5F);
-
-		renderSingleBellowsBagFold(bellowsRotation);
+		
+		int numBellowsBagFolds = 1;
+		float bellowsRotation = bellows.getBellowsRotation();
+		float individualFoldRotation = TileEntityBellows.MAX_ROTATION / (bellowsRotation / numBellowsBagFolds);
+		
+		for (int i = 0; i < numBellowsBagFolds; i++) {
+			renderSingleBellowsBagFold(individualFoldRotation);
+		}
 
 		GL11.glPopMatrix();
 	}
 
 	private void renderSingleBellowsBagFold(float bellowsRotation) {
 		Tessellator tessellator = Tessellator.instance;
+		
+		if (bellowsRotation == 0f) {
+			bellowsRotation = .001f;
+		}
 
 		float wf = 6f / 16f; // Width front
 		wf /= 2f;
@@ -167,7 +149,7 @@ public class RenderTileEntityBellows extends TileEntitySpecialRenderer {
 
 		// Right
 		tessellator.addVertexWithUV(.5 - wf, yo, .5 - l, 0, 1);
-		tessellator.addVertexWithUV(.5 - wb, yo, .5 + l, 1, 1);
+		tessellator.addVertexWithUV(.5 - wb, yo, .5 + l, 1, 0);
 		tessellator.addVertexWithUV(.5 - wb, yo, .5 + l, 1, 0);
 		tessellator.addVertexWithUV(.5 - wf, yt, .5 - lt, 0, 0);
 
@@ -175,7 +157,7 @@ public class RenderTileEntityBellows extends TileEntitySpecialRenderer {
 		tessellator.addVertexWithUV(.5 + wf, yo, .5 - l, 1, 1);
 		tessellator.addVertexWithUV(.5 + wf, yt, .5 - lt, 1, 0);
 		tessellator.addVertexWithUV(.5 + wb, yo, .5 + l, 0, 0);
-		tessellator.addVertexWithUV(.5 + wb, yo, .5 + l, 0, 1);
+		tessellator.addVertexWithUV(.5 + wb, yo, .5 + l, 0, 0);
 
 		Minecraft.getMinecraft().renderEngine.bindTexture(bellowsBagTexture);
 		tessellator.draw();

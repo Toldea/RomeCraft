@@ -1,32 +1,18 @@
 package toldea.romecraft.romanvillage;
 
-public class RomanVillageDoorInfo {
-	public final int posX;
-	public final int posY;
-	public final int posZ;
+public class RomanVillageDoorInfo extends RomanVillageObjectInfo {
+	
 	public final int insideDirectionX;
 	public final int insideDirectionZ;
 	public int lastActivityTimestamp;
 	public boolean isDetachedFromVillageFlag;
 	private int doorOpeningRestrictionCounter;
 
-	public RomanVillageDoorInfo(int par1, int par2, int par3, int par4, int par5, int par6) {
-		this.posX = par1;
-		this.posY = par2;
-		this.posZ = par3;
+	public RomanVillageDoorInfo(int x, int y, int z, int par4, int par5, int par6) {
+		super(x, y, z);
 		this.insideDirectionX = par4;
 		this.insideDirectionZ = par5;
 		this.lastActivityTimestamp = par6;
-	}
-
-	/**
-	 * Returns the squared distance between this door and the given coordinate.
-	 */
-	public int getDistanceSquared(int par1, int par2, int par3) {
-		int l = par1 - this.posX;
-		int i1 = par2 - this.posY;
-		int j1 = par3 - this.posZ;
-		return l * l + i1 * i1 + j1 * j1;
 	}
 
 	/**

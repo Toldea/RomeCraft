@@ -31,7 +31,7 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 	public int furnaceBurnTime = 0;
 	public int currentItemBurnTime = 0;
 	public int furnaceCookTime = 0;
-	
+
 	private int bellowsActiveTime = 0;
 	private int furnaceNotBellowedTime = 0;
 
@@ -161,6 +161,8 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 		if (isValidBloomeryMultiblock && isMaster) {
 			compound.setShort("BurnTime", (short) furnaceBurnTime);
 			compound.setShort("CookTime", (short) furnaceCookTime);
+			compound.setShort("bellowsActiveTime", (short) bellowsActiveTime);
+			compound.setShort("furnaceNotBellowedTime", (short) furnaceNotBellowedTime);
 			NBTTagList itemsList = new NBTTagList();
 
 			if (bloomeryItems != null) {
@@ -200,9 +202,12 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 			furnaceBurnTime = compound.getShort("BurnTime");
 			furnaceCookTime = compound.getShort("CookTime");
 			currentItemBurnTime = TileEntityFurnace.getItemBurnTime(bloomeryItems[1]);
+
+			bellowsActiveTime = compound.getShort("bellowsActiveTime");
+			furnaceNotBellowedTime = compound.getShort("furnaceNotBellowedTime");
 		}
 	}
-	
+
 	public void applyBellowsBoost(World world) {
 		if (world.isRemote) {
 			System.out.println("Applying bellows boost - Sending packet to server!");
@@ -210,10 +215,10 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 		} else {
 			System.out.println("Receiving bellow boost packet! Server now synced with client.");
 		}
-		
+
 		bellowsActiveTime = TileEntityBellows.ROTATION_TIME;
 		furnaceNotBellowedTime = 0;
-		
+
 		System.out.println("Applying a bellows boost for " + bellowsActiveTime + " ticks!");
 	}
 
@@ -237,7 +242,7 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 			return (resultingStackSize <= getInventoryStackLimit() && resultingStackSize <= itemStack.getMaxStackSize());
 		}
 	}
-	
+
 	public boolean isApplyingBellows() {
 		return bellowsActiveTime > 0;
 	}
@@ -272,7 +277,7 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 		if (furnaceBurnTime > 0) {
 			furnaceBurnTime--;
 		}
-		
+
 		if (bellowsActiveTime > 0) {
 			bellowsActiveTime--;
 		}

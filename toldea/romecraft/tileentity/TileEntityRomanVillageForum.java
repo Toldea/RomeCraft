@@ -116,6 +116,7 @@ public class TileEntityRomanVillageForum extends TileEntity {
 					+ romanVillage.getCenter().posY + ", " + romanVillage.getCenter().posZ + ")")));
 			player.sendChatToPlayer(ChatMessageComponent.createFromText(new String("Village Radius: " + romanVillage.getVillageRadius())));
 			player.sendChatToPlayer(ChatMessageComponent.createFromText(new String("Number of Doors: " + romanVillage.getNumVillageDoors())));
+			player.sendChatToPlayer(ChatMessageComponent.createFromText(new String("Number of Bloomeries: " + romanVillage.getNumBloomeries())));
 			player.sendChatToPlayer(ChatMessageComponent.createFromText(new String("Number of Plebs: " + romanVillage.getNumPlebs() + " / "
 					+ romanVillage.getMaxNumberOfPlebs())));
 

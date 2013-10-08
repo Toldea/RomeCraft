@@ -11,14 +11,20 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldSavedData;
+import toldea.romecraft.managers.BlockManager;
+import toldea.romecraft.tileentity.TileEntityBloomery;
 
 public class RomanVillageCollection extends WorldSavedData {
 	public static final String key = "romanVillages";
 
 	private World worldObj;
-	private final List villagerPositionsList = new ArrayList();
-	private final List newDoors = new ArrayList();
+
 	private final List villageList = new ArrayList();
+	private final List villagerPositionsList = new ArrayList();
+
+	private final List newDoors = new ArrayList();
+	private final List newBloomeries = new ArrayList();
+
 	private int tickCounter;
 
 	public RomanVillageCollection(String par1Str) {
@@ -63,7 +69,7 @@ public class RomanVillageCollection extends WorldSavedData {
 		while (iterator.hasNext()) {
 			RomanVillage village = (RomanVillage) iterator.next();
 			village.tick(this.tickCounter);
-			this.addUnassignedWoodenDoorsAroundToNewDoorsList(village.getCenter());
+			this.addUnassignedVillageObjectsAroundToNewObjectsList(village.getCenter());
 		}
 
 		if (this.villageList.size() > 0) {
@@ -71,7 +77,8 @@ public class RomanVillageCollection extends WorldSavedData {
 			this.dropOldestVillagerPosition();
 		}
 
-		this.addNewDoorsToVillage();
+		this.addNewObjectsToVillage(newDoors);
+		this.addNewObjectsToVillage(newBloomeries);
 
 		if (this.tickCounter % 400 == 0) {
 			this.markDirty();
@@ -127,7 +134,7 @@ public class RomanVillageCollection extends WorldSavedData {
 
 	private void dropOldestVillagerPosition() {
 		if (!this.villagerPositionsList.isEmpty()) {
-			this.addUnassignedWoodenDoorsAroundToNewDoorsList((ChunkCoordinates) this.villagerPositionsList.remove(0));
+			this.addUnassignedVillageObjectsAroundToNewObjectsList((ChunkCoordinates) this.villagerPositionsList.remove(0));
 		}
 	}
 
@@ -160,31 +167,35 @@ public class RomanVillageCollection extends WorldSavedData {
 	 * this.newDoors.clear(); }
 	 */
 
-	private void addNewDoorsToVillage() {
+	private void addNewObjectsToVillage(List infoList) {
 		int i = 0;
 
-		while (i < this.newDoors.size()) {
-			System.out.println("looping through new door #" + i);
-			RomanVillageDoorInfo villagedoorinfo = (RomanVillageDoorInfo) this.newDoors.get(i);
+		while (i < infoList.size()) {
+			System.out.println("looping through new object #" + i);
+			RomanVillageObjectInfo villageObjectInfo = (RomanVillageObjectInfo) infoList.get(i);
 			Iterator iterator = this.villageList.iterator();
 
 			while (true) {
 				if (iterator.hasNext()) {
 					RomanVillage village = (RomanVillage) iterator.next();
 					System.out.println("Looping through village: " + village);
-					int j = (int) village.getCenter().getDistanceSquared(villagedoorinfo.posX, villagedoorinfo.posY, villagedoorinfo.posZ);
+					int j = (int) village.getCenter().getDistanceSquared(villageObjectInfo.posX, villageObjectInfo.posY, villageObjectInfo.posZ);
 					float k = 32f + village.getVillageRadius();
 					if (j > k * k) {
 						continue;
 					}
-					village.addVillageDoorInfo(villagedoorinfo);
+					if (villageObjectInfo instanceof RomanVillageDoorInfo) {
+						village.addVillageObjectInfoToInfoList(village.getVillageDoorInfoList(), villageObjectInfo);
+					} else if (villageObjectInfo instanceof RomanVillageBloomeryInfo) {
+						village.addVillageObjectInfoToInfoList(village.getBloomeryInfoList(), villageObjectInfo);
+					}
 				}
 				++i;
 				break;
 			}
 		}
 
-		this.newDoors.clear();
+		infoList.clear();
 	}
 
 	public void createNewVillage(int x, int y, int z) {
@@ -209,7 +220,7 @@ public class RomanVillageCollection extends WorldSavedData {
 		return village;
 	}
 
-	private void addUnassignedWoodenDoorsAroundToNewDoorsList(ChunkCoordinates par1ChunkCoordinates) {
+	private void addUnassignedVillageObjectsAroundToNewObjectsList(ChunkCoordinates par1ChunkCoordinates) {
 		// System.out.println("RomanVillageCollection.addUnassignedWoodenDoorsAroundToNewDoorsList");
 		byte b0 = 16;
 		byte b1 = 4;
@@ -219,28 +230,35 @@ public class RomanVillageCollection extends WorldSavedData {
 			for (int j = par1ChunkCoordinates.posY - b1; j < par1ChunkCoordinates.posY + b1; ++j) {
 				for (int k = par1ChunkCoordinates.posZ - b2; k < par1ChunkCoordinates.posZ + b2; ++k) {
 					if (this.isWoodenDoorAt(i, j, k)) {
-						RomanVillageDoorInfo villagedoorinfo = this.getVillageDoorAt(i, j, k);
+						RomanVillageObjectInfo villageObjectInfo = this.getVillageObjectAt(this.newDoors, i, j, k);
 
-						if (villagedoorinfo == null) {
+						if (villageObjectInfo == null) {
 							this.addDoorToNewListIfAppropriate(i, j, k);
-						} else {
-							villagedoorinfo.lastActivityTimestamp = this.tickCounter;
+						} else if (villageObjectInfo instanceof RomanVillageDoorInfo) {
+							((RomanVillageDoorInfo) villageObjectInfo).lastActivityTimestamp = this.tickCounter;
 						}
+					} else if (this.isBloomeryAt(i, j, k)) {
+						RomanVillageObjectInfo villageObjectInfo = this.getVillageObjectAt(this.newBloomeries, i, j, k);
+
+						if (villageObjectInfo == null) {
+							this.addBloomeryToNewListIfAppropriate(i, j, k);
+						}/* else if (villageObjectInfo instanceof RomanVillageBloomeryInfo) {
+							((RomanVillageDoorInfo) villageObjectInfo).lastActivityTimestamp = this.tickCounter;
+						}*/
 					}
 				}
 			}
 		}
 	}
 
-	private RomanVillageDoorInfo getVillageDoorAt(int par1, int par2, int par3) {
-		// System.out.println("RomanVillageCollection.getVillageDoorAt");
-		Iterator iterator = this.newDoors.iterator();
-		RomanVillageDoorInfo villagedoorinfo;
+	private RomanVillageObjectInfo getVillageObjectAt(List objectInfoList, int x, int y, int z) {
+		Iterator iterator = objectInfoList.iterator();
+		RomanVillageObjectInfo villageObjectInfo;
 
 		do {
 			if (!iterator.hasNext()) {
 				iterator = this.villageList.iterator();
-				RomanVillageDoorInfo villagedoorinfo1;
+				RomanVillageObjectInfo villageObjectInfo1;
 
 				do {
 					if (!iterator.hasNext()) {
@@ -248,20 +266,19 @@ public class RomanVillageCollection extends WorldSavedData {
 					}
 
 					RomanVillage village = (RomanVillage) iterator.next();
-					villagedoorinfo1 = village.getVillageDoorAt(par1, par2, par3);
-				} while (villagedoorinfo1 == null);
+					villageObjectInfo1 = (RomanVillageObjectInfo) village.getVillageObjectAt(x, y, z);
+				} while (villageObjectInfo1 == null);
 
-				return villagedoorinfo1;
+				return villageObjectInfo1;
 			}
 
-			villagedoorinfo = (RomanVillageDoorInfo) iterator.next();
-		} while (villagedoorinfo.posX != par1 || villagedoorinfo.posZ != par3 || Math.abs(villagedoorinfo.posY - par2) > 1);
+			villageObjectInfo = (RomanVillageObjectInfo) iterator.next();
+		} while (villageObjectInfo.posX != x || villageObjectInfo.posZ != z || Math.abs(villageObjectInfo.posY - y) > 1);
 
-		return villagedoorinfo;
+		return villageObjectInfo;
 	}
 
 	private void addDoorToNewListIfAppropriate(int par1, int par2, int par3) {
-		// System.out.println("RomanVillageCollection.addDoorToNewListIfAppropriate");
 		int l = ((BlockDoor) Block.doorWood).getDoorOrientation(this.worldObj, par1, par2, par3);
 		int i1;
 		int j1;
@@ -274,7 +291,6 @@ public class RomanVillageCollection extends WorldSavedData {
 					--i1;
 				}
 			}
-
 			for (j1 = 1; j1 <= 5; ++j1) {
 				if (this.worldObj.canBlockSeeTheSky(par1, par2, par3 + j1)) {
 					++i1;
@@ -307,6 +323,14 @@ public class RomanVillageCollection extends WorldSavedData {
 		}
 	}
 
+	private void addBloomeryToNewListIfAppropriate(int x, int y, int z) {
+		TileEntityBloomery bloomery = (TileEntityBloomery) this.worldObj.getBlockTileEntity(x, y, z);
+		if (bloomery != null && bloomery.getIsValid() && bloomery.getIsMaster()) {
+			System.out.println("RomanVillageCollection.addBloomeryToNewListIfAppropriate adding new Bloomery!");
+			this.newBloomeries.add(new RomanVillageBloomeryInfo(x, y, z));
+		}
+	}
+
 	private boolean isVillagerPositionPresent(int par1, int par2, int par3) {
 		Iterator iterator = this.villagerPositionsList.iterator();
 		ChunkCoordinates chunkcoordinates;
@@ -322,9 +346,14 @@ public class RomanVillageCollection extends WorldSavedData {
 		return true;
 	}
 
-	private boolean isWoodenDoorAt(int par1, int par2, int par3) {
-		int l = this.worldObj.getBlockId(par1, par2, par3);
+	private boolean isWoodenDoorAt(int x, int y, int z) {
+		int l = this.worldObj.getBlockId(x, y, z);
 		return l == Block.doorWood.blockID;
+	}
+	
+	private boolean isBloomeryAt(int x, int y, int z) {
+		int l = this.worldObj.getBlockId(x, y, z);
+		return l == BlockManager.blockBloomery.blockID;
 	}
 
 	/**

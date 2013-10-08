@@ -11,23 +11,26 @@ import net.minecraft.entity.EntityLivingData;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import toldea.romecraft.entity.EntityPleb;
+import toldea.romecraft.tileentity.TileEntityBloomery;
 
 public class RomanVillage {
 	private World worldObj;
 
 	/** list of VillageDoorInfo objects */
 	private final List plebDoorInfoList = new ArrayList();
+	private final List bloomeryInfoList = new ArrayList();
 
 	private final ChunkCoordinates centerHelper = new ChunkCoordinates(0, 0, 0);
 	private final ChunkCoordinates center = new ChunkCoordinates(0, 0, 0);
 	private ChunkCoordinates villageForumLocation = new ChunkCoordinates(0, 0, 0);
-	
+
 	private int villageRadius;
 	private int lastAddDoorTimestamp;
 	private int tickCounter;
@@ -63,63 +66,59 @@ public class RomanVillage {
 	 * Called periodically by VillageCollection
 	 */
 	public void tick(int par1) {
-		//System.out.println("villageDoorInfoList size: " + villageDoorInfoList.size());
+		// System.out.println("villageDoorInfoList size: " + villageDoorInfoList.size());
 		this.tickCounter = par1;
-		this.removeDeadAndOutOfRangeDoors();
+		this.removeDeadAndOutOfRangeObjectsForList(plebDoorInfoList);
+		this.removeDeadAndOutOfRangeObjectsForList(bloomeryInfoList);
 		// this.removeDeadAndOldAgressors();
 
 		if (par1 % 2000 == 0) {
 			this.trySpawnPlebs();
 		}
-		
+
 		if (par1 % 20 == 0) {
 			this.updateNumPlebs();
 		}
 		/*
-		if (par1 % 30 == 0) {
-			this.updateNumIronGolems();
-		}*/
+		 * if (par1 % 30 == 0) { this.updateNumIronGolems(); }
+		 */
 
 		int j = this.numPlebs / 10;
 
 		/*
-		if (this.numIronGolems < j && this.villageDoorInfoList.size() > 20 && this.worldObj.rand.nextInt(7000) == 0) {
-			Vec3 vec3 = this.tryGetIronGolemSpawningLocation(MathHelper.floor_float((float) this.center.posX),
-					MathHelper.floor_float((float) this.center.posY), MathHelper.floor_float((float) this.center.posZ), 2, 4, 2);
-
-			if (vec3 != null) {
-				EntityIronGolem entityirongolem = new EntityIronGolem(this.worldObj);
-				entityirongolem.setPosition(vec3.xCoord, vec3.yCoord, vec3.zCoord);
-				this.worldObj.spawnEntityInWorld(entityirongolem);
-				++this.numIronGolems;
-			}
-		}*/
+		 * if (this.numIronGolems < j && this.villageDoorInfoList.size() > 20 && this.worldObj.rand.nextInt(7000) == 0) { Vec3 vec3 =
+		 * this.tryGetIronGolemSpawningLocation(MathHelper.floor_float((float) this.center.posX), MathHelper.floor_float((float) this.center.posY),
+		 * MathHelper.floor_float((float) this.center.posZ), 2, 4, 2);
+		 * 
+		 * if (vec3 != null) { EntityIronGolem entityirongolem = new EntityIronGolem(this.worldObj); entityirongolem.setPosition(vec3.xCoord, vec3.yCoord,
+		 * vec3.zCoord); this.worldObj.spawnEntityInWorld(entityirongolem); ++this.numIronGolems; } }
+		 */
 	}
 
 	public int getMaxNumberOfPlebs() {
-		return (int)((double)((float)this.getNumVillageDoors()) * 0.35D);
+		return (int) ((double) ((float) this.getNumVillageDoors()) * 0.35D);
 	}
 
 	/**
-	 * Try and spawn a new Pleb if there are less than 4 in the village and there are enough doors to house them.
-	 * Any villager past 4 should be created through breeding. 
+	 * Try and spawn a new Pleb if there are less than 4 in the village and there are enough doors to house them. Any villager past 4 should be created through
+	 * breeding.
 	 */
 	private void trySpawnPlebs() {
 		int numPlebs = getNumPlebs();
 		int maxNumPlebs = getMaxNumberOfPlebs();
 		if (numPlebs < 4 && numPlebs < maxNumPlebs) {
-			Vec3 spawnLocation = tryGetPlebSpawningLocation(MathHelper.floor_float((float) this.center.posX),
-					MathHelper.floor_float((float) this.center.posY), MathHelper.floor_float((float) this.center.posZ), 1, 2, 1);
+			Vec3 spawnLocation = tryGetPlebSpawningLocation(MathHelper.floor_float((float) this.center.posX), MathHelper.floor_float((float) this.center.posY),
+					MathHelper.floor_float((float) this.center.posZ), 1, 2, 1);
 			if (spawnLocation != null) {
 				EntityPleb entityPleb = new EntityPleb(this.worldObj);
-				entityPleb.onSpawnWithEgg((EntityLivingData)null);
-				//this.mate.setGrowingAge(6000);
-				//this.villagerObj.setGrowingAge(6000);
+				entityPleb.onSpawnWithEgg((EntityLivingData) null);
+				// this.mate.setGrowingAge(6000);
+				// this.villagerObj.setGrowingAge(6000);
 				entityPleb.setGrowingAge(-24000);
 				entityPleb.setLocationAndAngles(spawnLocation.xCoord, spawnLocation.yCoord, spawnLocation.zCoord, 0.0F, 0.0F);
 				this.worldObj.spawnEntityInWorld(entityPleb);
-				this.worldObj.setEntityState(entityPleb, (byte)12);
-				
+				this.worldObj.setEntityState(entityPleb, (byte) 12);
+
 				this.updateNumPlebs();
 			}
 		}
@@ -143,19 +142,13 @@ public class RomanVillage {
 	 * Tries up to 10 times to get a valid spawning location before eventually failing and returning null.
 	 */
 	/*
-	private Vec3 tryGetIronGolemSpawningLocation(int par1, int par2, int par3, int par4, int par5, int par6) {
-		for (int k1 = 0; k1 < 10; ++k1) {
-			int l1 = par1 + this.worldObj.rand.nextInt(16) - 8;
-			int i2 = par2 + this.worldObj.rand.nextInt(6) - 3;
-			int j2 = par3 + this.worldObj.rand.nextInt(16) - 8;
-
-			if (this.isInRange(l1, i2, j2) && this.isValidEntitySpawningLocation(l1, i2, j2, par4, par5, par6)) {
-				return this.worldObj.getWorldVec3Pool().getVecFromPool((double) l1, (double) i2, (double) j2);
-			}
-		}
-
-		return null;
-	}
+	 * private Vec3 tryGetIronGolemSpawningLocation(int par1, int par2, int par3, int par4, int par5, int par6) { for (int k1 = 0; k1 < 10; ++k1) { int l1 =
+	 * par1 + this.worldObj.rand.nextInt(16) - 8; int i2 = par2 + this.worldObj.rand.nextInt(6) - 3; int j2 = par3 + this.worldObj.rand.nextInt(16) - 8;
+	 * 
+	 * if (this.isInRange(l1, i2, j2) && this.isValidEntitySpawningLocation(l1, i2, j2, par4, par5, par6)) { return
+	 * this.worldObj.getWorldVec3Pool().getVecFromPool((double) l1, (double) i2, (double) j2); } }
+	 * 
+	 * return null; }
 	 */
 	private boolean isValidEntitySpawningLocation(int par1, int par2, int par3, int par4, int par5, int par6) {
 		if (!this.worldObj.doesBlockHaveSolidTopSurface(par1, par2 - 1, par3)) {
@@ -177,23 +170,17 @@ public class RomanVillage {
 			return true;
 		}
 	}
+
 	/*
-	private void updateNumIronGolems() {
-		List list = this.worldObj.getEntitiesWithinAABB(
-				EntityIronGolem.class,
-				AxisAlignedBB.getAABBPool().getAABB((double) (this.center.posX - this.villageRadius), (double) (this.center.posY - 4),
-						(double) (this.center.posZ - this.villageRadius), (double) (this.center.posX + this.villageRadius), (double) (this.center.posY + 4),
-						(double) (this.center.posZ + this.villageRadius)));
-		this.numIronGolems = list.size();
-	}
+	 * private void updateNumIronGolems() { List list = this.worldObj.getEntitiesWithinAABB( EntityIronGolem.class, AxisAlignedBB.getAABBPool().getAABB((double)
+	 * (this.center.posX - this.villageRadius), (double) (this.center.posY - 4), (double) (this.center.posZ - this.villageRadius), (double) (this.center.posX +
+	 * this.villageRadius), (double) (this.center.posY + 4), (double) (this.center.posZ + this.villageRadius))); this.numIronGolems = list.size(); }
 	 */
 	private void updateNumPlebs() {
 		/*
-		List list = this.worldObj.getEntitiesWithinAABB(
-				EntityVillager.class,
-				AxisAlignedBB.getAABBPool().getAABB((double) (this.center.posX - this.villageRadius), (double) (this.center.posY - 4),
-						(double) (this.center.posZ - this.villageRadius), (double) (this.center.posX + this.villageRadius), (double) (this.center.posY + 4),
-						(double) (this.center.posZ + this.villageRadius)));
+		 * List list = this.worldObj.getEntitiesWithinAABB( EntityVillager.class, AxisAlignedBB.getAABBPool().getAABB((double) (this.center.posX -
+		 * this.villageRadius), (double) (this.center.posY - 4), (double) (this.center.posZ - this.villageRadius), (double) (this.center.posX +
+		 * this.villageRadius), (double) (this.center.posY + 4), (double) (this.center.posZ + this.villageRadius)));
 		 */
 		List list = this.worldObj.getEntitiesWithinAABB(
 				EntityPleb.class,
@@ -210,7 +197,7 @@ public class RomanVillage {
 	public ChunkCoordinates getCenter() {
 		return this.center;
 	}
-	
+
 	public ChunkCoordinates getVillageForumLocation() {
 		return villageForumLocation;
 	}
@@ -226,6 +213,10 @@ public class RomanVillage {
 		return this.plebDoorInfoList.size();
 	}
 
+	public int getNumBloomeries() {
+		return this.bloomeryInfoList.size();
+	}
+
 	public int getTicksSinceLastDoorAdding() {
 		return this.tickCounter - this.lastAddDoorTimestamp;
 	}
@@ -239,7 +230,7 @@ public class RomanVillage {
 	 */
 	public boolean isInRange(int par1, int par2, int par3) {
 		return this.center.getDistanceSquared(par1, par2, par3) < (float) (this.villageRadius * this.villageRadius);
-		//return this.center.getDistanceSquared(par1, par2, par3) < (float) (this.villageRadius * this.villageRadius);
+		// return this.center.getDistanceSquared(par1, par2, par3) < (float) (this.villageRadius * this.villageRadius);
 	}
 
 	/**
@@ -249,22 +240,26 @@ public class RomanVillage {
 		return this.plebDoorInfoList;
 	}
 
-	public RomanVillageDoorInfo findNearestDoor(int par1, int par2, int par3) {
-		RomanVillageDoorInfo villagedoorinfo = null;
+	public List getBloomeryInfoList() {
+		return this.bloomeryInfoList;
+	}
+
+	public RomanVillageObjectInfo findNearestObjectForInfoList(List infoList, int par1, int par2, int par3) {
+		RomanVillageObjectInfo objectInfo = null;
 		int l = Integer.MAX_VALUE;
-		Iterator iterator = this.plebDoorInfoList.iterator();
+		Iterator iterator = infoList.iterator();
 
 		while (iterator.hasNext()) {
-			RomanVillageDoorInfo villagedoorinfo1 = (RomanVillageDoorInfo) iterator.next();
-			int i1 = villagedoorinfo1.getDistanceSquared(par1, par2, par3);
+			RomanVillageObjectInfo objectInfo1 = (RomanVillageObjectInfo) iterator.next();
+			int i1 = objectInfo1.getDistanceSquared(par1, par2, par3);
 
 			if (i1 < l) {
-				villagedoorinfo = villagedoorinfo1;
+				objectInfo = objectInfo1;
 				l = i1;
 			}
 		}
 
-		return villagedoorinfo;
+		return objectInfo;
 	}
 
 	/**
@@ -295,35 +290,46 @@ public class RomanVillage {
 		return villagedoorinfo;
 	}
 
-	public RomanVillageDoorInfo getVillageDoorAt(int par1, int par2, int par3) {
-		//if (this.center.getDistanceSquared(par1, par2, par3) > (float) (this.villageRadius * this.villageRadius)) {
-		if (this.center.getDistanceSquared(par1, par2, par3) > (float) (this.villageRadius * this.villageRadius)) {
+	/**
+	 * Loops through all different object lists and returns any object found at that position or null if none are found.
+	 */
+	public RomanVillageObjectInfo getVillageObjectAt(int x, int y, int z) {
+		RomanVillageObjectInfo objectInfo = getVillageObjectForInfoListAt(this.bloomeryInfoList, x, y, z);
+		if (objectInfo == null) {
+			objectInfo = getVillageObjectForInfoListAt(this.plebDoorInfoList, x, y, z);
+		}
+		return objectInfo;
+	}
+
+	public RomanVillageObjectInfo getVillageObjectForInfoListAt(List infoList, int x, int y, int z) {
+		if (this.center.getDistanceSquared(x, y, z) > (float) (this.villageRadius * this.villageRadius)) {
 			return null;
 		} else {
-			Iterator iterator = this.plebDoorInfoList.iterator();
-			RomanVillageDoorInfo villagedoorinfo;
+			Iterator iterator = infoList.iterator();
+			RomanVillageObjectInfo objectInfo;
 
 			do {
 				if (!iterator.hasNext()) {
 					return null;
 				}
 
-				villagedoorinfo = (RomanVillageDoorInfo) iterator.next();
-			} while (villagedoorinfo.posX != par1 || villagedoorinfo.posZ != par3 || Math.abs(villagedoorinfo.posY - par2) > 1);
+				objectInfo = (RomanVillageObjectInfo) iterator.next();
+			} while (objectInfo.posX != x || objectInfo.posZ != z || Math.abs(objectInfo.posY - y) > 1);
 
-			return villagedoorinfo;
+			return objectInfo;
 		}
 	}
 
-	public void addVillageDoorInfo(RomanVillageDoorInfo par1RomanVillageDoorInfo) {
-		System.out.println("RomanVillage.addVillageDoorInfo");
-		this.plebDoorInfoList.add(par1RomanVillageDoorInfo);
-		this.centerHelper.posX += par1RomanVillageDoorInfo.posX;
-		this.centerHelper.posY += par1RomanVillageDoorInfo.posY;
-		this.centerHelper.posZ += par1RomanVillageDoorInfo.posZ;
+	public void addVillageObjectInfoToInfoList(List infoList, RomanVillageObjectInfo romanVillageObjectInfo) {
+		infoList.add(romanVillageObjectInfo);
+		this.centerHelper.posX += romanVillageObjectInfo.posX;
+		this.centerHelper.posY += romanVillageObjectInfo.posY;
+		this.centerHelper.posZ += romanVillageObjectInfo.posZ;
 		this.updateVillageRadiusAndCenter();
 
-		this.lastAddDoorTimestamp = par1RomanVillageDoorInfo.lastActivityTimestamp;
+		if (romanVillageObjectInfo instanceof RomanVillageDoorInfo) {
+			this.lastAddDoorTimestamp = ((RomanVillageDoorInfo) romanVillageObjectInfo).lastActivityTimestamp;
+		}
 	}
 
 	/**
@@ -331,7 +337,7 @@ public class RomanVillage {
 	 */
 	public boolean isAnnihilated() {
 		return shouldBeAnnihilated; // TODO: Make sure current solution is working properly in all cases.
-		//return this.villageDoorInfoList.isEmpty();
+		// return this.villageDoorInfoList.isEmpty();
 	}
 
 	public void flagForAnnihilation() {
@@ -390,26 +396,34 @@ public class RomanVillage {
 	 * 
 	 * if (!villageagressor.agressor.isEntityAlive() || Math.abs(this.tickCounter - villageagressor.agressionTime) > 300) { iterator.remove(); } } }
 	 */
-	private void removeDeadAndOutOfRangeDoors() {
+	private void removeDeadAndOutOfRangeObjectsForList(List objectInfoList) {
 		boolean flag = false;
 		boolean flag1 = this.worldObj.rand.nextInt(50) == 0;
-		Iterator iterator = this.plebDoorInfoList.iterator();
+		Iterator iterator = objectInfoList.iterator();
 
 		while (iterator.hasNext()) {
-			RomanVillageDoorInfo villagedoorinfo = (RomanVillageDoorInfo) iterator.next();
+			RomanVillageObjectInfo villageObjectInfo = (RomanVillageObjectInfo) iterator.next();
 
-			if (flag1) {
-				villagedoorinfo.resetDoorOpeningRestrictionCounter();
-			}
-
-			if (!this.isBlockDoor(villagedoorinfo.posX, villagedoorinfo.posY, villagedoorinfo.posZ)
-					|| Math.abs(this.tickCounter - villagedoorinfo.lastActivityTimestamp) > 1200) {
-				this.centerHelper.posX -= villagedoorinfo.posX;
-				this.centerHelper.posY -= villagedoorinfo.posY;
-				this.centerHelper.posZ -= villagedoorinfo.posZ;
-				flag = true;
-				villagedoorinfo.isDetachedFromVillageFlag = true;
-				iterator.remove();
+			if (villageObjectInfo instanceof RomanVillageDoorInfo) {
+				RomanVillageDoorInfo villageDoorInfo = (RomanVillageDoorInfo) villageObjectInfo;
+				if (flag1) {
+					villageDoorInfo.resetDoorOpeningRestrictionCounter();
+				}
+				if (!this.isBlockDoor(villageDoorInfo.posX, villageDoorInfo.posY, villageDoorInfo.posZ)
+						|| Math.abs(this.tickCounter - villageDoorInfo.lastActivityTimestamp) > 1200) {
+					this.centerHelper.posX -= villageDoorInfo.posX;
+					this.centerHelper.posY -= villageDoorInfo.posY;
+					this.centerHelper.posZ -= villageDoorInfo.posZ;
+					flag = true;
+					villageDoorInfo.isDetachedFromVillageFlag = true;
+					iterator.remove();
+				}
+			} else if (villageObjectInfo instanceof RomanVillageBloomeryInfo) {
+				RomanVillageBloomeryInfo villageBloomeryInfo = (RomanVillageBloomeryInfo) villageObjectInfo;
+				if (!isBlockValidBloomery(villageBloomeryInfo.posX, villageBloomeryInfo.posY, villageBloomeryInfo.posZ)) {
+					System.out.println("Removing invalid Bloomery from village!");
+					iterator.remove();
+				}
 			}
 		}
 
@@ -418,9 +432,19 @@ public class RomanVillage {
 		}
 	}
 
-	private boolean isBlockDoor(int par1, int par2, int par3) {
-		int l = this.worldObj.getBlockId(par1, par2, par3);
+	private boolean isBlockDoor(int x, int y, int z) {
+		int l = this.worldObj.getBlockId(x, y, z);
 		return l <= 0 ? false : l == Block.doorWood.blockID;
+	}
+
+	private boolean isBlockValidBloomery(int x, int y, int z) {
+		TileEntity tileEntity = this.worldObj.getBlockTileEntity(x, y, z);
+		if (tileEntity == null || !(tileEntity instanceof TileEntityBloomery)) {
+			return false;
+		} else {
+			TileEntityBloomery bloomery = (TileEntityBloomery) tileEntity;
+			return (bloomery.getIsValid() && bloomery.getIsMaster());
+		}
 	}
 
 	private void updateVillageRadiusAndCenter() {
@@ -475,7 +499,7 @@ public class RomanVillage {
 	public void readVillageDataFromNBT(NBTTagCompound par1NBTTagCompound) {
 		this.numPlebs = par1NBTTagCompound.getInteger("PopSize");
 		this.villageRadius = par1NBTTagCompound.getInteger("Radius");
-		//this.numIronGolems = par1NBTTagCompound.getInteger("Golems");
+		// this.numIronGolems = par1NBTTagCompound.getInteger("Golems");
 		this.lastAddDoorTimestamp = par1NBTTagCompound.getInteger("Stable");
 		this.tickCounter = par1NBTTagCompound.getInteger("Tick");
 		this.noBreedTicks = par1NBTTagCompound.getInteger("MTick");
@@ -489,13 +513,22 @@ public class RomanVillage {
 		this.villageForumLocation.posY = par1NBTTagCompound.getInteger("FORUM_Y");
 		this.villageForumLocation.posZ = par1NBTTagCompound.getInteger("FORUM_Z");
 
-		NBTTagList nbttaglist = par1NBTTagCompound.getTagList("Doors");
+		NBTTagList doorTagList = par1NBTTagCompound.getTagList("Doors");
 
-		for (int i = 0; i < nbttaglist.tagCount(); ++i) {
-			NBTTagCompound nbttagcompound1 = (NBTTagCompound) nbttaglist.tagAt(i);
+		for (int i = 0; i < doorTagList.tagCount(); ++i) {
+			NBTTagCompound nbttagcompound1 = (NBTTagCompound) doorTagList.tagAt(i);
 			RomanVillageDoorInfo villagedoorinfo = new RomanVillageDoorInfo(nbttagcompound1.getInteger("X"), nbttagcompound1.getInteger("Y"),
 					nbttagcompound1.getInteger("Z"), nbttagcompound1.getInteger("IDX"), nbttagcompound1.getInteger("IDZ"), nbttagcompound1.getInteger("TS"));
 			this.plebDoorInfoList.add(villagedoorinfo);
+		}
+
+		NBTTagList bloomeryTagList = par1NBTTagCompound.getTagList("Bloomeries");
+
+		for (int i = 0; i < bloomeryTagList.tagCount(); ++i) {
+			NBTTagCompound nbttagcompound1 = (NBTTagCompound) bloomeryTagList.tagAt(i);
+			RomanVillageBloomeryInfo bloomeryInfo = new RomanVillageBloomeryInfo(nbttagcompound1.getInteger("X"), nbttagcompound1.getInteger("Y"),
+					nbttagcompound1.getInteger("Z"));
+			this.bloomeryInfoList.add(bloomeryInfo);
 		}
 
 		NBTTagList nbttaglist1 = par1NBTTagCompound.getTagList("Players");
@@ -512,7 +545,7 @@ public class RomanVillage {
 	public void writeVillageDataToNBT(NBTTagCompound par1NBTTagCompound) {
 		par1NBTTagCompound.setInteger("PopSize", this.numPlebs);
 		par1NBTTagCompound.setInteger("Radius", this.villageRadius);
-		//par1NBTTagCompound.setInteger("Golems", this.numIronGolems);
+		// par1NBTTagCompound.setInteger("Golems", this.numIronGolems);
 		par1NBTTagCompound.setInteger("Stable", this.lastAddDoorTimestamp);
 		par1NBTTagCompound.setInteger("Tick", this.tickCounter);
 		par1NBTTagCompound.setInteger("MTick", this.noBreedTicks);
@@ -526,7 +559,7 @@ public class RomanVillage {
 		par1NBTTagCompound.setInteger("FORUM_Y", this.villageForumLocation.posY);
 		par1NBTTagCompound.setInteger("FORUM_Z", this.villageForumLocation.posZ);
 
-		NBTTagList nbttaglist = new NBTTagList("Doors");
+		NBTTagList tagListDoors = new NBTTagList("Doors");
 		Iterator iterator = this.plebDoorInfoList.iterator();
 
 		while (iterator.hasNext()) {
@@ -538,10 +571,25 @@ public class RomanVillage {
 			nbttagcompound1.setInteger("IDX", villagedoorinfo.insideDirectionX);
 			nbttagcompound1.setInteger("IDZ", villagedoorinfo.insideDirectionZ);
 			nbttagcompound1.setInteger("TS", villagedoorinfo.lastActivityTimestamp);
-			nbttaglist.appendTag(nbttagcompound1);
+			tagListDoors.appendTag(nbttagcompound1);
 		}
 
-		par1NBTTagCompound.setTag("Doors", nbttaglist);
+		par1NBTTagCompound.setTag("Doors", tagListDoors);
+
+		NBTTagList tagListBloomery = new NBTTagList("Bloomeries");
+		iterator = this.bloomeryInfoList.iterator();
+
+		while (iterator.hasNext()) {
+			RomanVillageBloomeryInfo bloomeryInfo = (RomanVillageBloomeryInfo) iterator.next();
+			NBTTagCompound nbttagcompound1 = new NBTTagCompound("Bloomery");
+			nbttagcompound1.setInteger("X", bloomeryInfo.posX);
+			nbttagcompound1.setInteger("Y", bloomeryInfo.posY);
+			nbttagcompound1.setInteger("Z", bloomeryInfo.posZ);
+			tagListBloomery.appendTag(nbttagcompound1);
+		}
+
+		par1NBTTagCompound.setTag("Bloomeries", tagListBloomery);
+
 		NBTTagList nbttaglist1 = new NBTTagList("Players");
 		Iterator iterator1 = this.playerReputation.keySet().iterator();
 
