@@ -65,10 +65,6 @@ public class BlockBloomery extends RomeCraftBlockContainer {
 			}
 
 			if (tileEntity.getIsValid()) {
-				//if (world.isRemote) {
-				//	player.sendChatToPlayer(ChatMessageComponent.createFromText("I am the Bloomery " + (tileEntity.getIsMaster() ? " master." : " slave.")));
-				//}
-
 				ItemStack itemstack = player.getCurrentEquippedItem();
 				if (itemstack != null) {
 					int id = itemstack.itemID;

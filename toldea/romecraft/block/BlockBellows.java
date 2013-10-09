@@ -56,52 +56,31 @@ public class BlockBellows extends RomeCraftBlockContainer {
 		if (world.isRemote) {
 			TileEntity te = world.getBlockTileEntity(x, y, z);
 			if (te instanceof TileEntityBellows) {
-				pushBellows(world, (TileEntityBellows) te);
+				((TileEntityBellows) te).pushBellows();
 			}
 		}
-		
-		return true;
-	}
 
-	private void pushBellows(World world, TileEntityBellows bellows) {
-		// Try and 'push' the bellows. Returns whether or not the bellows was already active.
-		if (bellows.pushBellows()) {
-			// Check if there is a Bloomery in front of us and if so, notify it a bellows was activated.
-			TileEntity te = getNeighbouringTileEntityForDirection(bellows.getBlockMetadata() & BlockBloomery.MASK_DIR, world, bellows.xCoord, bellows.yCoord,
-					bellows.zCoord);
-			if (te != null && te instanceof TileEntityBloomery) {
-				TileEntityBloomery bloomery = (TileEntityBloomery) te;
-				if (bloomery.getIsMaster()) {
-					System.out.println("Informing bloomery a bellows has been used!");
-					bloomery.applyBellowsBoost(world);
-				}
-			}
-		}
+		return true;
 	}
 
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack itemStack) {
-		int metadata = 0;
-		int facing = META_DIR_WEST;
 		boolean foundAdjacentBloomery = false;
 
 		if (!entity.isSneaking()) {
-			// Look for any adjacent bloomery 'master' tile entities and face one if found.
-			for (int i = 0; i < 4; i++) {
-				TileEntity te = getNeighbouringTileEntityForDirection(i, world, x, y, z);
-				if (te != null && te instanceof TileEntityBloomery) {
-					TileEntityBloomery bloomery = (TileEntityBloomery) te;
-					if (bloomery.getIsMaster()) {
-						metadata = getOppositeDirectionByteForInt(i);
-						foundAdjacentBloomery = true;
-						break;
-					}
-				}
+			// Try and let the bellows face any adjacent valid bloomery multiblock structure.
+			TileEntityBellows bellows = (TileEntityBellows) world.getBlockTileEntity(x, y, z);
+			TileEntityBloomery bloomery = bellows.faceAdjacentBloomery();
+			if (bloomery != null && bloomery.getIsMaster()) {
+				foundAdjacentBloomery = true;
 			}
 		}
 
 		// If we haven't found any adjacent bloomery, face the direction the user faced.
 		if (!foundAdjacentBloomery) {
+			int metadata = 0;
+			int facing = META_DIR_WEST;
+
 			int dir = MathHelper.floor_double((double) (entity.rotationYaw * 4f / 360f) + 0.5) & 3;
 			if (dir == 0) {
 				facing = META_DIR_NORTH;
@@ -115,46 +94,13 @@ public class BlockBellows extends RomeCraftBlockContainer {
 			if (dir == 3) {
 				facing = META_DIR_WEST;
 			}
-		}
 
-		metadata |= facing;
-		world.setBlockMetadataWithNotify(x, y, z, metadata, 2);
-	}
-
-	/**
-	 * Returns the tile entity located one block away in the specified direction.
-	 */
-	private TileEntity getNeighbouringTileEntityForDirection(int direction, World world, int x, int y, int z) {
-		int dx = 0;
-		int dz = 0;
-
-		System.out.println("getNeighbouringTileEntityForDirection - direction: " + direction);
-		
-		switch (direction) {
-		case 0:
-			dx = 1;
-			break;
-		case 1:
-			//dz = -1;
-			dz = 1;
-			break;
-		case 2:
-			//dz = 1;
-			dz = -1;
-			break;
-		case 3:
-			dx = -1;
-			break;
-		}
-
-		if (dx == 0 && dz == 0) {
-			return null;
-		} else {
-			return world.getBlockTileEntity(x + dx, y, z + dz);
+			metadata |= facing;
+			world.setBlockMetadataWithNotify(x, y, z, metadata, 2);
 		}
 	}
 
-	private byte getOppositeDirectionByteForInt(int direction) {
+	public static byte getOppositeDirectionByteForInt(int direction) {
 		switch (direction) {
 		case 0:
 			return META_DIR_WEST;

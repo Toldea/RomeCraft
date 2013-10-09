@@ -36,6 +36,8 @@ import net.minecraft.util.Tuple;
 import net.minecraft.village.MerchantRecipe;
 import net.minecraft.village.MerchantRecipeList;
 import net.minecraft.world.World;
+import toldea.romecraft.entity.ai.EntityAIBloomerySmelt;
+import toldea.romecraft.entity.ai.EntityAIMoveTowardsBloomery;
 import toldea.romecraft.entity.ai.EntityAIPlebMate;
 import toldea.romecraft.managers.ItemManager;
 import toldea.romecraft.managers.TickManager;
@@ -95,21 +97,24 @@ public class EntityPleb extends EntityAgeable implements INpc // IMerchant, INpc
 
 		// this.tasks.addTask(1, new EntityAITradePlayer(this));
 		// this.tasks.addTask(1, new EntityAILookAtTradePlayer(this));
+		
+		this.tasks.addTask(2, new EntityAIMoveTowardsBloomery(this));
+		this.tasks.addTask(3, new EntityAIBloomerySmelt(this, true));
 
-		this.tasks.addTask(2, new EntityAIMoveIndoors(this));
-		this.tasks.addTask(3, new EntityAIRestrictOpenDoor(this));
-		this.tasks.addTask(4, new EntityAIOpenDoor(this, true));
-		this.tasks.addTask(5, new EntityAIMoveTowardsRestriction(this, 0.6D));
+		this.tasks.addTask(4, new EntityAIMoveIndoors(this));
+		this.tasks.addTask(5, new EntityAIRestrictOpenDoor(this));
+		this.tasks.addTask(6, new EntityAIOpenDoor(this, true));
+		this.tasks.addTask(7, new EntityAIMoveTowardsRestriction(this, 0.6D));
 
-		this.tasks.addTask(6, new EntityAIPlebMate(this));
+		this.tasks.addTask(8, new EntityAIPlebMate(this));
 
-		// this.tasks.addTask(7, new EntityAIFollowGolem(this));
-		// this.tasks.addTask(8, new EntityAIPlay(this, 0.32D));
+		// this.tasks.addTask(9, new EntityAIFollowGolem(this));
+		// this.tasks.addTask(10, new EntityAIPlay(this, 0.32D));
 
-		this.tasks.addTask(9, new EntityAIWatchClosest2(this, EntityPlayer.class, 3.0F, 1.0F));
-		this.tasks.addTask(9, new EntityAIWatchClosest2(this, EntityPleb.class, 5.0F, 0.02F));
-		this.tasks.addTask(9, new EntityAIWander(this, 0.6D));
-		this.tasks.addTask(10, new EntityAIWatchClosest(this, EntityLiving.class, 8.0F));
+		this.tasks.addTask(11, new EntityAIWatchClosest2(this, EntityPlayer.class, 3.0F, 1.0F));
+		this.tasks.addTask(11, new EntityAIWatchClosest2(this, EntityPleb.class, 5.0F, 0.02F));
+		this.tasks.addTask(11, new EntityAIWander(this, 0.6D));
+		this.tasks.addTask(12, new EntityAIWatchClosest(this, EntityLiving.class, 8.0F));
 	}
 
 	protected void applyEntityAttributes() {
