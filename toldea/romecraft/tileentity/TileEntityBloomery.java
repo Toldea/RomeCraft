@@ -12,8 +12,9 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
+import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.World;
-import toldea.romecraft.block.BlockBloomery;
+import toldea.romecraft.block.BlockHelper;
 import toldea.romecraft.item.crafting.BloomeryRecipes;
 import toldea.romecraft.managers.BlockManager;
 import toldea.romecraft.managers.PacketManager;
@@ -27,6 +28,8 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 	private static final int[] slots_bottom = new int[] { 2, 1 };
 	private static final int[] slots_sides = new int[] { 1, 0 };
 	private ItemStack[] bloomeryItems;
+
+	private final ChunkCoordinates[] adjacentBellowsLocations = new ChunkCoordinates[4];
 
 	public int furnaceBurnTime = 0;
 	public int currentItemBurnTime = 0;
@@ -57,7 +60,7 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 		furnaceCookTime = 0;
 
 		int metadata = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
-		metadata = metadata & BlockBloomery.MASK_DIR;
+		metadata = metadata & BlockHelper.MASK_DIR;
 		worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, metadata, 2);
 
 		updateValidityOther(false);
@@ -149,6 +152,39 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 
 	public void onDataPacket(INetworkManager net, Packet132TileEntityData packet) {
 		readFromNBT(packet.data);
+	}
+
+	public TileEntityBellows getAdjacentBellowsForDirection(int direction) {
+		if (adjacentBellowsLocations[direction] == null) {
+			findAdjacentBellowsForDirection(direction);
+		}
+		if (adjacentBellowsLocations[direction] != null) {
+			ChunkCoordinates pos = adjacentBellowsLocations[direction];
+			TileEntity tileEntity = this.worldObj.getBlockTileEntity(pos.posX, pos.posY, pos.posZ);
+			if (tileEntity != null && tileEntity instanceof TileEntityBellows) {
+				TileEntityBellows bellows = (TileEntityBellows) tileEntity;
+				System.out.println("isBellowsForDirectionValid: " + direction + ", bellows: " + bellows);
+				if (bellows.getBlockMetadata() == BlockHelper.getDirectionByteForInt(direction)) {
+					return bellows;
+				} else {
+					adjacentBellowsLocations[direction] = null;
+					return null;
+				}
+			}
+		}
+		return null;
+	}
+
+	private ChunkCoordinates findAdjacentBellowsForDirection(int direction) {
+		TileEntity te = TileEntityHelper.getNeighbouringTileEntityForDirection(direction, this.worldObj, xCoord, yCoord, zCoord);
+		if (te != null && te instanceof TileEntityBellows) {
+			TileEntityBellows bellows = (TileEntityBellows) te;
+			if (bellows.getBlockMetadata() == BlockHelper.getDirectionByteForInt(direction)) {
+				adjacentBellowsLocations[direction] = new ChunkCoordinates(te.xCoord, te.yCoord, te.zCoord);
+				return adjacentBellowsLocations[direction];
+			}
+		}
+		return null;
 	}
 
 	@Override

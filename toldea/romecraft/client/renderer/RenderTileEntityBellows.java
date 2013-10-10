@@ -10,7 +10,7 @@ import net.minecraft.world.World;
 
 import org.lwjgl.opengl.GL11;
 
-import toldea.romecraft.block.BlockBloomery;
+import toldea.romecraft.block.BlockHelper;
 import toldea.romecraft.client.model.ModelBellows;
 import toldea.romecraft.managers.BlockManager;
 import toldea.romecraft.tileentity.TileEntityBellows;
@@ -49,7 +49,7 @@ public class RenderTileEntityBellows extends TileEntitySpecialRenderer {
 		GL11.glRotatef(180f, 0F, 0F, 1F);
 
 		// Get the direction the block should be facing from the metadata and rotate the model appropriately.
-		int dir = (bellows.getBlockMetadata() & BlockBloomery.MASK_DIR);
+		int dir = (bellows.getBlockMetadata() & BlockHelper.MASK_DIR);
 		switch (dir) {
 		case 0:
 			// East
@@ -79,7 +79,7 @@ public class RenderTileEntityBellows extends TileEntitySpecialRenderer {
 		GL11.glPushMatrix();
 		GL11.glTranslatef(0.5F, 0.5f, 0.5F);
 		// Get the direction the block should be facing from the metadata and rotate the model appropriately.
-		int dir = (bellows.getBlockMetadata() & BlockBloomery.MASK_DIR);
+		int dir = (bellows.getBlockMetadata() & BlockHelper.MASK_DIR);
 		switch (dir) {
 		case 0:
 			// East

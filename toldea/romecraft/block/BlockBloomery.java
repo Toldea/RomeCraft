@@ -19,12 +19,6 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockBloomery extends RomeCraftBlockContainer {
-	public static final int MASK_DIR = 0x00000007;
-	public static final int META_DIR_NORTH = 0x00000001;
-	public static final int META_DIR_SOUTH = 0x00000002;
-	public static final int META_DIR_EAST = 0x00000003;
-	public static final int META_DIR_WEST = 0x00000000;
-
 	public BlockBloomery(int id, Material material) {
 		super(id, material);
 	}
@@ -110,20 +104,20 @@ public class BlockBloomery extends RomeCraftBlockContainer {
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack itemStack) {
 		int metadata = 0;
-		int facing = META_DIR_WEST;
+		int facing = BlockHelper.META_DIR_WEST;
 
 		int dir = MathHelper.floor_double((double) (entity.rotationYaw * 4f / 360f) + 0.5) & 3;
 		if (dir == 0) {
-			facing = META_DIR_NORTH;
+			facing = BlockHelper.META_DIR_NORTH;
 		}
 		if (dir == 1) {
-			facing = META_DIR_EAST;
+			facing = BlockHelper.META_DIR_EAST;
 		}
 		if (dir == 2) {
-			facing = META_DIR_SOUTH;
+			facing = BlockHelper.META_DIR_SOUTH;
 		}
 		if (dir == 3) {
-			facing = META_DIR_WEST;
+			facing = BlockHelper.META_DIR_WEST;
 		}
 
 		metadata |= facing;
@@ -180,7 +174,7 @@ public class BlockBloomery extends RomeCraftBlockContainer {
 		if (bloomery != null && bloomery.getIsValid() && bloomery.getIsMaster() && bloomery.getIsActive()) {
 			int metadata = world.getBlockMetadata(x, y, z);
 
-			int facing = metadata & MASK_DIR;
+			int facing = metadata & BlockHelper.MASK_DIR;
 
 			double yMod = (0.3 * random.nextDouble());
 			double xMod = -0.02;
@@ -188,15 +182,15 @@ public class BlockBloomery extends RomeCraftBlockContainer {
 			double temp = 0.0;
 
 			switch (facing) {
-			case META_DIR_EAST:
+			case BlockHelper.META_DIR_EAST:
 				xMod += 1.04;
 				break;
-			case META_DIR_NORTH:
+			case BlockHelper.META_DIR_NORTH:
 				temp = xMod;
 				xMod = zMod;
 				zMod = temp;
 				break;
-			case META_DIR_SOUTH:
+			case BlockHelper.META_DIR_SOUTH:
 				temp = xMod;
 				xMod = zMod;
 				zMod = temp + 1.04;

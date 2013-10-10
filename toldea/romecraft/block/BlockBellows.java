@@ -13,12 +13,6 @@ import toldea.romecraft.tileentity.TileEntityBellows;
 import toldea.romecraft.tileentity.TileEntityBloomery;
 
 public class BlockBellows extends RomeCraftBlockContainer {
-	public static final int MASK_DIR = 0x00000007;
-	public static final int META_DIR_NORTH = 0x00000001;
-	public static final int META_DIR_SOUTH = 0x00000002;
-	public static final int META_DIR_EAST = 0x00000003;
-	public static final int META_DIR_WEST = 0x00000000;
-
 	public BlockBellows(int par1, Material par2Material) {
 		super(par1, par2Material);
 	}
@@ -79,39 +73,24 @@ public class BlockBellows extends RomeCraftBlockContainer {
 		// If we haven't found any adjacent bloomery, face the direction the user faced.
 		if (!foundAdjacentBloomery) {
 			int metadata = 0;
-			int facing = META_DIR_WEST;
+			int facing = BlockHelper.META_DIR_WEST;
 
 			int dir = MathHelper.floor_double((double) (entity.rotationYaw * 4f / 360f) + 0.5) & 3;
 			if (dir == 0) {
-				facing = META_DIR_NORTH;
+				facing = BlockHelper.META_DIR_NORTH;
 			}
 			if (dir == 1) {
-				facing = META_DIR_EAST;
+				facing = BlockHelper.META_DIR_EAST;
 			}
 			if (dir == 2) {
-				facing = META_DIR_SOUTH;
+				facing = BlockHelper.META_DIR_SOUTH;
 			}
 			if (dir == 3) {
-				facing = META_DIR_WEST;
+				facing = BlockHelper.META_DIR_WEST;
 			}
 
 			metadata |= facing;
 			world.setBlockMetadataWithNotify(x, y, z, metadata, 2);
-		}
-	}
-
-	public static byte getOppositeDirectionByteForInt(int direction) {
-		switch (direction) {
-		case 0:
-			return META_DIR_WEST;
-		case 1:
-			return META_DIR_NORTH;
-		case 2:
-			return META_DIR_SOUTH;
-		case 3:
-			return META_DIR_EAST;
-		default:
-			return 0;
 		}
 	}
 
@@ -120,19 +99,19 @@ public class BlockBellows extends RomeCraftBlockContainer {
 		if (te == null) {
 			return;
 		}
-		int dir = (te.getBlockMetadata() & BlockBloomery.MASK_DIR);
+		int dir = (te.getBlockMetadata() & BlockHelper.MASK_DIR);
 		switch (dir) {
 		case 0:
-			world.setBlockMetadataWithNotify(x, y, z, META_DIR_NORTH, 2); // West -> North
+			world.setBlockMetadataWithNotify(x, y, z, BlockHelper.META_DIR_NORTH, 2); // West -> North
 			break;
 		case 1:
-			world.setBlockMetadataWithNotify(x, y, z, META_DIR_EAST, 2); // North -> East
+			world.setBlockMetadataWithNotify(x, y, z, BlockHelper.META_DIR_EAST, 2); // North -> East
 			break;
 		case 2:
-			world.setBlockMetadataWithNotify(x, y, z, META_DIR_WEST, 2); // South -> West
+			world.setBlockMetadataWithNotify(x, y, z, BlockHelper.META_DIR_WEST, 2); // South -> West
 			break;
 		case 3:
-			world.setBlockMetadataWithNotify(x, y, z, META_DIR_SOUTH, 2); // East -> South
+			world.setBlockMetadataWithNotify(x, y, z, BlockHelper.META_DIR_SOUTH, 2); // East -> South
 			break;
 		}
 	}

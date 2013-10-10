@@ -1,8 +1,7 @@
 package toldea.romecraft.tileentity;
 
 import net.minecraft.tileentity.TileEntity;
-import toldea.romecraft.block.BlockBellows;
-import toldea.romecraft.block.BlockBloomery;
+import toldea.romecraft.block.BlockHelper;
 
 public class TileEntityBellows extends TileEntity {
 	public static final float MAX_ROTATION = (float) (30f * Math.PI / 180f);
@@ -55,7 +54,8 @@ public class TileEntityBellows extends TileEntity {
 
 	public TileEntityBloomery getFacingBloomery() {
 		if (facingBloomery == null) {
-			TileEntity tileEntity = getNeighbouringTileEntityForDirection(getBlockMetadata() & BlockBloomery.MASK_DIR);
+			TileEntity tileEntity = TileEntityHelper.getNeighbouringTileEntityForDirection(getBlockMetadata() & BlockHelper.MASK_DIR, this.worldObj, xCoord,
+					yCoord, zCoord);
 			if (tileEntity != null && tileEntity instanceof TileEntityBloomery) {
 				TileEntityBloomery bloomery = (TileEntityBloomery) tileEntity;
 				if (bloomery.getIsValid() && bloomery.getIsMaster()) {
@@ -69,11 +69,11 @@ public class TileEntityBellows extends TileEntity {
 	public TileEntityBloomery faceAdjacentBloomery() {
 		// Look for any adjacent bloomery 'master' tile entities and face one if found.
 		for (int i = 0; i < 4; i++) {
-			TileEntity te = getNeighbouringTileEntityForDirection(i);
+			TileEntity te = TileEntityHelper.getNeighbouringTileEntityForDirection(i, this.worldObj, xCoord, yCoord, zCoord);
 			if (te != null && te instanceof TileEntityBloomery) {
 				TileEntityBloomery bloomery = (TileEntityBloomery) te;
 				if (bloomery.getIsValid() && bloomery.getIsMaster()) {
-					this.blockMetadata = BlockBellows.getOppositeDirectionByteForInt(i);
+					this.blockMetadata = BlockHelper.getOppositeDirectionByteForInt(i);
 					this.worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, this.blockMetadata, 2);
 					setFacingBloomery(bloomery);
 					break;
@@ -85,34 +85,5 @@ public class TileEntityBellows extends TileEntity {
 
 	public float getBellowsRotation() {
 		return bellowsRotation;
-	}
-
-	/**
-	 * Returns the tile entity located one block away in the specified direction.
-	 */
-	private TileEntity getNeighbouringTileEntityForDirection(int direction) {
-		int dx = 0;
-		int dz = 0;
-
-		switch (direction) {
-		case 0:
-			dx = 1;
-			break;
-		case 1:
-			dz = 1;
-			break;
-		case 2:
-			dz = -1;
-			break;
-		case 3:
-			dx = -1;
-			break;
-		}
-
-		if (dx == 0 && dz == 0) {
-			return null;
-		} else {
-			return this.worldObj.getBlockTileEntity(xCoord + dx, yCoord, zCoord + dz);
-		}
 	}
 }
