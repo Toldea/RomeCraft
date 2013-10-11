@@ -6,7 +6,6 @@ import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.pathfinding.PathPoint;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
-import toldea.romecraft.block.BlockBloomery;
 import toldea.romecraft.entity.EntityPleb;
 import toldea.romecraft.tileentity.TileEntityBloomery;
 
@@ -15,7 +14,7 @@ public class EntityAIBloomeryInteract extends EntityAIBase {
 	protected int entityPosX;
 	protected int entityPosY;
 	protected int entityPosZ;
-	protected BlockBloomery targetBloomery;
+	protected TileEntityBloomery targetBloomery;
 
 	/**
 	 * If is true then the Entity has stopped Door Interaction and compoleted the task.
@@ -32,13 +31,14 @@ public class EntityAIBloomeryInteract extends EntityAIBase {
 	 * Returns whether the EntityAIBase should begin execution.
 	 */
 	public boolean shouldExecute() {
-		if (!this.entityPleb.isCollidedHorizontally) {
-			return false;
-		} else {
+		//if (!this.entityPleb.isCollidedHorizontally) {
+		//	System.out.println("EntityAIBloomeryInteract.shouldExecute: false!");
+		//	return false;
+		//} else {
 			PathNavigate pathnavigate = this.entityPleb.getNavigator();
 			PathEntity pathentity = pathnavigate.getPath();
 
-			if (pathentity != null && !pathentity.isFinished() && pathnavigate.getCanBreakDoors()) {
+			if (pathentity != null && !pathentity.isFinished()) {
 				for (int i = 0; i < Math.min(pathentity.getCurrentPathIndex() + 2, pathentity.getCurrentPathLength()); ++i) {
 					PathPoint pathpoint = pathentity.getPathPointFromIndex(i);
 					this.entityPosX = pathpoint.xCoord;
@@ -49,6 +49,7 @@ public class EntityAIBloomeryInteract extends EntityAIBase {
 						this.targetBloomery = this.findUsableBloomery(this.entityPosX, this.entityPosY, this.entityPosZ);
 
 						if (this.targetBloomery != null) {
+							System.out.println("EntityAIBloomeryInteract.shouldExecute: Couldn't find target bloomery!");
 							return true;
 						}
 					}
@@ -58,11 +59,13 @@ public class EntityAIBloomeryInteract extends EntityAIBase {
 				this.entityPosY = MathHelper.floor_double(this.entityPleb.posY + 1.0D);
 				this.entityPosZ = MathHelper.floor_double(this.entityPleb.posZ);
 				this.targetBloomery = this.findUsableBloomery(this.entityPosX, this.entityPosY, this.entityPosZ);
+				System.out.println("EntityAIBloomeryInteract.shouldExecute: " + (this.targetBloomery != null));
 				return this.targetBloomery != null;
 			} else {
+				System.out.println("EntityAIBloomeryInteract.shouldExecute: false!");
 				return false;
 			}
-		}
+		//}
 	}
 
 	/**
@@ -97,12 +100,12 @@ public class EntityAIBloomeryInteract extends EntityAIBase {
 	/**
 	 * Determines if a door can be broken with AI.
 	 */
-	private BlockBloomery findUsableBloomery(int x, int y, int z) {
+	private TileEntityBloomery findUsableBloomery(int x, int y, int z) {
 		TileEntity tileEntity = this.entityPleb.worldObj.getBlockTileEntity(x, y, z);
 		if (tileEntity != null && tileEntity instanceof TileEntityBloomery) {
 			TileEntityBloomery bloomery = (TileEntityBloomery) tileEntity;
 			if (bloomery.getIsValid() && bloomery.getIsMaster()) {
-				return (BlockBloomery) bloomery.getBlockType();
+				return bloomery;
 			}
 		}
 		return null;

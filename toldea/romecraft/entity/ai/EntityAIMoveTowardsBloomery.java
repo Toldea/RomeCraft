@@ -12,8 +12,8 @@ import toldea.romecraft.romanvillage.RomanVillageBloomeryInfo;
 public class EntityAIMoveTowardsBloomery extends EntityAIBase {
 	private EntityPleb entityPleb;
 	private RomanVillageBloomeryInfo bloomeryInfo;
-	private int bloomeryPosX;
-	private int bloomeryPosZ;
+	private int bloomeryPosX = -1;
+	private int bloomeryPosZ = -1;
 
 	public EntityAIMoveTowardsBloomery(EntityPleb entityPlebj) {
 		this.entityPleb = entityPlebj;
@@ -24,26 +24,34 @@ public class EntityAIMoveTowardsBloomery extends EntityAIBase {
 	public boolean shouldExecute() {
 		// Only Blacksmith plebs should execute tihs behavior.
 		if (this.entityPleb.getProfession() != 1) {
+			System.out.println("EntityAIMoveTowardsBloomery.shouldExecute - Profession is not blacksmithg!");
 			return false;
 		}
-		if ((!this.entityPleb.worldObj.isDaytime() || this.entityPleb.worldObj.isRaining()) && !this.entityPleb.worldObj.provider.hasNoSky) {
+		if (this.entityPleb.worldObj.isDaytime() && !this.entityPleb.worldObj.isRaining() && !this.entityPleb.worldObj.provider.hasNoSky) {
 			if (this.entityPleb.getRNG().nextInt(50) != 0) {
 				return false;
-			} else if (this.bloomeryPosX != -1 && this.entityPleb.getDistanceSq((double) this.bloomeryPosX, this.entityPleb.posY, (double) this.bloomeryPosZ) < 4.0D) {
+			} else if (this.bloomeryPosX != -1
+					&& this.entityPleb.getDistanceSq((double) this.bloomeryPosX, this.entityPleb.posY, (double) this.bloomeryPosZ) < 4.0D) {
+				System.out.println("EntityAIMoveTowardsBloomery.shouldExecute - Too close to bloomery!");
 				return false;
 			} else {
 				RomanVillage village = TickManager.romanVillageCollection.findNearestVillage(MathHelper.floor_double(this.entityPleb.posX),
 						MathHelper.floor_double(this.entityPleb.posY), MathHelper.floor_double(this.entityPleb.posZ), 14);
 				if (village == null) {
+					System.out.println("EntityAIMoveTowardsBloomery.shouldExecute - Couldn't find village!");
 					return false;
 				} else {
 					this.bloomeryInfo = (RomanVillageBloomeryInfo) village.findNearestObjectForInfoList(village.getBloomeryInfoList(),
 							MathHelper.floor_double(this.entityPleb.posX), MathHelper.floor_double(this.entityPleb.posY),
 							MathHelper.floor_double(this.entityPleb.posZ));
+					if (bloomeryInfo == null) {
+						System.out.println("EntityAIMoveTowardsBloomery.shouldExecute - Couldn't find bloomery!");
+					}
 					return this.bloomeryInfo != null;
 				}
 			}
 		} else {
+			System.out.println("EntityAIMoveTowardsBloomery.shouldExecute - Obey!");
 			return false;
 		}
 	}
@@ -59,6 +67,7 @@ public class EntityAIMoveTowardsBloomery extends EntityAIBase {
 	 * Execute a one shot task or start executing a continuous task
 	 */
 	public void startExecuting() {
+		System.out.println("startExecuting");
 		this.bloomeryPosX = -1;
 
 		if (this.entityPleb.getDistanceSq((double) this.bloomeryInfo.posX, (double) this.bloomeryInfo.posY, (double) this.bloomeryInfo.posZ) > 256.0D) {

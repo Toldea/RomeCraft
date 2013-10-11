@@ -13,12 +13,7 @@ import net.minecraft.entity.EntityLivingData;
 import net.minecraft.entity.INpc;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAvoidEntity;
-import net.minecraft.entity.ai.EntityAIMoveIndoors;
-import net.minecraft.entity.ai.EntityAIMoveTowardsRestriction;
-import net.minecraft.entity.ai.EntityAIOpenDoor;
-import net.minecraft.entity.ai.EntityAIRestrictOpenDoor;
 import net.minecraft.entity.ai.EntityAISwimming;
-import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.ai.EntityAIWatchClosest2;
 import net.minecraft.entity.monster.EntityZombie;
@@ -101,10 +96,10 @@ public class EntityPleb extends EntityAgeable implements INpc // IMerchant, INpc
 		this.tasks.addTask(2, new EntityAIMoveTowardsBloomery(this));
 		this.tasks.addTask(3, new EntityAIBloomerySmelt(this, true));
 
-		this.tasks.addTask(4, new EntityAIMoveIndoors(this));
-		this.tasks.addTask(5, new EntityAIRestrictOpenDoor(this));
-		this.tasks.addTask(6, new EntityAIOpenDoor(this, true));
-		this.tasks.addTask(7, new EntityAIMoveTowardsRestriction(this, 0.6D));
+		//this.tasks.addTask(4, new EntityAIMoveIndoors(this));
+		//this.tasks.addTask(5, new EntityAIRestrictOpenDoor(this));
+		//this.tasks.addTask(6, new EntityAIOpenDoor(this, true));
+		//this.tasks.addTask(7, new EntityAIMoveTowardsRestriction(this, 0.6D));
 
 		this.tasks.addTask(8, new EntityAIPlebMate(this));
 
@@ -113,7 +108,7 @@ public class EntityPleb extends EntityAgeable implements INpc // IMerchant, INpc
 
 		this.tasks.addTask(11, new EntityAIWatchClosest2(this, EntityPlayer.class, 3.0F, 1.0F));
 		this.tasks.addTask(11, new EntityAIWatchClosest2(this, EntityPleb.class, 5.0F, 0.02F));
-		this.tasks.addTask(11, new EntityAIWander(this, 0.6D));
+		//this.tasks.addTask(11, new EntityAIWander(this, 0.6D));
 		this.tasks.addTask(12, new EntityAIWatchClosest(this, EntityLiving.class, 8.0F));
 	}
 
