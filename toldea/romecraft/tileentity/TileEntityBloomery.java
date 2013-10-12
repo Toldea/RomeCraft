@@ -11,12 +11,14 @@ import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.World;
 import toldea.romecraft.block.BlockHelper;
 import toldea.romecraft.item.crafting.BloomeryRecipes;
 import toldea.romecraft.managers.BlockManager;
+import toldea.romecraft.managers.ItemManager;
 import toldea.romecraft.managers.PacketManager;
 
 public class TileEntityBloomery extends TileEntity implements ISidedInventory {
@@ -30,6 +32,7 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 	private ItemStack[] bloomeryItems;
 
 	private final ChunkCoordinates[] adjacentBellowsLocations = new ChunkCoordinates[4];
+	private final ChunkCoordinates[] adjacentChestLocations = new ChunkCoordinates[4];
 
 	public int furnaceBurnTime = 0;
 	public int currentItemBurnTime = 0;
@@ -163,15 +166,12 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 			TileEntity tileEntity = this.worldObj.getBlockTileEntity(pos.posX, pos.posY, pos.posZ);
 			if (tileEntity != null && tileEntity instanceof TileEntityBellows) {
 				TileEntityBellows bellows = (TileEntityBellows) tileEntity;
-				System.out.println("isBellowsForDirectionValid: " + direction + ", bellows: " + bellows);
 				if (bellows.getBlockMetadata() == BlockHelper.getDirectionByteForInt(direction)) {
 					return bellows;
-				} else {
-					adjacentBellowsLocations[direction] = null;
-					return null;
 				}
 			}
 		}
+		adjacentBellowsLocations[direction] = null;
 		return null;
 	}
 
@@ -185,6 +185,86 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 			}
 		}
 		return null;
+	}
+
+	public TileEntityChest getAdjacentChestForDirection(int direction) {
+		if (adjacentChestLocations[direction] == null) {
+			findAdjacentChestForDirection(direction);
+		}
+		if (adjacentChestLocations[direction] != null) {
+			ChunkCoordinates pos = adjacentChestLocations[direction];
+			TileEntity tileEntity = this.worldObj.getBlockTileEntity(pos.posX, pos.posY, pos.posZ);
+			if (tileEntity != null && tileEntity instanceof TileEntityChest) {
+				TileEntityChest chest = (TileEntityChest) tileEntity;
+				return chest;
+			}
+		}
+		adjacentChestLocations[direction] = null;
+		return null;
+	}
+
+	private ChunkCoordinates findAdjacentChestForDirection(int direction) {
+		TileEntity te = TileEntityHelper.getNeighbouringTileEntityForDirection(direction, this.worldObj, xCoord, yCoord, zCoord);
+		if (te != null && te instanceof TileEntityChest) {
+			TileEntityChest chest = (TileEntityChest) te;
+			adjacentChestLocations[direction] = new ChunkCoordinates(te.xCoord, te.yCoord, te.zCoord);
+			return adjacentChestLocations[direction];
+		}
+		return null;
+	}
+
+	/**
+	 * Checks if there is either a smelted iron bloom in the bloomery waiting for retrieval or if there is both iron ore and fuel in either the bloomery or any
+	 * adjacent chests.
+	 */
+	public boolean hasWork() {
+		boolean hasFuel = (this.isBurning() || isItemValidForSlot(1, getStackInSlot(1)));
+		boolean hasIronOre = isItemValidForSlot(0, getStackInSlot(0));
+		
+		ItemStack itemstack = getStackInSlot(2);
+		boolean hasSmeltedItem = (itemstack != null && itemstack.stackSize > 0);
+
+		// If there is a smelted iron bloom left in the furnace and we have at least one adjacent chest with room left, return true.
+		if (hasSmeltedItem) {
+			for (int i = 0; i < 4; i++) {
+				TileEntityChest chest = getAdjacentChestForDirection(i);
+				if (chest != null) {
+					for (int slot = 0; slot < chest.getSizeInventory(); slot++) {
+						itemstack = chest.getStackInSlot(slot);
+						// If the itemstack equals null (aka a free slot) or equals iron bloom with a stack size lower than the max stack size, return true.
+						if (itemstack == null || (itemstack.itemID == ItemManager.itemIronBloom.itemID && itemstack.stackSize < chest.getInventoryStackLimit())) {
+							return true;
+						}
+					}
+				}
+			}
+		}
+
+		// Loop through all adjacent chests to find if there is any fuel and iron available.
+		if (!hasFuel || !hasIronOre) {
+			for (int i = 0; i < 4; i++) {
+				TileEntityChest chest = getAdjacentChestForDirection(i);
+				if (chest != null) {
+					for (int slot = 0; slot < chest.getSizeInventory(); slot++) {
+						itemstack = chest.getStackInSlot(slot);
+						if (itemstack != null) {
+							if (!hasIronOre && this.isItemValidForSlot(0, itemstack)) {
+								hasIronOre = true;
+							}
+							if (!hasFuel && this.isItemValidForSlot(1, itemstack)) {
+								hasFuel = true;
+							}
+							if (hasFuel && hasIronOre) {
+								break;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		// Return true if we have both fuel and iron somewhere in the system, else return false.
+		return (hasFuel && hasIronOre);
 	}
 
 	@Override
@@ -477,7 +557,7 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 
 	@Override
 	public boolean isItemValidForSlot(int i, ItemStack itemstack) {
-		if (!this.isValidBloomeryMultiblock) {
+		if (!this.isValidBloomeryMultiblock || itemstack == null) {
 			return false;
 		} else if (this.isMaster) {
 			switch (i) {

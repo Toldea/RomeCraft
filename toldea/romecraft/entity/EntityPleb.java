@@ -31,8 +31,7 @@ import net.minecraft.util.Tuple;
 import net.minecraft.village.MerchantRecipe;
 import net.minecraft.village.MerchantRecipeList;
 import net.minecraft.world.World;
-import toldea.romecraft.entity.ai.EntityAIBloomerySmelt;
-import toldea.romecraft.entity.ai.EntityAIMoveTowardsBloomery;
+import toldea.romecraft.entity.ai.EntityAIBlacksmithing;
 import toldea.romecraft.entity.ai.EntityAIPlebMate;
 import toldea.romecraft.managers.ItemManager;
 import toldea.romecraft.managers.TickManager;
@@ -93,8 +92,7 @@ public class EntityPleb extends EntityAgeable implements INpc // IMerchant, INpc
 		// this.tasks.addTask(1, new EntityAITradePlayer(this));
 		// this.tasks.addTask(1, new EntityAILookAtTradePlayer(this));
 		
-		this.tasks.addTask(2, new EntityAIMoveTowardsBloomery(this));
-		this.tasks.addTask(3, new EntityAIBloomerySmelt(this, true));
+		this.tasks.addTask(2, new EntityAIBlacksmithing(this));
 
 		//this.tasks.addTask(4, new EntityAIMoveIndoors(this));
 		//this.tasks.addTask(5, new EntityAIRestrictOpenDoor(this));
