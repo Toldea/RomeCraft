@@ -218,53 +218,67 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 	 * adjacent chests.
 	 */
 	public boolean hasWork() {
-		boolean hasFuel = (this.isBurning() || isItemValidForSlot(1, getStackInSlot(1)));
-		boolean hasIronOre = isItemValidForSlot(0, getStackInSlot(0));
-		
-		ItemStack itemstack = getStackInSlot(2);
-		boolean hasSmeltedItem = (itemstack != null && itemstack.stackSize > 0);
+		boolean hasFuel = hasFuel();
+		boolean hasIronOre = hasIronOre();
+		boolean hasSmeltedItem = hasIronBloom();
+
+		ItemStack itemstack;
 
 		// If there is a smelted iron bloom left in the furnace and we have at least one adjacent chest with room left, return true.
 		if (hasSmeltedItem) {
-			for (int i = 0; i < 4; i++) {
-				TileEntityChest chest = getAdjacentChestForDirection(i);
-				if (chest != null) {
-					for (int slot = 0; slot < chest.getSizeInventory(); slot++) {
-						itemstack = chest.getStackInSlot(slot);
-						// If the itemstack equals null (aka a free slot) or equals iron bloom with a stack size lower than the max stack size, return true.
-						if (itemstack == null || (itemstack.itemID == ItemManager.itemIronBloom.itemID && itemstack.stackSize < chest.getInventoryStackLimit())) {
-							return true;
-						}
-					}
-				}
-			}
+			return (getAdjacentChestWithValidContentsForBloomerySlot(2) != null);
 		}
 
 		// Loop through all adjacent chests to find if there is any fuel and iron available.
-		if (!hasFuel || !hasIronOre) {
-			for (int i = 0; i < 4; i++) {
-				TileEntityChest chest = getAdjacentChestForDirection(i);
-				if (chest != null) {
-					for (int slot = 0; slot < chest.getSizeInventory(); slot++) {
-						itemstack = chest.getStackInSlot(slot);
-						if (itemstack != null) {
-							if (!hasIronOre && this.isItemValidForSlot(0, itemstack)) {
-								hasIronOre = true;
-							}
-							if (!hasFuel && this.isItemValidForSlot(1, itemstack)) {
-								hasFuel = true;
-							}
-							if (hasFuel && hasIronOre) {
-								break;
-							}
-						}
-					}
-				}
-			}
+		if (!hasIronOre) {
+			hasIronOre = (getAdjacentChestWithValidContentsForBloomerySlot(0) != null);
+		}
+		if (!hasFuel) {
+			hasFuel = (getAdjacentChestWithValidContentsForBloomerySlot(1) != null);
 		}
 
 		// Return true if we have both fuel and iron somewhere in the system, else return false.
 		return (hasFuel && hasIronOre);
+	}
+
+	public boolean hasFuel() {
+		return (this.isBurning() || isItemValidForSlot(1, getStackInSlot(1)));
+	}
+
+	public boolean hasIronOre() {
+		return isItemValidForSlot(0, getStackInSlot(0));
+	}
+
+	public boolean hasIronBloom() {
+		ItemStack itemstack = getStackInSlot(2);
+		return (itemstack != null && itemstack.stackSize > 0);
+	}
+
+	/**
+	 * Gets the first adjacent chest which has valid contents for the specified slot. 0 for ores. 1 for fuel. 2 for a valid spot to deposit iron blooms.
+	 */
+	public TileEntityChest getAdjacentChestWithValidContentsForBloomerySlot(int bloomerySlot) {
+		ItemStack itemstack;
+		for (int i = 0; i < 4; i++) {
+			TileEntityChest chest = getAdjacentChestForDirection(i);
+			if (chest != null) {
+				for (int slot = 0; slot < chest.getSizeInventory(); slot++) {
+					itemstack = chest.getStackInSlot(slot);
+					if (itemstack != null) {
+						if (bloomerySlot == 2) {
+							// If the itemstack equals null (aka a free slot) or equals iron bloom with a stack size lower than the max stack size, return true.
+							if (itemstack == null
+									|| (itemstack.itemID == ItemManager.itemIronBloom.itemID && itemstack.stackSize < chest.getInventoryStackLimit())) {
+								return chest;
+							}
+						} else if (this.isItemValidForSlot(bloomerySlot, itemstack)) {
+							return chest;
+						}
+					}
+				}
+			}
+		}
+		return null;
 	}
 
 	@Override
