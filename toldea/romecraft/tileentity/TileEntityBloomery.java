@@ -221,7 +221,7 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 		boolean hasFuel = hasFuel();
 		boolean hasIronOre = hasIronOre();
 		boolean hasSmeltedItem = hasIronBloom();
-
+		
 		ItemStack itemstack;
 
 		// If there is a smelted iron bloom left in the furnace and we have at least one adjacent chest with room left, return true.
@@ -264,20 +264,19 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 			if (chest != null) {
 				for (int slot = 0; slot < chest.getSizeInventory(); slot++) {
 					itemstack = chest.getStackInSlot(slot);
-					if (itemstack != null) {
-						if (bloomerySlot == 2) {
-							// If the itemstack equals null (aka a free slot) or equals iron bloom with a stack size lower than the max stack size, return true.
-							if (itemstack == null
-									|| (itemstack.itemID == ItemManager.itemIronBloom.itemID && itemstack.stackSize < chest.getInventoryStackLimit())) {
-								return chest;
-							}
-						} else if (this.isItemValidForSlot(bloomerySlot, itemstack)) {
+					if (bloomerySlot == 2) {
+						// If the itemstack equals null (aka a free slot) or equals iron bloom with a stack size lower than the max stack size, return true.
+						if (itemstack == null
+								|| (itemstack.itemID == ItemManager.itemIronBloom.itemID && itemstack.stackSize < chest.getInventoryStackLimit())) {
 							return chest;
 						}
+					} else if (itemstack != null && this.isItemValidForSlot(bloomerySlot, itemstack)) {
+						return chest;
 					}
 				}
 			}
 		}
+		//System.out.println("Couldn't find an appropriate chest.");
 		return null;
 	}
 
@@ -340,16 +339,10 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 
 	public void applyBellowsBoost(World world) {
 		if (world.isRemote) {
-			System.out.println("Applying bellows boost - Sending packet to server!");
-			PacketManager.sendApplyBellowsBoostPacket(this);
-		} else {
-			System.out.println("Receiving bellow boost packet! Server now synced with client.");
+			PacketManager.sendApplyBellowsBoostPacketToServer(this);
 		}
-
 		bellowsActiveTime = TileEntityBellows.ROTATION_TIME;
 		furnaceNotBellowedTime = 0;
-
-		System.out.println("Applying a bellows boost for " + bellowsActiveTime + " ticks!");
 	}
 
 	public boolean isBurning() {

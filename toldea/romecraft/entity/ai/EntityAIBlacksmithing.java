@@ -5,6 +5,7 @@ import java.util.List;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.RandomPositionGenerator;
 import net.minecraft.item.ItemStack;
+import net.minecraft.pathfinding.PathEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.MathHelper;
@@ -25,6 +26,11 @@ public class EntityAIBlacksmithing extends EntityAIBase {
 		NONE, BLOOMERY, CHEST, BELLOWS
 	}
 
+	private static final int IDLE_DELAY = 10;
+	private static final int CHEST_CLOSE_DELAY = 10;
+
+	private static final double IN_RANGE = 4.0d;
+
 	private final EntityPleb entityPleb;
 
 	private BlacksmithTask currentTask = BlacksmithTask.NONE;
@@ -34,6 +40,9 @@ public class EntityAIBlacksmithing extends EntityAIBase {
 	private TileEntityBloomery bloomery = null;
 	private TileEntityBellows bellows = null;
 	private TileEntityChest chest = null;
+
+	private int idleTimer = 0;
+	private int chestOpenTimer = 0;
 
 	public EntityAIBlacksmithing(EntityPleb entityPleb) {
 		this.entityPleb = entityPleb;
@@ -58,6 +67,7 @@ public class EntityAIBlacksmithing extends EntityAIBase {
 		// Make sure the village has at least one bloomery.
 		int numBloomeries = village.getNumBloomeries();
 		if (numBloomeries <= 0) {
+			System.out.println("EntityAIBlacksmithing.shouldExecute - No bloomery in village!");
 			return false;
 		}
 
@@ -75,6 +85,7 @@ public class EntityAIBlacksmithing extends EntityAIBase {
 
 					// Make sure it is valid and the master block and it has work to do.
 					if (!bloomery.getIsValid() || !bloomery.getIsMaster() || !bloomery.hasWork()) {
+						System.out.println("Invalid bloomery, not master, or no work to be done!");
 						continue;
 					}
 
@@ -91,6 +102,7 @@ public class EntityAIBlacksmithing extends EntityAIBase {
 						}
 					}
 					if (!hasValidBellows) {
+						System.out.println("No valid bellows");
 						continue;
 					}
 
@@ -106,12 +118,28 @@ public class EntityAIBlacksmithing extends EntityAIBase {
 	// public void startExecuting() {}
 
 	public boolean continueExecuting() {
+		if (chestOpenTimer > 0) {
+			chestOpenTimer--;
+			if (chestOpenTimer == 0) {
+				if (chest != null) {
+					interactWithChestForCurrentTask();
+					chest.closeChest();
+				}
+			}
+		}
+		if (idleTimer > 0) {
+			idleTimer--;
+			return true;
+		}
 		// Make sure the pleb is still a blacksmith, it is still day and it is still not raining.
 		if (entityPleb.getProfession() != 1 || !entityPleb.worldObj.isDaytime() || entityPleb.worldObj.isRaining()) {
+			System.out.println("Stopping blacksmthing behavior, either lost profession or it is raining or it is not day!");
 			return false;
 		}
-		// Make sure the bloomery still is valid and has work to do, else stop this behavior.
-		if (!bloomery.getIsValid() || !bloomery.hasWork()) {
+		// Make sure the bloomery still is valid and has work to do or the pleb is carrying some item, else stop this behavior.
+		if (!bloomery.getIsValid() || (this.entityPleb.getCurrentItemOrArmor(0) == null && !bloomery.hasWork())) {
+			System.out
+					.println("Stopping blacksmithing behavior, either bloomery became invalid or bloomery has no more work to do and we aren't carrying some kind of item!");
 			return false;
 		}
 
@@ -119,6 +147,7 @@ public class EntityAIBlacksmithing extends EntityAIBase {
 		if (currentTask == BlacksmithTask.NONE) {
 			selectNextBlacksmithingTask();
 			if (currentTask == BlacksmithTask.NONE) {
+				System.out.println("Stopping blacksmithing behavior, selectNextBlacksmithTask selected BlacksmithTask.NONE!");
 				return false;
 			}
 			startBlacksmithingTask();
@@ -130,6 +159,7 @@ public class EntityAIBlacksmithing extends EntityAIBase {
 	}
 
 	public void resetTask() {
+		System.out.println("Resetting Blacksmithing task!");
 		this.bloomery = null;
 		this.bellows = null;
 		this.chest = null;
@@ -145,97 +175,98 @@ public class EntityAIBlacksmithing extends EntityAIBase {
 		boolean hasIronBloom = bloomery.hasIronBloom();
 
 		if (hasIronBloom) {
-			// Move to bloomery
-			// Get iron bloom from bloomery
-			// Move to chest
-			// Put iron bloom in chest
 			currentTask = BlacksmithTask.STORE_IRON_BLOOM;
 		} else if (!hasIronOre) {
-			// Move to chest
-			// Get iron from chest
-			// Move to bloomery
-			// Put iron in bloomery
 			currentTask = BlacksmithTask.GET_IRON_ORE;
 		} else if (!hasFuel) {
-			// Move to chest
-			// Get fuel from chest
-			// Move to bloomery
-			// Put fuel in bloomery
 			currentTask = BlacksmithTask.GET_FUEL;
 		} else if (hasFuel && hasIronOre) {
-			// While smelting:
-			// (Move to bellows)
-			// Push bellows
 			currentTask = BlacksmithTask.PUSH_BELLOWS;
 		} else {
 			currentTask = BlacksmithTask.NONE;
 		}
+
+		System.out.println("Selecting next task: " + currentTask);
 	}
 
-	private boolean startBlacksmithingTask() {
+	private void startBlacksmithingTask() {
 		switch (currentTask) {
 		case STORE_IRON_BLOOM:
-			// Move to bloomery
-			// Get iron bloom from bloomery
-			// Move to chest
-			// Put iron bloom in chest
-
 			currentTargetLocation = BlacksmithTargetLocation.BLOOMERY;
-
 			break;
 		case GET_IRON_ORE:
-			break;
 		case GET_FUEL:
+			chest = bloomery.getAdjacentChestWithValidContentsForBloomerySlot(currentTask == BlacksmithTask.GET_IRON_ORE ? 0 : 1);
+			if (chest != null) {
+				currentTargetLocation = BlacksmithTargetLocation.CHEST;
+			} else {
+				currentTask = BlacksmithTask.NONE;
+			}
 			break;
 		case PUSH_BELLOWS:
+			currentTargetLocation = BlacksmithTargetLocation.BELLOWS;
 			break;
 		default:
 			break;
 		}
-
-		return false; // TODO: This probably gets removed when all logic is done.
 	}
 
 	private void updateBlacksmithingTask() {
-		switch (currentTask) {
-		case STORE_IRON_BLOOM:
-			// Move to bloomery
-			// Get iron bloom from bloomery
-			// Move to chest
-			// Put iron bloom in chest
-
-			moveTowardsBlacksmithTargetLocation();
-			if (entityPleb.getNavigator().getPath().isFinished()) {
-				currentNavigationTarget = BlacksmithTargetLocation.NONE;
-
-				if (inRangeOfTargetLocation()) {
-					if (currentTargetLocation == BlacksmithTargetLocation.BLOOMERY) {
-						if (interactWithBloomerySlot(2)) {
-							chest = bloomery.getAdjacentChestWithValidContentsForBloomerySlot(2);
-							if (chest != null) {
-								if (interactWithBloomerySlot(2)) {
-									currentTargetLocation = BlacksmithTargetLocation.CHEST;
-								}
-							}
+		if (currentTask == BlacksmithTask.NONE) {
+			return;
+		}
+		moveTowardsBlacksmithTargetLocation();
+		PathEntity path = entityPleb.getNavigator().getPath();
+		if (path != null && path.isFinished()) {
+			currentNavigationTarget = BlacksmithTargetLocation.NONE;
+		}
+		if (inRangeOfTargetLocation()) {
+			switch (currentTask) {
+			case STORE_IRON_BLOOM:
+				if (currentTargetLocation == BlacksmithTargetLocation.BLOOMERY) {
+					if (interactWithBloomerySlot(2)) {
+						chest = bloomery.getAdjacentChestWithValidContentsForBloomerySlot(2);
+						if (chest != null) {
+							currentTargetLocation = BlacksmithTargetLocation.CHEST;
+							idleTimer = IDLE_DELAY;
+							return;
 						}
-					} else if (currentTargetLocation == BlacksmithTargetLocation.CHEST) {
-						insertEquippedItemInChest();
+					}
+				} else if (currentTargetLocation == BlacksmithTargetLocation.CHEST) {
+					chest.openChest();
+					chestOpenTimer = CHEST_CLOSE_DELAY;
+					idleTimer = CHEST_CLOSE_DELAY + 1;
+					return;
+				}
+				return;
+			case GET_IRON_ORE:
+			case GET_FUEL:
+				if (currentTargetLocation == BlacksmithTargetLocation.CHEST) {
+					chest.openChest();
+					chestOpenTimer = CHEST_CLOSE_DELAY;
+					idleTimer = CHEST_CLOSE_DELAY + 1;
+					return;
+				} else if (currentTargetLocation == BlacksmithTargetLocation.BLOOMERY) {
+					if (interactWithBloomerySlot(currentTask == BlacksmithTask.GET_IRON_ORE ? 0 : 1)) {
+						idleTimer = IDLE_DELAY;
 						currentTargetLocation = BlacksmithTargetLocation.NONE;
 						currentTask = BlacksmithTask.NONE;
 						return;
 					}
 				}
+				return;
+			case PUSH_BELLOWS:
+				if (!bloomery.hasIronOre()) {
+					currentTask = BlacksmithTask.NONE;
+					return;
+				} else {
+					bellows.pushBellows();
+					idleTimer = TileEntityBellows.ROTATION_TIME + 10;
+					return;
+				}
+			default:
+				break;
 			}
-
-			break;
-		case GET_IRON_ORE:
-			break;
-		case GET_FUEL:
-			break;
-		case PUSH_BELLOWS:
-			break;
-		default:
-			break;
 		}
 	}
 
@@ -248,18 +279,22 @@ public class EntityAIBlacksmithing extends EntityAIBase {
 			return;
 		}
 		double dist = entityPleb.getDistanceSq(targetEntity.xCoord, targetEntity.yCoord, targetEntity.zCoord);
-		if (dist > 4.0d) {
+		if (dist > IN_RANGE) {
 			if (dist > 256.0d) {
 				Vec3 vec3 = RandomPositionGenerator.findRandomTargetBlockTowards(this.entityPleb, 14, 3, this.entityPleb.worldObj.getWorldVec3Pool()
 						.getVecFromPool((double) targetEntity.xCoord + .5d, (double) targetEntity.yCoord + .5d, (double) targetEntity.zCoord + .5d));
 				if (vec3 != null) {
-					this.entityPleb.getNavigator().tryMoveToXYZ(vec3.xCoord, vec3.yCoord, vec3.zCoord, 1.0D);
+					// this.entityPleb.getNavigator().tryMoveToXYZ(vec3.xCoord, vec3.yCoord, vec3.zCoord, 1.0D);
+					this.entityPleb.getNavigator().tryMoveToXYZ(vec3.xCoord, vec3.yCoord, vec3.zCoord, .6D); // TODO: Check if this causes the glitchy movement
+																												// if set to 1.0?
 					currentNavigationTarget = currentTargetLocation;
 					return;
 				}
 			} else {
+				// this.entityPleb.getNavigator().tryMoveToXYZ((double) targetEntity.xCoord + .5d, (double) targetEntity.yCoord + .5d, (double)
+				// targetEntity.zCoord + .5d, 1.0D);
 				this.entityPleb.getNavigator().tryMoveToXYZ((double) targetEntity.xCoord + .5d, (double) targetEntity.yCoord + .5d,
-						(double) targetEntity.zCoord + .5d, 1.0D);
+						(double) targetEntity.zCoord + .5d, .6D); // TODO: Check if this causes the glitchy movement if set to 1.0?
 				currentNavigationTarget = currentTargetLocation;
 				return;
 			}
@@ -273,7 +308,7 @@ public class EntityAIBlacksmithing extends EntityAIBase {
 			return false;
 		}
 		double dist = entityPleb.getDistanceSq(targetEntity.xCoord, targetEntity.yCoord, targetEntity.zCoord);
-		return (dist <= 4.0d);
+		return (dist <= IN_RANGE);
 	}
 
 	private TileEntity getTileEntityForTargetLocation() {
@@ -331,30 +366,97 @@ public class EntityAIBlacksmithing extends EntityAIBase {
 			}
 			bloomery.setInventorySlotContents(slot, bloomerySlotStack);
 			--equippedItem.stackSize;
-			entityPleb.setCurrentItemOrArmor(slot, equippedItem);
+			if (equippedItem.stackSize == 0) {
+				entityPleb.setCurrentItemOrArmor(0, null);
+			} else {
+				entityPleb.setCurrentItemOrArmor(0, equippedItem);
+			}
 			return true;
 		}
 		return false;
 	}
 
-	private boolean insertEquippedItemInChest() {
+	private void interactWithChestForCurrentTask() {
+		switch (currentTask) {
+		case STORE_IRON_BLOOM:
+			insertEquippedItemInChest();
+			currentTargetLocation = BlacksmithTargetLocation.NONE;
+			currentTask = BlacksmithTask.NONE;
+			break;
+		case GET_IRON_ORE:
+		case GET_FUEL:
+			if (withdrawItemFromChestValidForBloomerySlot(currentTask == BlacksmithTask.GET_IRON_ORE ? 0 : 1)) {
+				currentTargetLocation = BlacksmithTargetLocation.BLOOMERY;
+				idleTimer = IDLE_DELAY;
+			} else {
+				currentTargetLocation = BlacksmithTargetLocation.NONE;
+				currentTask = BlacksmithTask.NONE;
+			}
+			break;
+		default:
+			break;
+		}
+	}
+
+	private void insertEquippedItemInChest() {
 		ItemStack equippedItem = entityPleb.getCurrentItemOrArmor(0);
 		ItemStack chestItemStack;
+
+		int firstEmptySlot = -1;
 
 		for (int slot = 0; slot < chest.getSizeInventory(); slot++) {
 			chestItemStack = chest.getStackInSlot(slot);
 			if (chestItemStack == null) {
-				chestItemStack = equippedItem.copy();
-				chestItemStack.stackSize = 1;
+				if (firstEmptySlot == -1) {
+					firstEmptySlot = slot;
+				}
+				continue;
 			} else if (chestItemStack.itemID == equippedItem.itemID && chestItemStack.stackSize < chest.getInventoryStackLimit()) {
 				chestItemStack.stackSize++;
-			} else {
-				continue;
+				insertOrMergeEquippedItemWithChestStackInSlot(equippedItem, chestItemStack, slot);
+				return;
 			}
-			chest.setInventorySlotContents(slot, chestItemStack);
-			--equippedItem.stackSize;
-			entityPleb.setCurrentItemOrArmor(slot, equippedItem);
-			return true;
+		}
+		
+		if (firstEmptySlot != -1) {
+			System.out.println("Ikenai! " + firstEmptySlot);
+			chestItemStack = equippedItem.copy();
+			chestItemStack.stackSize = 1;
+			insertOrMergeEquippedItemWithChestStackInSlot(equippedItem, chestItemStack, firstEmptySlot);
+		}
+	}
+
+	private void insertOrMergeEquippedItemWithChestStackInSlot(ItemStack equippedItem, ItemStack chestItemStack, int slot) {
+		chest.setInventorySlotContents(slot, chestItemStack);
+		--equippedItem.stackSize;
+		if (equippedItem.stackSize <= 0) {
+			entityPleb.setCurrentItemOrArmor(0, null);
+		} else {
+			entityPleb.setCurrentItemOrArmor(0, equippedItem);
+		}
+	}
+
+	private boolean withdrawItemFromChestValidForBloomerySlot(int bloomerySlot) {
+		ItemStack equippedItem = entityPleb.getCurrentItemOrArmor(0);
+		if (equippedItem != null) {
+			return false;
+		}
+		ItemStack chestItemStack;
+
+		for (int slot = 0; slot < chest.getSizeInventory(); slot++) {
+			chestItemStack = chest.getStackInSlot(slot);
+			if (chestItemStack != null && bloomery.isItemValidForSlot(bloomerySlot, chestItemStack)) {
+				equippedItem = chestItemStack.copy();
+				equippedItem.stackSize = 1;
+				chestItemStack.stackSize--;
+				if (chestItemStack.stackSize <= 0) {
+					chest.setInventorySlotContents(slot, null);
+				} else {
+					chest.setInventorySlotContents(slot, chestItemStack);
+				}
+				entityPleb.setCurrentItemOrArmor(0, equippedItem);
+				return true;
+			}
 		}
 		return false;
 	}
