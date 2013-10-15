@@ -61,14 +61,12 @@ public class EntityAIBlacksmithing extends EntityAIBase {
 		RomanVillage village = TickManager.romanVillageCollection.findNearestVillage(MathHelper.floor_double(this.entityPleb.posX),
 				MathHelper.floor_double(this.entityPleb.posY), MathHelper.floor_double(this.entityPleb.posZ), 14);
 		if (village == null) {
-			System.out.println("EntityAIBlacksmithing.shouldExecute - Couldn't find village!");
 			return false;
 		}
 
 		// Make sure the village has at least one bloomery.
 		int numBloomeries = village.getNumBloomeries();
 		if (numBloomeries <= 0) {
-			System.out.println("EntityAIBlacksmithing.shouldExecute - No bloomery in village!");
 			return false;
 		}
 
@@ -86,7 +84,6 @@ public class EntityAIBlacksmithing extends EntityAIBase {
 
 					// Make sure it is valid and the master block and it has work to do.
 					if (!bloomery.getIsValid() || !bloomery.getIsMaster() || !bloomery.hasWork()) {
-						System.out.println("Invalid bloomery, not master, or no work to be done!");
 						continue;
 					}
 
@@ -103,12 +100,10 @@ public class EntityAIBlacksmithing extends EntityAIBase {
 						}
 					}
 					if (!hasValidBellows) {
-						System.out.println("No valid bellows");
 						continue;
 					}
 
 					this.bloomery = bloomery;
-					System.out.println("Systems go! Should execute the blacksmithing behavior!");
 					return true;
 				}
 			}
