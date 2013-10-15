@@ -57,8 +57,8 @@ public class PacketManager implements IPacketHandler {
 			}
 			
 			break;
-			default:
-				break;
+		default:
+			break;
 		}
 	}
 	

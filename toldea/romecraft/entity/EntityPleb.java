@@ -79,28 +79,28 @@ public class EntityPleb extends EntityAgeable implements INpc // IMerchant, INpc
 		this.getNavigator().setBreakDoors(true);
 		this.getNavigator().setAvoidsWater(true);
 
-		//this.tasks.addTask(0, new EntityAISwimming(this));
-		//this.tasks.addTask(1, new EntityAIAvoidEntity(this, EntityZombie.class, 8.0F, 0.6D, 0.6D));
+		// this.tasks.addTask(0, new EntityAISwimming(this));
+		// this.tasks.addTask(1, new EntityAIAvoidEntity(this, EntityZombie.class, 8.0F, 0.6D, 0.6D));
 
 		// this.tasks.addTask(1, new EntityAITradePlayer(this));
 		// this.tasks.addTask(1, new EntityAILookAtTradePlayer(this));
-		
+
 		this.tasks.addTask(2, new EntityAIBlacksmithing(this));
 
-		//this.tasks.addTask(4, new EntityAIMoveIndoors(this));
-		//this.tasks.addTask(5, new EntityAIRestrictOpenDoor(this));
-		//this.tasks.addTask(6, new EntityAIOpenDoor(this, true));
-		//this.tasks.addTask(7, new EntityAIMoveTowardsRestriction(this, 0.6D));
+		// this.tasks.addTask(4, new EntityAIMoveIndoors(this));
+		// this.tasks.addTask(5, new EntityAIRestrictOpenDoor(this));
+		// this.tasks.addTask(6, new EntityAIOpenDoor(this, true));
+		// this.tasks.addTask(7, new EntityAIMoveTowardsRestriction(this, 0.6D));
 
-		//this.tasks.addTask(8, new EntityAIPlebMate(this));
+		// this.tasks.addTask(8, new EntityAIPlebMate(this));
 
 		// this.tasks.addTask(9, new EntityAIFollowGolem(this));
 		// this.tasks.addTask(10, new EntityAIPlay(this, 0.32D));
 
-		//this.tasks.addTask(11, new EntityAIWatchClosest2(this, EntityPlayer.class, 3.0F, 1.0F));
-		//this.tasks.addTask(11, new EntityAIWatchClosest2(this, EntityPleb.class, 5.0F, 0.02F));
-			//this.tasks.addTask(11, new EntityAIWander(this, 0.6D));
-		//this.tasks.addTask(12, new EntityAIWatchClosest(this, EntityLiving.class, 8.0F));
+		// this.tasks.addTask(11, new EntityAIWatchClosest2(this, EntityPlayer.class, 3.0F, 1.0F));
+		// this.tasks.addTask(11, new EntityAIWatchClosest2(this, EntityPleb.class, 5.0F, 0.02F));
+		// this.tasks.addTask(11, new EntityAIWander(this, 0.6D));
+		// this.tasks.addTask(12, new EntityAIWatchClosest(this, EntityLiving.class, 8.0F));
 	}
 
 	protected void applyEntityAttributes() {
@@ -214,7 +214,7 @@ public class EntityPleb extends EntityAgeable implements INpc // IMerchant, INpc
 		this.worldObj.spawnEntityInWorld(entityLegionary);
 		this.worldObj.playAuxSFXAtEntity((EntityPlayer) null, 1017, (int) this.posX, (int) this.posY, (int) this.posZ, 0);
 	}
-	
+
 	private void convertToProfession(int profession) {
 		if (this.setProfession(profession)) {
 			this.worldObj.playAuxSFXAtEntity((EntityPlayer) null, 1017, (int) this.posX, (int) this.posY, (int) this.posZ, 0);

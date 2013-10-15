@@ -11,6 +11,7 @@ import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import toldea.romecraft.entity.EntityPleb;
+import toldea.romecraft.managers.ItemManager;
 import toldea.romecraft.managers.TickManager;
 import toldea.romecraft.romanvillage.RomanVillage;
 import toldea.romecraft.romanvillage.RomanVillageBloomeryInfo;
@@ -166,6 +167,15 @@ public class EntityAIBlacksmithing extends EntityAIBase {
 	}
 
 	private void selectNextBlacksmithingTask() {
+		// If we are currently holding an iron bloom, store that away first before we begin the correct smelting logic.
+		// This can occur when the server shuts down just as we picked up an iron bloom.
+		ItemStack equippedItem = entityPleb.getCurrentItemOrArmor(0);
+		if (equippedItem != null && equippedItem.itemID == ItemManager.itemIronBloom.itemID) {
+			currentTask = BlacksmithTask.STORE_IRON_BLOOM;
+			System.out.println("Selecting next task: " + currentTask);
+			return;
+		}
+		
 		boolean hasFuel = bloomery.hasFuel();
 		boolean hasIronOre = bloomery.hasIronOre();
 		boolean hasIronBloom = bloomery.hasIronBloom();
@@ -252,7 +262,7 @@ public class EntityAIBlacksmithing extends EntityAIBase {
 				}
 				return;
 			case PUSH_BELLOWS:
-				if (!bloomery.hasIronOre()) {
+				if (!bloomery.hasIronOre() || !bloomery.hasFuel()) {
 					currentTask = BlacksmithTask.NONE;
 					return;
 				} else {
@@ -339,6 +349,8 @@ public class EntityAIBlacksmithing extends EntityAIBase {
 					bloomery.setInventorySlotContents(2, null);
 					return true;
 				}
+			} else if (equippedItem.itemID == ItemManager.itemIronBloom.itemID) {
+				return true;
 			}
 			return false;
 		default:
@@ -381,12 +393,20 @@ public class EntityAIBlacksmithing extends EntityAIBase {
 			break;
 		case GET_IRON_ORE:
 		case GET_FUEL:
-			if (withdrawItemFromChestValidForBloomerySlot(currentTask == BlacksmithTask.GET_IRON_ORE ? 0 : 1)) {
+			int slot = currentTask == BlacksmithTask.GET_IRON_ORE ? 0 : 1;
+			if (withdrawItemFromChestValidForBloomerySlot(slot)) {
 				currentTargetLocation = BlacksmithTargetLocation.BLOOMERY;
 				idleTimer = IDLE_DELAY;
 			} else {
-				currentTargetLocation = BlacksmithTargetLocation.NONE;
-				currentTask = BlacksmithTask.NONE;
+				// Check if we somehow were already holding the correct item (i.e. when the server was shut down mid task).
+				ItemStack equippedItem = entityPleb.getCurrentItemOrArmor(0);
+				if (equippedItem != null && bloomery.isItemValidForSlot(slot, equippedItem)) {
+					currentTargetLocation = BlacksmithTargetLocation.BLOOMERY;
+					idleTimer = IDLE_DELAY;
+				} else {
+					currentTargetLocation = BlacksmithTargetLocation.NONE;
+					currentTask = BlacksmithTask.NONE;
+				}
 			}
 			break;
 		default:
