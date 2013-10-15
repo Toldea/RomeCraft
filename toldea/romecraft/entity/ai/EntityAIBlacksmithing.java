@@ -133,13 +133,10 @@ public class EntityAIBlacksmithing extends EntityAIBase {
 		}
 		// Make sure the pleb is still a blacksmith, it is still day and it is still not raining.
 		if (entityPleb.getProfession() != 1 || !entityPleb.worldObj.isDaytime() || entityPleb.worldObj.isRaining()) {
-			System.out.println("Stopping blacksmthing behavior, either lost profession or it is raining or it is not day!");
 			return false;
 		}
 		// Make sure the bloomery still is valid and has work to do or the pleb is carrying some item, else stop this behavior.
 		if (!bloomery.getIsValid() || (this.entityPleb.getCurrentItemOrArmor(0) == null && !bloomery.hasWork())) {
-			System.out
-					.println("Stopping blacksmithing behavior, either bloomery became invalid or bloomery has no more work to do and we aren't carrying some kind of item!");
 			return false;
 		}
 
@@ -147,7 +144,6 @@ public class EntityAIBlacksmithing extends EntityAIBase {
 		if (currentTask == BlacksmithTask.NONE) {
 			selectNextBlacksmithingTask();
 			if (currentTask == BlacksmithTask.NONE) {
-				System.out.println("Stopping blacksmithing behavior, selectNextBlacksmithTask selected BlacksmithTask.NONE!");
 				return false;
 			}
 			startBlacksmithingTask();
@@ -459,5 +455,14 @@ public class EntityAIBlacksmithing extends EntityAIBase {
 			}
 		}
 		return false;
+	}
+	
+	public void updateTask() {
+		if (this.currentTargetLocation != BlacksmithTargetLocation.NONE) {
+			TileEntity tileEntity = getTileEntityForTargetLocation();
+			if (tileEntity != null) {
+				this.entityPleb.getLookHelper().setLookPosition(tileEntity.xCoord, tileEntity.yCoord + .5d, tileEntity.zCoord, 10.0F, (float)this.entityPleb.getVerticalFaceSpeed());
+			}
+	    }
 	}
 }
