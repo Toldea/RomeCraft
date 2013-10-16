@@ -1,7 +1,7 @@
 package toldea.romecraft.client.renderer;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
@@ -19,10 +19,13 @@ import toldea.romecraft.tileentity.TileEntityBloomery;
 public class RenderTileEntityBloomery extends TileEntitySpecialRenderer {
 	private final ModelBloomery modelBloomery;
 	private final ModelBloomeryBlock modelBloomeryBlock;
+
 	private static final ResourceLocation bloomeryTexture = new ResourceLocation("romecraft", "textures/entity/bloomery.png");
 	private static final ResourceLocation bloomeryBlockTexture = new ResourceLocation("romecraft", "textures/entity/bloomery_block.png");
 	private static final ResourceLocation ironOreTexture = new ResourceLocation("textures/blocks/iron_ore.png");
 	private static final ResourceLocation coalBlockTexture = new ResourceLocation("textures/blocks/coal_block.png");
+
+	private static final float BLOOMERY_INSIDE_WIDTH = .375f;
 
 	public RenderTileEntityBloomery() {
 		modelBloomery = new ModelBloomery();
@@ -46,16 +49,16 @@ public class RenderTileEntityBloomery extends TileEntitySpecialRenderer {
 
 					// Render the iron ore block if any are inside the bloomery.
 					if (tileEntityBloomery.hasIronOre()) {
-						renderOreInsideBloomery(tileEntity.worldObj, tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
+						renderOreInsideBloomery(tileEntity.worldObj, tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord, tileEntityBloomery.getSmeltingProgress(), tileEntityBloomery.getBellowsIdleFailureProgress());
 					}
 					// Render the fuel if there is any inside the bloomery.
 					if (tileEntityBloomery.hasFuel()) {
 						renderFuelInsideBloomery(tileEntity.worldObj, tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
 					}
-					
+
 					renderTileEntityBloomery(tileEntityBloomery, tileEntity.worldObj, tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord,
 							BlockManager.blockBloomery);
-					
+
 					GL11.glPopMatrix();
 				}
 			} else {
@@ -74,15 +77,6 @@ public class RenderTileEntityBloomery extends TileEntitySpecialRenderer {
 	 * Renders the fully formed Bloomery model.
 	 */
 	public void renderTileEntityBloomery(TileEntityBloomery tl, World world, int x, int y, int z, Block block) {
-		// Add lighting to the model.
-		Tessellator tessellator = Tessellator.instance;
-		float f = block.getBlockBrightness(world, x, y, z);
-		int l = world.getLightBrightnessForSkyBlocks(x, y, z, 0);
-		int l1 = l % 65536;
-		int l2 = l / 65536;
-		tessellator.setColorOpaque_F(f, f, f);
-		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float) l1, (float) l2);
-
 		// Move and rotate the model to the right position and orientation.
 		GL11.glPushMatrix();
 		GL11.glTranslatef(0.5F, 0.5f, 0.5F);
@@ -118,16 +112,7 @@ public class RenderTileEntityBloomery extends TileEntitySpecialRenderer {
 	/**
 	 * Renders the incomplete 'block form' of the Bloomery.
 	 */
-	public void renderBlockBloomery(TileEntityBloomery tl, World world, int i, int j, int k, Block block) {
-		// Add lighting to the model.
-		Tessellator tessellator = Tessellator.instance;
-		float f = block.getBlockBrightness(world, i, j, k);
-		int l = world.getLightBrightnessForSkyBlocks(i, j, k, 0);
-		int l1 = l % 65536;
-		int l2 = l / 65536;
-		tessellator.setColorOpaque_F(f, f, f);
-		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float) l1, (float) l2);
-
+	public void renderBlockBloomery(TileEntityBloomery tl, World world, int x, int y, int z, Block block) {
 		// Move and rotate the model to the right position and orientation.
 		GL11.glPushMatrix();
 		GL11.glTranslatef(0.5F, 0.5f, 0.5F);
@@ -140,47 +125,55 @@ public class RenderTileEntityBloomery extends TileEntitySpecialRenderer {
 		GL11.glPopMatrix();
 	}
 
-	private void renderOreInsideBloomery(World world, int x, int y, int z) {
-		Tessellator tessellator = Tessellator.instance;
-		float f = BlockManager.blockBloomery.getBlockBrightness(world, x, y, z);
-		int l = world.getLightBrightnessForSkyBlocks(x, y, z, 0);
-		int l1 = l % 65536;
-		int l2 = l / 65536;
-		tessellator.setColorOpaque_F(f, f, f);
-		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float) l1, (float) l2);
-
-		float bloomeryInsideWidth = .375f;
-		
-		float origin_x = .5f - bloomeryInsideWidth / 2f;
+	private void renderOreInsideBloomery(World world, int x, int y, int z, float smeltingProgress, float bellowsIdleFailureProgress) {
+		float origin_x = .5f - BLOOMERY_INSIDE_WIDTH / 2f;
 		float origin_y = .15f;
-		float origin_z = .15f;
-		
-		float width = bloomeryInsideWidth;
-		float height = bloomeryInsideWidth;
-		float length = bloomeryInsideWidth;
-		
-		RomeCraftRenderHelper.renderCube(origin_x, origin_y, origin_z, width, height, length, ironOreTexture);
-	}
-	
-	private void renderFuelInsideBloomery(World world, int x, int y, int z) {
-		Tessellator tessellator = Tessellator.instance;
-		float f = BlockManager.blockBloomery.getBlockBrightness(world, x, y, z);
-		int l = world.getLightBrightnessForSkyBlocks(x, y, z, 0);
-		int l1 = l % 65536;
-		int l2 = l / 65536;
-		tessellator.setColorOpaque_F(f, f, f);
-		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float) l1, (float) l2);
-		
-		float bloomeryInsideWidth = .375f;
-		
-		float origin_x = .5f - bloomeryInsideWidth / 2f;
-		float origin_y = .0f;
-		float origin_z = .05f;
-		
-		float width = bloomeryInsideWidth;
-		float height = .15f;
-		float length = .6f;
+		float origin_z = origin_x;
 
-		RomeCraftRenderHelper.renderCube(origin_x, origin_y, origin_z, width, height, length, coalBlockTexture);
+		float width = BLOOMERY_INSIDE_WIDTH;
+		float height = BLOOMERY_INSIDE_WIDTH;
+		float length = BLOOMERY_INSIDE_WIDTH;
+
+		GL11.glDisable(GL11.GL_LIGHTING);
+		GL11.glPushMatrix();
+
+		Tessellator tessellator = Tessellator.instance;
+		tessellator.startDrawingQuads();
+		
+		float tint = 1.0f;
+		tint -= smeltingProgress;
+		
+		if (bellowsIdleFailureProgress > .8f) {
+			bellowsIdleFailureProgress = (bellowsIdleFailureProgress - .8f) * 5f;
+			tint += (bellowsIdleFailureProgress * (1 - tint));
+		}
+
+		RomeCraftRenderHelper.applyLightLevelsForRGB(1f, tint, tint, world, x, y, z, BlockManager.blockBloomery);
+		RomeCraftRenderHelper.addVerticesForCube(origin_x, origin_y, origin_z, width, height, length);
+		
+		Minecraft.getMinecraft().renderEngine.bindTexture(ironOreTexture);
+		
+		tessellator.draw();
+
+		GL11.glPopMatrix();
+		GL11.glEnable(GL11.GL_LIGHTING);
+	}
+
+	private void renderFuelInsideBloomery(World world, int x, int y, int z) {
+		float origin_x = .5f - BLOOMERY_INSIDE_WIDTH / 2f;
+		float origin_y = .0f;
+		float origin_z = .2f;
+
+		float width = BLOOMERY_INSIDE_WIDTH;
+		float height = .15f;
+		float length = .48f;
+
+		Tessellator tessellator = Tessellator.instance;
+		tessellator.startDrawingQuads();
+
+		RomeCraftRenderHelper.addVerticesForCube(origin_x, origin_y, origin_z, width, height, length);
+		Minecraft.getMinecraft().renderEngine.bindTexture(coalBlockTexture);
+
+		tessellator.draw();
 	}
 }

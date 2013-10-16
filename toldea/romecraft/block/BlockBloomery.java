@@ -70,7 +70,7 @@ public class BlockBloomery extends RomeCraftBlockContainer {
 						slot = 0;
 					}
 					
-					if (slot != -1) {
+					if (slot != -1 && tileEntity.isItemValidForSlot(slot, itemstack)) {
 						ItemStack bloomerySlotStack = tileEntity.getStackInSlot(slot);
 						if (bloomerySlotStack == null) {
 							bloomerySlotStack = itemstack.copy();
@@ -79,7 +79,7 @@ public class BlockBloomery extends RomeCraftBlockContainer {
 							if (bloomerySlotStack.stackSize < tileEntity.getInventoryStackLimit()) {
 								bloomerySlotStack.stackSize++;
 							} else {
-								return false;
+								return true;
 							}
 						}
 						

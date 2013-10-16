@@ -22,14 +22,18 @@ import toldea.romecraft.managers.ItemManager;
 import toldea.romecraft.managers.PacketManager;
 
 public class TileEntityBloomery extends TileEntity implements ISidedInventory {
-	private boolean isValidBloomeryMultiblock = false;
-	private boolean isMaster = false;
-	private boolean isActive = false;
+	private static final int SMELTING_TIME = 180;
+	private static final int MAX_BELLOWS_IDLE_TIME = 100;
 
 	private static final int[] slots_invald = new int[] {};
 	private static final int[] slots_bottom = new int[] { 2, 1 };
 	private static final int[] slots_sides = new int[] { 1, 0 };
+
 	private ItemStack[] bloomeryItems;
+
+	private boolean isValidBloomeryMultiblock = false;
+	private boolean isMaster = false;
+	private boolean isActive = false;
 
 	private final ChunkCoordinates[] adjacentBellowsLocations = new ChunkCoordinates[4];
 	private final ChunkCoordinates[] adjacentChestLocations = new ChunkCoordinates[4];
@@ -221,7 +225,7 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 		boolean hasFuel = hasFuel();
 		boolean hasIronOre = hasIronOre();
 		boolean hasSmeltedItem = hasIronBloom();
-		
+
 		ItemStack itemstack;
 
 		// If there is a smelted iron bloom left in the furnace and we have at least one adjacent chest with room left, return true.
@@ -242,7 +246,12 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 	}
 
 	public boolean hasFuel() {
-		return (this.isBurning() || isItemValidForSlot(1, getStackInSlot(1)));
+		if (this.isBurning()) {
+			return true;
+		} else {
+			ItemStack itemstack = getStackInSlot(1);
+			return (itemstack != null && itemstack.itemID == Item.coal.itemID);
+		}
 	}
 
 	public boolean hasIronOre() {
@@ -252,6 +261,14 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 	public boolean hasIronBloom() {
 		ItemStack itemstack = getStackInSlot(2);
 		return (itemstack != null && itemstack.stackSize > 0);
+	}
+
+	public float getSmeltingProgress() {
+		return (float)this.furnaceCookTime / (float)SMELTING_TIME;
+	}
+	
+	public float getBellowsIdleFailureProgress() {
+		return (float)this.furnaceNotBellowedTime / (float)MAX_BELLOWS_IDLE_TIME;
 	}
 
 	/**
@@ -266,8 +283,7 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 					itemstack = chest.getStackInSlot(slot);
 					if (bloomerySlot == 2) {
 						// If the itemstack equals null (aka a free slot) or equals iron bloom with a stack size lower than the max stack size, return true.
-						if (itemstack == null
-								|| (itemstack.itemID == ItemManager.itemIronBloom.itemID && itemstack.stackSize < chest.getInventoryStackLimit())) {
+						if (itemstack == null || (itemstack.itemID == ItemManager.itemIronBloom.itemID && itemstack.stackSize < chest.getInventoryStackLimit())) {
 							return chest;
 						}
 					} else if (itemstack != null && this.isItemValidForSlot(bloomerySlot, itemstack)) {
@@ -276,7 +292,6 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 				}
 			}
 		}
-		//System.out.println("Couldn't find an appropriate chest.");
 		return null;
 	}
 
@@ -338,6 +353,10 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 	}
 
 	public void applyBellowsBoost(World world) {
+		// Applying a bellows boost without a burning fire does nothing, so return immediatly.
+		if (!isBurning()) {
+			return;
+		}
 		if (world.isRemote) {
 			PacketManager.sendApplyBellowsBoostPacketToServer(this);
 		}
@@ -424,13 +443,13 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 			if (isBurning() && canSmelt() && isApplyingBellows()) {
 				furnaceCookTime++;
 
-				if (furnaceCookTime == 180) {
+				if (furnaceCookTime == SMELTING_TIME) {
 					furnaceCookTime = 0;
 					smeltItem();
 					flag1 = true;
 				}
 			} else {
-				if (furnaceNotBellowedTime < 100) {
+				if (furnaceNotBellowedTime < MAX_BELLOWS_IDLE_TIME) {
 					furnaceNotBellowedTime++;
 				} else {
 					furnaceCookTime = 0;
@@ -571,7 +590,7 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 			case 0:
 				return itemstack.itemID == Block.oreIron.blockID;
 			case 1:
-				return itemstack.itemID == Item.coal.itemID;
+				return (!isBurning() && itemstack.itemID == Item.coal.itemID);
 			case 2:
 			default:
 				return false;
