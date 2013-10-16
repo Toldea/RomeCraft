@@ -588,7 +588,7 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 		} else if (this.isMaster) {
 			switch (i) {
 			case 0:
-				return itemstack.itemID == Block.oreIron.blockID;
+				return (!hasIronBloom() && itemstack.itemID == Block.oreIron.blockID);
 			case 1:
 				return (!isBurning() && itemstack.itemID == Item.coal.itemID);
 			case 2:

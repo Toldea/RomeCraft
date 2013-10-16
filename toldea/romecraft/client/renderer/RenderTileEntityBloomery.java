@@ -49,11 +49,16 @@ public class RenderTileEntityBloomery extends TileEntitySpecialRenderer {
 
 					// Render the iron ore block if any are inside the bloomery.
 					if (tileEntityBloomery.hasIronOre()) {
-						renderOreInsideBloomery(tileEntity.worldObj, tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord, tileEntityBloomery.getSmeltingProgress(), tileEntityBloomery.getBellowsIdleFailureProgress());
+						renderOreInsideBloomery(tileEntity.worldObj, tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord,
+								tileEntityBloomery.getSmeltingProgress(), tileEntityBloomery.getBellowsIdleFailureProgress());
 					}
 					// Render the fuel if there is any inside the bloomery.
 					if (tileEntityBloomery.hasFuel()) {
-						renderFuelInsideBloomery(tileEntity.worldObj, tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
+						renderFuelInsideBloomery(tileEntityBloomery, tileEntity.worldObj, tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
+					}
+					// Render the smelted iron bloom if there is one inside the bloomery.
+					if (tileEntityBloomery.hasIronBloom()) {
+						//renderSmeltedIronBloomInsideBloomery(tileEntityBloomery, tileEntity.worldObj, tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
 					}
 
 					renderTileEntityBloomery(tileEntityBloomery, tileEntity.worldObj, tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord,
@@ -139,10 +144,10 @@ public class RenderTileEntityBloomery extends TileEntitySpecialRenderer {
 
 		Tessellator tessellator = Tessellator.instance;
 		tessellator.startDrawingQuads();
-		
+
 		float tint = 1.0f;
 		tint -= smeltingProgress;
-		
+
 		if (bellowsIdleFailureProgress > .8f) {
 			bellowsIdleFailureProgress = (bellowsIdleFailureProgress - .8f) * 5f;
 			tint += (bellowsIdleFailureProgress * (1 - tint));
@@ -150,16 +155,34 @@ public class RenderTileEntityBloomery extends TileEntitySpecialRenderer {
 
 		RomeCraftRenderHelper.applyLightLevelsForRGB(1f, tint, tint, world, x, y, z, BlockManager.blockBloomery);
 		RomeCraftRenderHelper.addVerticesForCube(origin_x, origin_y, origin_z, width, height, length);
-		
+
 		Minecraft.getMinecraft().renderEngine.bindTexture(ironOreTexture);
-		
+
 		tessellator.draw();
 
 		GL11.glPopMatrix();
 		GL11.glEnable(GL11.GL_LIGHTING);
 	}
 
-	private void renderFuelInsideBloomery(World world, int x, int y, int z) {
+	private void renderFuelInsideBloomery(TileEntityBloomery bloomery, World world, int x, int y, int z) {
+		GL11.glPushMatrix();
+		GL11.glTranslatef(0.5F, 0.5f, 0.5F);
+		int dir = (bloomery.getBlockMetadata() & BlockHelper.MASK_DIR);
+		switch (dir) {
+		case 0:
+			GL11.glRotatef(90f, 0F, 1F, 0F); // East
+			break;
+		case 1:
+			break; // South
+		case 2:
+			GL11.glRotatef(180f, 0F, 1F, 0F); // North
+			break;
+		case 3:
+			GL11.glRotatef(-90f, 0F, 1F, 0F); // West
+			break;
+		}
+		GL11.glTranslatef(-0.5F, -0.5f, -0.5F);
+
 		float origin_x = .5f - BLOOMERY_INSIDE_WIDTH / 2f;
 		float origin_y = .0f;
 		float origin_z = .2f;
@@ -175,5 +198,7 @@ public class RenderTileEntityBloomery extends TileEntitySpecialRenderer {
 		Minecraft.getMinecraft().renderEngine.bindTexture(coalBlockTexture);
 
 		tessellator.draw();
+
+		GL11.glPopMatrix();
 	}
 }

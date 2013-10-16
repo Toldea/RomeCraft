@@ -14,6 +14,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import toldea.romecraft.managers.BlockManager;
+import toldea.romecraft.managers.ItemManager;
 import toldea.romecraft.tileentity.TileEntityBloomery;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -68,9 +69,18 @@ public class BlockBloomery extends RomeCraftBlockContainer {
 						slot = 1;
 					} else if (id == Block.oreIron.blockID) {
 						slot = 0;
+					} else if (id == ItemManager.itemIronBloom.itemID) {
+						slot = 2;
 					}
 					
-					if (slot != -1 && tileEntity.isItemValidForSlot(slot, itemstack)) {
+					if (slot == 2) {
+						ItemStack bloomerySlotStack = tileEntity.getStackInSlot(slot);
+						if (bloomerySlotStack != null && itemstack.stackSize + bloomerySlotStack.stackSize <= 64) {
+							itemstack.stackSize += bloomerySlotStack.stackSize;
+							player.inventory.setInventorySlotContents(player.inventory.currentItem, itemstack);
+							tileEntity.setInventorySlotContents(2, null);
+						}
+					} else if (slot != -1 && tileEntity.isItemValidForSlot(slot, itemstack)) {
 						ItemStack bloomerySlotStack = tileEntity.getStackInSlot(slot);
 						if (bloomerySlotStack == null) {
 							bloomerySlotStack = itemstack.copy();
@@ -82,7 +92,7 @@ public class BlockBloomery extends RomeCraftBlockContainer {
 								return true;
 							}
 						}
-						
+
 						if (!player.capabilities.isCreativeMode) {
 							--itemstack.stackSize;
 						}
@@ -91,6 +101,13 @@ public class BlockBloomery extends RomeCraftBlockContainer {
 							player.inventory.setInventorySlotContents(player.inventory.currentItem, (ItemStack) null);
 						}
 						return true;
+					}
+				} else {
+					ItemStack bloomerySlotStack = tileEntity.getStackInSlot(2);
+					if (bloomerySlotStack != null && bloomerySlotStack.itemID == ItemManager.itemIronBloom.itemID) {
+						itemstack = bloomerySlotStack.copy();
+						player.inventory.setInventorySlotContents(player.inventory.currentItem, itemstack);
+						tileEntity.setInventorySlotContents(2, null);
 					}
 				}
 
