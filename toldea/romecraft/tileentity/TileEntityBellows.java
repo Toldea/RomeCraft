@@ -57,7 +57,7 @@ public class TileEntityBellows extends TileEntity {
 	}
 
 	public TileEntityBloomery getFacingBloomery() {
-		if (facingBloomery == null) {
+		if (facingBloomery == null || !facingBloomery.getIsValid() || !facingBloomery.getIsMaster()) {
 			TileEntity tileEntity = TileEntityHelper.getNeighbouringTileEntityForDirection(getBlockMetadata() & BlockHelper.MASK_DIR, this.worldObj, xCoord,
 					yCoord, zCoord);
 			if (tileEntity != null && tileEntity instanceof TileEntityBloomery) {
