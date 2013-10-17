@@ -22,8 +22,10 @@ public class RenderTileEntityBloomery extends TileEntitySpecialRenderer {
 
 	private static final ResourceLocation bloomeryTexture = new ResourceLocation("romecraft", "textures/entity/bloomery.png");
 	private static final ResourceLocation bloomeryBlockTexture = new ResourceLocation("romecraft", "textures/entity/bloomery_block.png");
+	
 	private static final ResourceLocation ironOreTexture = new ResourceLocation("textures/blocks/iron_ore.png");
 	private static final ResourceLocation coalBlockTexture = new ResourceLocation("textures/blocks/coal_block.png");
+	private static final ResourceLocation ironBloomTexture = new ResourceLocation("romecraft", "textures/items/ironbloom.png");
 
 	private static final float BLOOMERY_INSIDE_WIDTH = .375f;
 
@@ -58,7 +60,7 @@ public class RenderTileEntityBloomery extends TileEntitySpecialRenderer {
 					}
 					// Render the smelted iron bloom if there is one inside the bloomery.
 					if (tileEntityBloomery.hasIronBloom()) {
-						//renderSmeltedIronBloomInsideBloomery(tileEntityBloomery, tileEntity.worldObj, tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
+						renderSmeltedIronBloomInsideBloomery(tileEntityBloomery, tileEntity.worldObj, tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
 					}
 
 					renderTileEntityBloomery(tileEntityBloomery, tileEntity.worldObj, tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord,
@@ -200,5 +202,32 @@ public class RenderTileEntityBloomery extends TileEntitySpecialRenderer {
 		tessellator.draw();
 
 		GL11.glPopMatrix();
+	}
+
+	private void renderSmeltedIronBloomInsideBloomery(TileEntityBloomery bloomery, World world, int x, int y, int z) {
+		GL11.glDisable(GL11.GL_LIGHTING);
+		
+		float origin_x = .5f - BLOOMERY_INSIDE_WIDTH / 2f;
+		float origin_y = .10f;
+		float origin_z = origin_x;
+
+		float width = BLOOMERY_INSIDE_WIDTH;
+		float height = BLOOMERY_INSIDE_WIDTH;
+
+		int dir = (bloomery.getBlockMetadata() & BlockHelper.MASK_DIR);
+
+		Tessellator tessellator = Tessellator.instance;
+		tessellator.startDrawingQuads();
+		
+		// Draw a plane with the iron bloom icon facing towards the opening in the bottom.
+		RomeCraftRenderHelper.addVerticesForPlaneWithDirection(dir, origin_x, origin_y, origin_z, width, height);
+		// Also draw a top version for when viewing from above through the shaft.
+		RomeCraftRenderHelper.addVerticesForPlaneWithDirection(4, origin_x, origin_y + height, origin_z, width, height);
+		
+		Minecraft.getMinecraft().renderEngine.bindTexture(ironBloomTexture);
+		
+		tessellator.draw();
+		
+		GL11.glEnable(GL11.GL_LIGHTING);
 	}
 }
