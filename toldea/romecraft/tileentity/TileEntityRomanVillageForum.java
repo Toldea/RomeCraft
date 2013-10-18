@@ -1,11 +1,11 @@
 package toldea.romecraft.tileentity;
 
-import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.MathHelper;
+import toldea.romecraft.managers.BlockManager;
 import toldea.romecraft.managers.TickManager;
 import toldea.romecraft.romanvillage.RomanVillage;
 
@@ -49,16 +49,14 @@ public class TileEntityRomanVillageForum extends TileEntity {
 						} else {
 							// Check if the rest of the blocks around us are air, return false if not.
 							if (blockId != 0) {
-								// System.out.println("Block Isn't Air! BlockId: " + blockId + " (" + x + ", " + y + ", " + z + ")");
 								return false;
 							} else {
 								continue;
 							}
 						}
 					}
-					// On the row below us make sure everything is made out of some sort of quartz block.
-					else if (!isBlockQuartz(x, y, z)) {
-						// System.out.println("Block Isn't Quartz! BlockId: " + blockId + " (" + x + ", " + y + ", " + z + ")");
+					// On the row below us make sure everything is made out of some sort of marble block.
+					else if (!isBlockMarble(x, y, z)) {
 						return false;
 					}
 				}
@@ -86,13 +84,11 @@ public class TileEntityRomanVillageForum extends TileEntity {
 		isValidMultiblock = par1.getBoolean("isValidMultiblock");
 	}
 
-	private boolean isBlockQuartz(int x, int y, int z) {
+	private boolean isBlockMarble(int x, int y, int z) {
 		int blockId = worldObj.getBlockId(x, y, z);
-		if (blockId == Block.blockNetherQuartz.blockID || blockId == Block.stairsNetherQuartz.blockID || blockId == Block.stairsNetherQuartz.blockID) {
+		if (blockId == BlockManager.blockMarble.blockID || blockId == BlockManager.blockMarbleMosaic.blockID
+				|| blockId == BlockManager.blockMarbleMosaicHalfSlab.blockID || blockId == BlockManager.blockMarbleMosaicStairs.blockID) {
 			return true;
-		} else if (blockId == Block.stoneSingleSlab.blockID) {
-			int metadata = worldObj.getBlockMetadata(x, y, z);
-			return (metadata == 7);
 		} else {
 			return false;
 		}

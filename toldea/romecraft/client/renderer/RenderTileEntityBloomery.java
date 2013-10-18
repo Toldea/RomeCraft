@@ -20,10 +20,9 @@ public class RenderTileEntityBloomery extends TileEntitySpecialRenderer {
 	private final ModelBloomery modelBloomery;
 	private final ModelBloomeryBlock modelBloomeryBlock;
 
-	private static final ResourceLocation bloomeryTextureIdle = new ResourceLocation("romecraft", "textures/entity/bloomery.png");
-	private static final ResourceLocation bloomeryTextureActive = new ResourceLocation("romecraft", "textures/entity/bloomery_active.png");
+	private static final ResourceLocation bloomeryTexture = new ResourceLocation("romecraft", "textures/entity/bloomery.png");
 	private static final ResourceLocation bloomeryBlockTexture = new ResourceLocation("romecraft", "textures/entity/bloomery_block.png");
-	
+
 	private static final ResourceLocation ironOreTexture = new ResourceLocation("textures/blocks/iron_ore.png");
 	private static final ResourceLocation coalBlockTexture = new ResourceLocation("textures/blocks/coal_block.png");
 	private static final ResourceLocation ironBloomTexture = new ResourceLocation("romecraft", "textures/items/ironbloom.png");
@@ -94,28 +93,19 @@ public class RenderTileEntityBloomery extends TileEntitySpecialRenderer {
 		int dir = (bloomery.getBlockMetadata() & BlockHelper.MASK_DIR);
 		switch (dir) {
 		case 0:
-			// East
-			GL11.glRotatef(-90f, 0F, 1F, 0F);
+			GL11.glRotatef(-90f, 0F, 1F, 0F); // East
 			break;
 		case 1:
-			// South
-			break;
+			break; // South
 		case 2:
-			// North
-			GL11.glRotatef(180f, 0F, 1F, 0F);
+			GL11.glRotatef(180f, 0F, 1F, 0F); // North
 			break;
 		case 3:
-			// West
-			GL11.glRotatef(90f, 0F, 1F, 0F);
+			GL11.glRotatef(90f, 0F, 1F, 0F); // West
 			break;
 		}
 
-		// Bind the texture and render the model.
-		if (bloomery.getIsActive()) {
-			bindTexture(bloomeryTextureActive);
-		} else {
-			bindTexture(bloomeryTextureIdle);
-		}
+		bindTexture(bloomeryTexture);
 		modelBloomery.renderBloomery(null, 0f, 0f, 0f, 0f, 0f, .0625f);
 
 		GL11.glPopMatrix();
@@ -211,7 +201,7 @@ public class RenderTileEntityBloomery extends TileEntitySpecialRenderer {
 
 	private void renderSmeltedIronBloomInsideBloomery(TileEntityBloomery bloomery, World world, int x, int y, int z) {
 		GL11.glDisable(GL11.GL_LIGHTING);
-		
+
 		float origin_x = .5f - BLOOMERY_INSIDE_WIDTH / 2f;
 		float origin_y = .10f;
 		float origin_z = origin_x;
@@ -223,16 +213,16 @@ public class RenderTileEntityBloomery extends TileEntitySpecialRenderer {
 
 		Tessellator tessellator = Tessellator.instance;
 		tessellator.startDrawingQuads();
-		
+
 		// Draw a plane with the iron bloom icon facing towards the opening in the bottom.
 		RomeCraftRenderHelper.addVerticesForPlaneWithDirection(dir, origin_x, origin_y, origin_z, width, height);
 		// Also draw a top version for when viewing from above through the shaft.
 		RomeCraftRenderHelper.addVerticesForPlaneWithDirection(4, origin_x, origin_y + height, origin_z, width, height);
-		
+
 		Minecraft.getMinecraft().renderEngine.bindTexture(ironBloomTexture);
-		
+
 		tessellator.draw();
-		
+
 		GL11.glEnable(GL11.GL_LIGHTING);
 	}
 }
