@@ -4,8 +4,6 @@ import net.minecraft.item.EnumArmorMaterial;
 import net.minecraft.item.EnumToolMaterial;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
-import net.minecraftforge.client.MinecraftForgeClient;
-import toldea.romecraft.client.renderer.RenderItemPilum;
 import toldea.romecraft.item.ItemPilum;
 import toldea.romecraft.item.ItemScepter;
 import toldea.romecraft.item.RomeCraftArmor;
@@ -61,7 +59,6 @@ public class ItemManager {
 		// Pilum
 		itemPilum = new ItemPilum(nextItemID++).setUnlocalizedName("pilum").setTextureName("romecraft:pilum");
 		LanguageRegistry.addName(itemPilum, "Pilum");
-		MinecraftForgeClient.registerItemRenderer(itemPilum.itemID, new RenderItemPilum());
 		// Verutum
 		itemVerutum = new RomeCraftItem(nextItemID++).setUnlocalizedName("verutum").setTextureName("romecraft:verutum");
 		LanguageRegistry.addName(itemVerutum, "Verutum");

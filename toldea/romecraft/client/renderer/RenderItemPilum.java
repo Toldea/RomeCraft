@@ -1,17 +1,16 @@
 package toldea.romecraft.client.renderer;
 
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
-
-import toldea.romecraft.client.model.ModelPilum;
-import toldea.romecraft.entity.EntityPilum;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.IItemRenderer;
+
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
+
+import toldea.romecraft.client.model.ModelPilum;
 
 public class RenderItemPilum implements IItemRenderer {
 	private static final ResourceLocation pilumTexture = new ResourceLocation("romecraft", "textures/entity/pilum.png");

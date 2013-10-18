@@ -8,6 +8,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import toldea.romecraft.client.renderer.RenderBlockBellows;
 import toldea.romecraft.managers.BlockManager;
 import toldea.romecraft.tileentity.TileEntityBellows;
 import toldea.romecraft.tileentity.TileEntityBloomery;
@@ -32,6 +33,16 @@ public class BlockBellows extends RomeCraftBlockContainer {
 	@Override
 	public boolean isOpaqueCube() {
 		return false;
+	}
+
+	@Override
+	public boolean renderAsNormalBlock() {
+		return false;
+	}
+
+	@Override
+	public int getRenderType() {
+		return RenderBlockBellows.renderID;
 	}
 
 	@Override

@@ -5,9 +5,11 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
 import toldea.romecraft.CommonProxy;
 import toldea.romecraft.client.model.ModelLegionaryBiped;
+import toldea.romecraft.client.renderer.RenderBlockBellows;
 import toldea.romecraft.client.renderer.RenderEntityLegionary;
 import toldea.romecraft.client.renderer.RenderEntityPilum;
 import toldea.romecraft.client.renderer.RenderEntityPleb;
+import toldea.romecraft.client.renderer.RenderItemPilum;
 import toldea.romecraft.client.renderer.RenderScutum;
 import toldea.romecraft.client.renderer.RenderTileEntityBellows;
 import toldea.romecraft.client.renderer.RenderTileEntityBloomery;
@@ -29,6 +31,9 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBellows.class, new RenderTileEntityBellows());
 		
 		MinecraftForgeClient.registerItemRenderer(ItemManager.itemScutum.itemID, new RenderScutum());
+		MinecraftForgeClient.registerItemRenderer(ItemManager.itemPilum.itemID, new RenderItemPilum());
+		
+		RenderingRegistry.registerBlockHandler(new RenderBlockBellows());
 		
 		RenderingRegistry.registerEntityRenderingHandler(EntityLegionary.class, new RenderEntityLegionary(new ModelLegionaryBiped(), .03f));
 		RenderingRegistry.registerEntityRenderingHandler(EntityPilum.class, new RenderEntityPilum());
