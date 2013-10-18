@@ -20,7 +20,8 @@ public class RenderTileEntityBloomery extends TileEntitySpecialRenderer {
 	private final ModelBloomery modelBloomery;
 	private final ModelBloomeryBlock modelBloomeryBlock;
 
-	private static final ResourceLocation bloomeryTexture = new ResourceLocation("romecraft", "textures/entity/bloomery.png");
+	private static final ResourceLocation bloomeryTextureIdle = new ResourceLocation("romecraft", "textures/entity/bloomery.png");
+	private static final ResourceLocation bloomeryTextureActive = new ResourceLocation("romecraft", "textures/entity/bloomery_active.png");
 	private static final ResourceLocation bloomeryBlockTexture = new ResourceLocation("romecraft", "textures/entity/bloomery_block.png");
 	
 	private static final ResourceLocation ironOreTexture = new ResourceLocation("textures/blocks/iron_ore.png");
@@ -83,14 +84,14 @@ public class RenderTileEntityBloomery extends TileEntitySpecialRenderer {
 	/**
 	 * Renders the fully formed Bloomery model.
 	 */
-	public void renderTileEntityBloomery(TileEntityBloomery tl, World world, int x, int y, int z, Block block) {
+	public void renderTileEntityBloomery(TileEntityBloomery bloomery, World world, int x, int y, int z, Block block) {
 		// Move and rotate the model to the right position and orientation.
 		GL11.glPushMatrix();
 		GL11.glTranslatef(0.5F, 0.5f, 0.5F);
 		GL11.glRotatef(180f, 0F, 0F, 1F);
 
 		// Get the direction the block should be facing from the metadata and rotate the model appropriately.
-		int dir = (tl.getBlockMetadata() & BlockHelper.MASK_DIR);
+		int dir = (bloomery.getBlockMetadata() & BlockHelper.MASK_DIR);
 		switch (dir) {
 		case 0:
 			// East
@@ -110,7 +111,11 @@ public class RenderTileEntityBloomery extends TileEntitySpecialRenderer {
 		}
 
 		// Bind the texture and render the model.
-		bindTexture(bloomeryTexture);
+		if (bloomery.getIsActive()) {
+			bindTexture(bloomeryTextureActive);
+		} else {
+			bindTexture(bloomeryTextureIdle);
+		}
 		modelBloomery.renderBloomery(null, 0f, 0f, 0f, 0f, 0f, .0625f);
 
 		GL11.glPopMatrix();

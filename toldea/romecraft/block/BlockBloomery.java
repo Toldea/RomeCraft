@@ -20,6 +20,8 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockBloomery extends RomeCraftBlockContainer {
+	private TileEntityBloomery tileEntity = null;
+
 	public BlockBloomery(int id, Material material) {
 		super(id, material);
 	}
@@ -72,7 +74,7 @@ public class BlockBloomery extends RomeCraftBlockContainer {
 					} else if (id == ItemManager.itemIronBloom.itemID) {
 						slot = 2;
 					}
-					
+
 					if (slot == 2) {
 						ItemStack bloomerySlotStack = tileEntity.getStackInSlot(slot);
 						if (bloomerySlotStack != null && itemstack.stackSize + bloomerySlotStack.stackSize <= 64) {

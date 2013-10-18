@@ -22,6 +22,8 @@ public class RecipeManager {
 			ItemManager.itemSudis
 			});
 		
+		craftingManager.addRecipe(new ItemStack(BlockManager.blockBloomery, 2), "AAA", "A A", "AAA", 'A', Block.hardenedClay);
+		
 		craftingManager.addRecipe(new ItemStack(BlockManager.blockBellows, 1), "AA ", "BBC", "AA ", 'A', Block.planks, 'B', Item.leather, 'C', Item.ingotIron);
 	}
 }
