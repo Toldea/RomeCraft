@@ -60,16 +60,24 @@ public class GuiForum extends GuiScreen {
 	}
 
 	private void drawForeground() {
-		fontRenderer.drawString("Forum", guiLeft + 8, guiTop + 6, 0x404040);
-		/*
-		 * fontRenderer.drawString( "Village Forum: (" + village.getVillageForumLocation().posX + ", " + village.getVillageForumLocation().posY + ", " +
-		 * village.getVillageForumLocation().posZ + ")", guiLeft + 8, guiTop + 16, 0x404040); fontRenderer.drawString("Village Center: (" +
-		 * village.getCenter().posX + ", " + village.getCenter().posY + ", " + village.getCenter().posZ + ")", guiLeft + 8, guiTop + 26, 0x404040);
-		 * fontRenderer.drawString("Village Radius: " + village.getVillageRadius(), guiLeft + 8, guiTop + 36, 0x404040);
-		 * fontRenderer.drawString("Number of Doors: " + village.getNumVillageDoors(), guiLeft + 8, guiTop + 46, 0x404040);
-		 * fontRenderer.drawString("Number of Bloomeries: " + village.getNumBloomeries(), guiLeft + 8, guiTop + 56, 0x404040);
-		 * fontRenderer.drawString("Number of Plebs: " + village.getNumPlebs() + " / " + village.getMaxNumberOfPlebs(), guiLeft + 8, guiTop + 66, 0x404040);
-		 */
+		fontRenderer.drawStringWithShadow("Forum", guiLeft + 8, guiTop + 6, 0xFFFFFF);
+		//fontRenderer.drawString("Forum", guiLeft + 8, guiTop + 6, 0x404040);
+
+		int x = guiLeft + 14;
+		int y = guiTop + 20;
+		int i = 0;
+		int d = 12;
+
+		fontRenderer.drawString(
+				"Village Forum: (" + village.getVillageForumLocation().posX + ", " + village.getVillageForumLocation().posY + ", "
+						+ village.getVillageForumLocation().posZ + ")", x, y + i++ * d, 0x404040);
+		fontRenderer.drawString("Village Center: (" + village.getCenter().posX + ", " + village.getCenter().posY + ", " + village.getCenter().posZ + ")", x, y
+				+ i++ * d, 0x404040);
+		fontRenderer.drawString("Village Radius: " + village.getVillageRadius(), x, y + i++ * d, 0x404040);
+		fontRenderer.drawString("Number of Doors: " + village.getNumVillageDoors(), x, y + i++ * d, 0x404040);
+		fontRenderer.drawString("Number of Bloomeries: " + village.getNumBloomeries(), x, y + i++ * d, 0x404040);
+		fontRenderer.drawString("Number of Plebs: " + village.getNumPlebs() + " / " + village.getMaxNumberOfPlebs(), x, y + i++ * d, 0x404040);
+
 		drawVillageMap();
 	}
 
@@ -81,10 +89,11 @@ public class GuiForum extends GuiScreen {
 			GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_ALPHA);
 			GL11.glDisable(GL11.GL_ALPHA_TEST);
 			GL11.glColor4f(1, 1, 1, 1);
-			GL11.glScalef(.5F, .5F, .5F);
+
+			GL11.glScalef(.25F, .25F, .25F);
 
 			// Draw the map twice as large as normal, but scale it down 50%. For some reason the source image is twice too large.
-			drawTexturedModalRect((guiLeft + 10) * 2, (guiTop + 154) * 2 - mapSize, 0, 0, mapSize, mapSize);
+			drawTexturedModalRect((guiLeft + 238) * 4 - mapSize, (guiTop + 10) * 4, 0, 0, mapSize, mapSize);
 
 			GL11.glScalef(1.0F, 1.0F, 1.0F);
 			GL11.glEnable(GL11.GL_ALPHA_TEST);

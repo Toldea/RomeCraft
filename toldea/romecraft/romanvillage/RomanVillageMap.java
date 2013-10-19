@@ -25,31 +25,29 @@ public class RomanVillageMap extends MapData {
 
 	public void updateMapData(World par1World) {
 		if (par1World.provider.dimensionId == this.dimension) {
-			short short1 = this.mapSize;
-			short short2 = this.mapSize;
-			int i = 1 << this.scale;
-			int j = this.xCenter;
-			int k = this.zCenter;
-			int l = short1 / 2;
-			int i1 = short2 / 2;
-			int j1 = this.mapSize / i;
+			int mapScale = 1 << this.scale;
+			int mapXCenter = this.xCenter;
+			int mapZCenter = this.zCenter;
+			int mapPosX = mapSize / 2;
+			int mapPosZ = mapSize / 2;
+			int mapRadius = this.mapSize / mapScale;
 
 			if (par1World.provider.hasNoSky) {
-				j1 /= 2;
+				mapRadius /= 2;
 			}
 
-			for (int k1 = l - j1 + 1; k1 < l + j1; ++k1) {
+			for (int x = mapPosX - mapRadius + 1; x < mapPosX + mapRadius; ++x) {
 				int l1 = 255;
 				int i2 = 0;
 				double d0 = 0.0D;
 
-				for (int j2 = i1 - j1 - 1; j2 < i1 + j1; ++j2) {
-					if (k1 >= 0 && j2 >= -1 && k1 < short1 && j2 < short2) {
-						int k2 = k1 - l;
-						int l2 = j2 - i1;
-						boolean flag = k2 * k2 + l2 * l2 > (j1 - 2) * (j1 - 2);
-						int i3 = (j / i + k1 - short1 / 2) * i;
-						int j3 = (k / i + j2 - short2 / 2) * i;
+				for (int z = mapPosZ - mapRadius - 1; z < mapPosZ + mapRadius; ++z) {
+					if (x >= 0 && z >= -1 && x < mapSize && z < mapSize) {
+						int centerOffsetX = x - mapPosX;
+						int centerOffsetZ = z - mapPosZ;
+						boolean flag = centerOffsetX * centerOffsetX + centerOffsetZ * centerOffsetZ > (mapRadius - 2) * (mapRadius - 2);
+						int i3 = (mapXCenter / mapScale + x - mapSize / 2) * mapScale;
+						int j3 = (mapZCenter / mapScale + z - mapSize / 2) * mapScale;
 						int[] aint = new int[Block.blocksList.length];
 						Chunk chunk = par1World.getChunkFromBlockCoords(i3, j3);
 
@@ -75,8 +73,8 @@ public class RomanVillageMap extends MapData {
 
 								d1 = 100.0D;
 							} else {
-								for (j4 = 0; j4 < i; ++j4) {
-									for (k4 = 0; k4 < i; ++k4) {
+								for (j4 = 0; j4 < mapScale; ++j4) {
+									for (k4 = 0; k4 < mapScale; ++k4) {
 										l4 = chunk.getHeightValue(j4 + k3, k4 + l3) + 1;
 										int j5 = 0;
 
@@ -116,13 +114,13 @@ public class RomanVillageMap extends MapData {
 											}
 										}
 
-										d1 += (double) l4 / (double) (i * i);
+										d1 += (double) l4 / (double) (mapScale * mapScale);
 										++aint[j5];
 									}
 								}
 							}
 
-							i4 /= i * i;
+							i4 /= mapScale * mapScale;
 							j4 = 0;
 							k4 = 0;
 
@@ -133,7 +131,7 @@ public class RomanVillageMap extends MapData {
 								}
 							}
 
-							double d2 = (d1 - d0) * 4.0D / (double) (i + 4) + ((double) (k1 + j2 & 1) - 0.5D) * 0.4D;
+							double d2 = (d1 - d0) * 4.0D / (double) (mapScale + 4) + ((double) (x + z & 1) - 0.5D) * 0.4D;
 							byte b0 = 1;
 
 							if (d2 > 0.6D) {
@@ -150,7 +148,7 @@ public class RomanVillageMap extends MapData {
 								MapColor mapcolor = Block.blocksList[k4].blockMaterial.materialMapColor;
 
 								if (mapcolor == MapColor.waterColor) {
-									d2 = (double) i4 * 0.1D + (double) (k1 + j2 & 1) * 0.2D;
+									d2 = (double) i4 * 0.1D + (double) (x + z & 1) * 0.2D;
 									b0 = 1;
 
 									if (d2 < 0.5D) {
@@ -167,20 +165,20 @@ public class RomanVillageMap extends MapData {
 
 							d0 = d1;
 
-							if (j2 >= 0 && k2 * k2 + l2 * l2 < j1 * j1 && (!flag || (k1 + j2 & 1) != 0)) {
-								byte b1 = this.colors[k1 + j2 * short1];
+							if (z >= 0 && centerOffsetX * centerOffsetX + centerOffsetZ * centerOffsetZ < mapRadius * mapRadius && (!flag || (x + z & 1) != 0)) {
+								byte b1 = this.colors[x + z * mapSize];
 								byte b2 = (byte) (i5 * 4 + b0);
 
 								if (b1 != b2) {
-									if (l1 > j2) {
-										l1 = j2;
+									if (l1 > z) {
+										l1 = z;
 									}
 
-									if (i2 < j2) {
-										i2 = j2;
+									if (i2 < z) {
+										i2 = z;
 									}
 
-									this.colors[k1 + j2 * short1] = b2;
+									this.colors[x + z * mapSize] = b2;
 								}
 							}
 						}
@@ -188,7 +186,7 @@ public class RomanVillageMap extends MapData {
 				}
 
 				if (l1 <= i2) {
-					this.setColumnDirty(k1, l1, i2);
+					this.setColumnDirty(x, l1, i2);
 				}
 			}
 		}
