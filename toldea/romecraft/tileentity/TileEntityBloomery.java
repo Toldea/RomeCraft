@@ -59,12 +59,11 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 
 	public void invalidateMultiblock() {
 		isValidBloomeryMultiblock = false;
+		isActive = false;
+		isMaster = false;
+		furnaceBurnTime = currentItemBurnTime = furnaceCookTime = bellowsActiveTime = furnaceNotBellowedTime = 0;
 
 		bloomeryItems = null;
-
-		furnaceBurnTime = 0;
-		currentItemBurnTime = 0;
-		furnaceCookTime = 0;
 
 		int metadata = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
 		metadata = metadata & BlockHelper.MASK_DIR;
@@ -264,11 +263,11 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 	}
 
 	public float getSmeltingProgress() {
-		return (float)this.furnaceCookTime / (float)SMELTING_TIME;
+		return (float) this.furnaceCookTime / (float) SMELTING_TIME;
 	}
-	
+
 	public float getBellowsIdleFailureProgress() {
-		return (float)this.furnaceNotBellowedTime / (float)MAX_BELLOWS_IDLE_TIME;
+		return (float) this.furnaceNotBellowedTime / (float) MAX_BELLOWS_IDLE_TIME;
 	}
 
 	/**
@@ -354,7 +353,8 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 
 	public void applyBellowsBoost(World world) {
 		// Applying a bellows boost without a burning fire does nothing, so return immediatly.
-		if (!isBurning()) {
+		// The same goes for when an iron bloom is inside it.
+		if (!isBurning() || hasIronBloom()) {
 			return;
 		}
 		if (world.isRemote) {
@@ -456,16 +456,18 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 				}
 			}
 
-			if (furnaceBurnTime > 0) {
+			if (flag != this.furnaceBurnTime > 0) {
 				flag1 = true;
 				this.isActive = true;
-				worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-			} else if (this.isActive) {
+			} else if (this.isActive && this.furnaceBurnTime <= 0) {
 				this.isActive = false;
 				worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 			}
 		}
 
+		if (this.isActive) {
+			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		}
 		if (flag1) {
 			onInventoryChanged();
 		}

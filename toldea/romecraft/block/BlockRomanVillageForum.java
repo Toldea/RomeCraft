@@ -9,6 +9,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
+import toldea.romecraft.RomeCraft;
 import toldea.romecraft.tileentity.TileEntityRomanVillageForum;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -47,10 +48,7 @@ public class BlockRomanVillageForum extends RomeCraftBlockContainer {
 			}
 
 			if (tileEntity.getIsValid()) {
-				if (world.isRemote) {
-					tileEntity.printVillageData(player);
-				}
-				// player.openGui(MultiFurnaceMod.instance, ModConfig.GUIIDs.multiFurnace, world, x, y, z);
+				player.openGui(RomeCraft.instance, 0, world, x, y, z);
 			}
 		}
 

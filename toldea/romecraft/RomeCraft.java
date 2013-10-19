@@ -4,6 +4,7 @@ import toldea.romecraft.managers.BlockManager;
 import toldea.romecraft.managers.CreativeTabsManager;
 import toldea.romecraft.managers.EntityManager;
 import toldea.romecraft.managers.EventManager;
+import toldea.romecraft.managers.GuiManager;
 import toldea.romecraft.managers.ItemManager;
 import toldea.romecraft.managers.PacketManager;
 import toldea.romecraft.managers.RecipeManager;
@@ -47,6 +48,8 @@ public class RomeCraft {
 
 		EventManager.registerEvents();
 		TickManager.registerTickHandler();
+		
+		GuiManager.registerGuiManager();
 
 		proxy.registerRenderers();
 	}

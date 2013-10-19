@@ -99,8 +99,7 @@ public class TileEntityRomanVillageForum extends TileEntity {
 			player.sendChatToPlayer(ChatMessageComponent.createFromText("Roman Village forum is not formed properly!"));
 		}
 
-		RomanVillage romanVillage = TickManager.romanVillageCollection.getVillageAt(MathHelper.floor_double(xCoord), MathHelper.floor_double(yCoord),
-				MathHelper.floor_double(zCoord));
+		RomanVillage romanVillage = getRomanVillage();
 
 		if (romanVillage == null) {
 			player.sendChatToPlayer(ChatMessageComponent.createFromText("Roman Village forum is null!"));
@@ -117,5 +116,10 @@ public class TileEntityRomanVillageForum extends TileEntity {
 					+ romanVillage.getMaxNumberOfPlebs())));
 
 		}
+	}
+
+	public RomanVillage getRomanVillage() {
+		return TickManager.romanVillageCollection.getVillageAt(MathHelper.floor_double(xCoord), MathHelper.floor_double(yCoord),
+				MathHelper.floor_double(zCoord));
 	}
 }
