@@ -6,11 +6,15 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
+import toldea.romecraft.client.renderer.RenderRomanVillageMap;
 import toldea.romecraft.romanvillage.RomanVillage;
+import toldea.romecraft.romanvillage.RomanVillageMap;
 import toldea.romecraft.tileentity.TileEntityRomanVillageForum;
 
 public class GuiForum extends GuiScreen {
 	private static final ResourceLocation texture = new ResourceLocation("romecraft", "textures/gui/gui_forum.png");
+	private static final Minecraft minecraft = Minecraft.getMinecraft();
+	private static final RenderRomanVillageMap mapRenderer = new RenderRomanVillageMap(minecraft.getTextureManager(), RomanVillageMap.DEFAULT_ROMAN_MAP_SIZE);
 
 	protected int xSize = 248;
 	protected int ySize = 166;
@@ -19,10 +23,17 @@ public class GuiForum extends GuiScreen {
 
 	private final TileEntityRomanVillageForum forum;
 	private final RomanVillage village;
+	private int mapSize = 0;
 
 	public GuiForum(TileEntityRomanVillageForum forum) {
 		this.forum = forum;
 		village = forum.getRomanVillage();
+		if (village != null) {
+			RomanVillageMap mapData = village.getVillageMapData();
+			mapRenderer.renderMapToImage(mapData);
+			// For some reason we have to draw the map twice as large to get all the pixels.
+			mapSize = mapData.mapSize * 2;
+		}
 	}
 
 	public void initGui() {
@@ -44,22 +55,40 @@ public class GuiForum extends GuiScreen {
 
 		GL11.glColor4f(1, 1, 1, 1);
 
-		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
+		minecraft.getTextureManager().bindTexture(texture);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 	}
 
-	public void drawForeground() {
+	private void drawForeground() {
 		fontRenderer.drawString("Forum", guiLeft + 8, guiTop + 6, 0x404040);
+		/*
+		 * fontRenderer.drawString( "Village Forum: (" + village.getVillageForumLocation().posX + ", " + village.getVillageForumLocation().posY + ", " +
+		 * village.getVillageForumLocation().posZ + ")", guiLeft + 8, guiTop + 16, 0x404040); fontRenderer.drawString("Village Center: (" +
+		 * village.getCenter().posX + ", " + village.getCenter().posY + ", " + village.getCenter().posZ + ")", guiLeft + 8, guiTop + 26, 0x404040);
+		 * fontRenderer.drawString("Village Radius: " + village.getVillageRadius(), guiLeft + 8, guiTop + 36, 0x404040);
+		 * fontRenderer.drawString("Number of Doors: " + village.getNumVillageDoors(), guiLeft + 8, guiTop + 46, 0x404040);
+		 * fontRenderer.drawString("Number of Bloomeries: " + village.getNumBloomeries(), guiLeft + 8, guiTop + 56, 0x404040);
+		 * fontRenderer.drawString("Number of Plebs: " + village.getNumPlebs() + " / " + village.getMaxNumberOfPlebs(), guiLeft + 8, guiTop + 66, 0x404040);
+		 */
+		drawVillageMap();
+	}
 
-		fontRenderer.drawString(
-				"Village Forum: (" + village.getVillageForumLocation().posX + ", " + village.getVillageForumLocation().posY + ", "
-						+ village.getVillageForumLocation().posZ + ")", guiLeft + 8, guiTop + 16, 0x404040);
-		fontRenderer.drawString("Village Center: (" + village.getCenter().posX + ", " + village.getCenter().posY + ", " + village.getCenter().posZ + ")",
-				guiLeft + 8, guiTop + 26, 0x404040);
-		fontRenderer.drawString("Village Radius: " + village.getVillageRadius(), guiLeft + 8, guiTop + 36, 0x404040);
-		fontRenderer.drawString("Number of Doors: " + village.getNumVillageDoors(), guiLeft + 8, guiTop + 46, 0x404040);
-		fontRenderer.drawString("Number of Bloomeries: " + village.getNumBloomeries(), guiLeft + 8, guiTop + 56, 0x404040);
-		fontRenderer.drawString("Number of Plebs: " + village.getNumPlebs() + " / " + village.getMaxNumberOfPlebs(), guiLeft + 8, guiTop + 66, 0x404040);
+	private void drawVillageMap() {
+		if (mapSize > 0) {
+			minecraft.getTextureManager().bindTexture(mapRenderer.getMapImage());
 
+			GL11.glEnable(GL11.GL_BLEND);
+			GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_ALPHA);
+			GL11.glDisable(GL11.GL_ALPHA_TEST);
+			GL11.glColor4f(1, 1, 1, 1);
+			GL11.glScalef(.5F, .5F, .5F);
+
+			// Draw the map twice as large as normal, but scale it down 50%. For some reason the source image is twice too large.
+			drawTexturedModalRect((guiLeft + 10) * 2, (guiTop + 154) * 2 - mapSize, 0, 0, mapSize, mapSize);
+
+			GL11.glScalef(1.0F, 1.0F, 1.0F);
+			GL11.glEnable(GL11.GL_ALPHA_TEST);
+			GL11.glDisable(GL11.GL_BLEND);
+		}
 	}
 }

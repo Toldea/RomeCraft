@@ -45,6 +45,8 @@ public class RomanVillage {
 
 	private boolean shouldBeAnnihilated = false;
 
+	private RomanVillageMap villageMapData;
+
 	public RomanVillage() {
 	}
 
@@ -52,10 +54,21 @@ public class RomanVillage {
 		this.worldObj = par1World;
 	}
 
-	public RomanVillage(World par1World, ChunkCoordinates par2VillageForumLocation) {
-		this.worldObj = par1World;
+	public RomanVillage(World world, ChunkCoordinates par2VillageForumLocation) {
+		this.worldObj = world;
 		villageForumLocation = par2VillageForumLocation;
 		updateVillageRadiusAndCenter();
+
+		String mapName = new String("romanvillagemap" + villageForumLocation.posX + "." + villageForumLocation.posY + "." + villageForumLocation.posZ);
+		villageMapData = new RomanVillageMap(mapName, RomanVillageMap.DEFAULT_ROMAN_MAP_SIZE);
+		world.setItemData(mapName, villageMapData);
+		villageMapData.scale = 0;
+		int i = RomanVillageMap.DEFAULT_ROMAN_MAP_SIZE * (1 << villageMapData.scale);
+		villageMapData.xCenter = (int) (Math.round(villageForumLocation.posX / (double) i) * (long) i);
+		villageMapData.zCenter = (int) (Math.round(villageForumLocation.posZ / (double) i) * (long) i);
+		villageMapData.dimension = (byte) world.provider.dimensionId;
+		villageMapData.updateMapData(world);
+		villageMapData.markDirty();
 	}
 
 	public void linkWorld(World par1World) {
@@ -93,6 +106,10 @@ public class RomanVillage {
 		 * if (vec3 != null) { EntityIronGolem entityirongolem = new EntityIronGolem(this.worldObj); entityirongolem.setPosition(vec3.xCoord, vec3.yCoord,
 		 * vec3.zCoord); this.worldObj.spawnEntityInWorld(entityirongolem); ++this.numIronGolems; } }
 		 */
+	}
+
+	public RomanVillageMap getVillageMapData() {
+		return this.villageMapData;
 	}
 
 	public int getMaxNumberOfPlebs() {
@@ -548,6 +565,13 @@ public class RomanVillage {
 			NBTTagCompound nbttagcompound2 = (NBTTagCompound) nbttaglist1.tagAt(j);
 			this.playerReputation.put(nbttagcompound2.getString("Name"), Integer.valueOf(nbttagcompound2.getInteger("S")));
 		}
+		if (par1NBTTagCompound.hasKey("MapData")) {
+			if (villageMapData == null) {
+				String mapName = new String("romanvillagemap" + villageForumLocation.posX + "." + villageForumLocation.posY + "." + villageForumLocation.posZ);
+				villageMapData = new RomanVillageMap(mapName, RomanVillageMap.DEFAULT_ROMAN_MAP_SIZE);
+			}
+			this.villageMapData.readFromNBT(par1NBTTagCompound.getCompoundTag("MapData"));
+		}
 	}
 
 	/**
@@ -613,6 +637,12 @@ public class RomanVillage {
 		}
 
 		par1NBTTagCompound.setTag("Players", nbttaglist1);
+
+		if (this.villageMapData != null) {
+			NBTTagCompound villageMapDataCompound = new NBTTagCompound("MapData");
+			villageMapData.writeToNBT(villageMapDataCompound);
+			par1NBTTagCompound.setCompoundTag("MapData", villageMapDataCompound);
+		}
 	}
 
 	/**
