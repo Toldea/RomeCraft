@@ -1,6 +1,7 @@
 package toldea.romecraft;
 
 import toldea.romecraft.managers.BlockManager;
+import toldea.romecraft.managers.ConfigManager;
 import toldea.romecraft.managers.CreativeTabsManager;
 import toldea.romecraft.managers.EntityManager;
 import toldea.romecraft.managers.EventManager;
@@ -32,6 +33,7 @@ public class RomeCraft {
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
+		ConfigManager.loadConfig(event.getSuggestedConfigurationFile());
 	}
 
 	@EventHandler

@@ -17,8 +17,6 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 
 public class BlockManager {
-	private static int nextBlockID = 500;
-
 	public static Block blockRomanBricks = null;
 	public static RomeCraftBlockHalfSlab blockRomanBricksHalfSlab = null;
 	public static RomeCraftBlockHalfSlab blockRomanBricksDoubleSlab = null;
@@ -31,24 +29,24 @@ public class BlockManager {
 	public static RomeCraftBlockHalfSlab blockMarbleMosaicDoubleSlab = null;
 	public static Block blockMarbleMosaicStairs = null;
 
-	public static Block romanVillageForum = null;
+	public static Block blockRomanVillageForum = null;
 
 	public static Block blockBloomery = null;
 	public static Block blockBellows = null;
 
 	public static void registerBlocks() {
 		// Roman Bricks
-		blockRomanBricks = new RomeCraftBlock(nextBlockID++, Material.rock).setHardness(2.0F).setResistance(10.0F).setStepSound(Block.soundStoneFootstep)
+		blockRomanBricks = new RomeCraftBlock(ConfigManager.blockRomanBricksId, Material.rock).setHardness(2.0F).setResistance(10.0F).setStepSound(Block.soundStoneFootstep)
 				.setUnlocalizedName("blockRomanBricks").setTextureName("romecraft:romanbrick");
 		GameRegistry.registerBlock(blockRomanBricks, "blockRomanBricks");
 		LanguageRegistry.addName(blockRomanBricks, "Roman Bricks");
 
-		blockRomanBricksHalfSlab = (RomeCraftBlockHalfSlab) new BlockRomanBrickSlab(nextBlockID++, false).setHardness(2.0F).setResistance(10.0F)
+		blockRomanBricksHalfSlab = (RomeCraftBlockHalfSlab) new BlockRomanBrickSlab(ConfigManager.blockRomanBricksHalfSlabId, false).setHardness(2.0F).setResistance(10.0F)
 				.setStepSound(Block.soundStoneFootstep).setUnlocalizedName("blockRomanBricksSlab").setTextureName("romecraft:romanbrick");
 		GameRegistry.registerBlock(blockRomanBricksHalfSlab, "blockRomanBricksHalfSlab");
 		LanguageRegistry.instance().addStringLocalization(((BlockRomanBrickSlab) blockRomanBricksHalfSlab).getFullSlabName(0) + ".name", "Roman Bricks Slab");
 
-		blockRomanBricksDoubleSlab = (RomeCraftBlockHalfSlab) new BlockRomanBrickSlab(nextBlockID++, true).setHardness(2.0F).setResistance(10.0F)
+		blockRomanBricksDoubleSlab = (RomeCraftBlockHalfSlab) new BlockRomanBrickSlab(ConfigManager.blockRomanBricksDoubleSlabId, true).setHardness(2.0F).setResistance(10.0F)
 				.setStepSound(Block.soundStoneFootstep).setUnlocalizedName("blockRomanBricksSlab").setTextureName("romecraft:romanbrick");
 		GameRegistry.registerBlock(blockRomanBricksDoubleSlab, "blockRomanBricksDoubleSlab");
 		LanguageRegistry.addName(blockRomanBricksDoubleSlab, "Roman Bricks Double Slab");
@@ -56,32 +54,32 @@ public class BlockManager {
 		Item.itemsList[blockRomanBricksHalfSlab.blockID] = (new RomeCraftItemSlab(blockRomanBricksHalfSlab.blockID - 256,
 				(RomeCraftBlockHalfSlab) blockRomanBricksHalfSlab, (RomeCraftBlockHalfSlab) blockRomanBricksDoubleSlab, false));
 
-		blockRomanBricksStairs = (new RomeCraftBlockStairs(nextBlockID++, blockRomanBricks, 0)).setUnlocalizedName("blockRomanBricksStairs");
+		blockRomanBricksStairs = (new RomeCraftBlockStairs(ConfigManager.blockRomanBricksStairsId, blockRomanBricks, 0)).setUnlocalizedName("blockRomanBricksStairs");
 		GameRegistry.registerBlock(blockRomanBricksStairs, "blockRomanBricksStairs");
 		LanguageRegistry.addName(blockRomanBricksStairs, "Roman Brick Stairs");
 		/*
-		blockRomanBricksChiseled = new RomeCraftBlock(nextBlockID++, Material.rock).setHardness(2.0F).setResistance(10.0F)
+		blockRomanBricksChiseled = new RomeCraftBlock(ConfigManager.blockRomanBricksChiseledId, Material.rock).setHardness(2.0F).setResistance(10.0F)
 				.setStepSound(Block.soundStoneFootstep).setUnlocalizedName("blockRomanBricksChiseled").setTextureName("romecraft:romanbrick_chiseled");
 		GameRegistry.registerBlock(blockRomanBricksChiseled, "blockRomanBricksChiseled");
 		LanguageRegistry.addName(blockRomanBricksChiseled, "Chiseled Roman Bricks");
 		*/
 		// Marble Block
-		blockMarble = new RomeCraftMultiSidedBlock(nextBlockID++, Material.rock).setHardness(2.0F).setResistance(10.0F).setStepSound(Block.soundStoneFootstep)
+		blockMarble = new RomeCraftMultiSidedBlock(ConfigManager.blockMarbleId, Material.rock).setHardness(2.0F).setResistance(10.0F).setStepSound(Block.soundStoneFootstep)
 				.setUnlocalizedName("blockMarble").setTextureName("romecraft:marble_block");
 		GameRegistry.registerBlock(blockMarble, "blockMarble");
 		LanguageRegistry.addName(blockMarble, "Marble");
 
-		blockMarbleMosaic = new RomeCraftBlock(nextBlockID++, Material.rock).setHardness(2.0F).setResistance(10.0F).setStepSound(Block.soundStoneFootstep)
+		blockMarbleMosaic = new RomeCraftBlock(ConfigManager.blockMarbleMosaicId, Material.rock).setHardness(2.0F).setResistance(10.0F).setStepSound(Block.soundStoneFootstep)
 				.setUnlocalizedName("blockMarbleMosaic").setTextureName("romecraft:marble_mosaic");
 		GameRegistry.registerBlock(blockMarbleMosaic, "blockMarbleMosaic");
 		LanguageRegistry.addName(blockMarbleMosaic, "Marble Mosaic");
 
-		blockMarbleMosaicHalfSlab = (RomeCraftBlockHalfSlab) new BlockMarbleMosaicSlab(nextBlockID++, false).setHardness(2.0F).setResistance(10.0F)
+		blockMarbleMosaicHalfSlab = (RomeCraftBlockHalfSlab) new BlockMarbleMosaicSlab(ConfigManager.blockMarbleMosaicHalfSlabId, false).setHardness(2.0F).setResistance(10.0F)
 				.setStepSound(Block.soundStoneFootstep).setUnlocalizedName("blockMarbleMosaicHalfSlab").setTextureName("romecraft:marble_mosaic");
 		GameRegistry.registerBlock(blockMarbleMosaicHalfSlab, "blockMarbleMosaicSlab");
 		LanguageRegistry.instance().addStringLocalization(((BlockMarbleMosaicSlab) blockMarbleMosaicHalfSlab).getFullSlabName(0) + ".name", "Marble Mosaic Slab");
 
-		blockMarbleMosaicDoubleSlab = (RomeCraftBlockHalfSlab) new BlockMarbleMosaicSlab(nextBlockID++, true).setHardness(2.0F).setResistance(10.0F)
+		blockMarbleMosaicDoubleSlab = (RomeCraftBlockHalfSlab) new BlockMarbleMosaicSlab(ConfigManager.blockMarbleMosaicDoubleSlabId, true).setHardness(2.0F).setResistance(10.0F)
 				.setStepSound(Block.soundStoneFootstep).setUnlocalizedName("blockMarbleMosaicSlab").setTextureName("romecraft:marble_mosaic");
 		GameRegistry.registerBlock(blockMarbleMosaicDoubleSlab, "blockMarbleMosaicDoubleSlab");
 		LanguageRegistry.addName(blockMarbleMosaicDoubleSlab, "Marble Mosaic Double Slab");
@@ -89,23 +87,23 @@ public class BlockManager {
 		Item.itemsList[blockMarbleMosaicHalfSlab.blockID] = (new RomeCraftItemSlab(blockMarbleMosaicHalfSlab.blockID - 256,
 				(RomeCraftBlockHalfSlab) blockMarbleMosaicHalfSlab, (RomeCraftBlockHalfSlab) blockMarbleMosaicDoubleSlab, false));
 
-		blockMarbleMosaicStairs = (new RomeCraftBlockStairs(nextBlockID++, blockMarbleMosaic, 0)).setUnlocalizedName("blockMarbleMosaicStairs");
+		blockMarbleMosaicStairs = (new RomeCraftBlockStairs(ConfigManager.blockMarbleMosaicStairsId, blockMarbleMosaic, 0)).setUnlocalizedName("blockMarbleMosaicStairs");
 		GameRegistry.registerBlock(blockMarbleMosaicStairs, "blockMarbleMosaicStairs");
 		LanguageRegistry.addName(blockMarbleMosaicStairs, "Marble Mosaic Stairs");
 
 		// RomanVillageForum Block
-		romanVillageForum = new BlockRomanVillageForum(nextBlockID++, Material.rock).setUnlocalizedName("romanVillageForum").setTextureName("romecraft:forum");
-		GameRegistry.registerBlock(romanVillageForum, "blockRomanVillageForum");
-		LanguageRegistry.addName(romanVillageForum, "Forum");
+		blockRomanVillageForum = new BlockRomanVillageForum(ConfigManager.blockRomanVillageForumId, Material.rock).setUnlocalizedName("romanVillageForum").setTextureName("romecraft:forum");
+		GameRegistry.registerBlock(blockRomanVillageForum, "blockRomanVillageForum");
+		LanguageRegistry.addName(blockRomanVillageForum, "Forum");
 
 		// Bloomery Block
-		blockBloomery = new BlockBloomery(nextBlockID++, Material.clay).setHardness(0.5F).setStepSound(Block.soundGravelFootstep)
+		blockBloomery = new BlockBloomery(ConfigManager.blockBloomeryId, Material.clay).setHardness(0.5F).setStepSound(Block.soundGravelFootstep)
 				.setUnlocalizedName("bloomery").setTextureName("romecraft:bloomery");
 		GameRegistry.registerBlock(blockBloomery, "blockBloomery");
 		LanguageRegistry.addName(blockBloomery, "Bloomery Block");
 
 		// Bellows Block
-		blockBellows = new BlockBellows(nextBlockID++, Material.wood).setUnlocalizedName("blockBellows").setTextureName("romecraft:bellows");
+		blockBellows = new BlockBellows(ConfigManager.blockBellowsId, Material.wood).setUnlocalizedName("blockBellows").setTextureName("romecraft:bellows");
 		GameRegistry.registerBlock(blockBellows, "blockBellows");
 		LanguageRegistry.addName(blockBellows, "Bellows");
 	}

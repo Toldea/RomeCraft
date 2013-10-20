@@ -12,8 +12,6 @@ import toldea.romecraft.item.RomeCraftItemMeleeWeapon;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 
 public class ItemManager {
-	public static int nextItemID = 5000;
-
 	public static Item itemGladius = null;
 	public static Item itemScutum = null;
 	public static ItemArmor itemGalea = null;
@@ -25,66 +23,66 @@ public class ItemManager {
 	public static Item itemPugio = null;
 	public static Item itemSarcina = null;
 	public static Item itemSudis = null;
-
 	public static Item itemLegionaryEquipment = null;
-
 	public static Item itemBlacksmithEquipment = null;
-
 	public static Item itemScepter = null;
-
 	public static Item itemIronBloom = null;
 
 	public static void registerItems() {
 		// Gladius
-		itemGladius = new RomeCraftItemMeleeWeapon(nextItemID++, EnumToolMaterial.IRON).setUnlocalizedName("gladius").setTextureName("romecraft:gladius");
+		itemGladius = new RomeCraftItemMeleeWeapon(ConfigManager.itemGladiusId, EnumToolMaterial.IRON).setUnlocalizedName("gladius").setTextureName(
+				"romecraft:gladius");
 		LanguageRegistry.addName(itemGladius, "Gladius");
 		// Scutum
-		itemScutum = new RomeCraftItem(nextItemID++).setUnlocalizedName("scutum").setTextureName("romecraft:scutum").setFull3D();
+		itemScutum = new RomeCraftItem(ConfigManager.itemScutumId).setUnlocalizedName("scutum").setTextureName("romecraft:scutum").setFull3D();
 		LanguageRegistry.addName(itemScutum, "Scutum");
 		// Lorica Segmentata
-		itemLoricaSegmentata = (ItemArmor) (new RomeCraftArmor(nextItemID++, EnumArmorMaterial.IRON, 2, 1)).setUnlocalizedName("loricaSegmentata")
-				.setTextureName("romecraft:loricasegmentata");
+		itemLoricaSegmentata = (ItemArmor) (new RomeCraftArmor(ConfigManager.itemLoricaSegmentataId, EnumArmorMaterial.IRON, 2, 1)).setUnlocalizedName(
+				"loricaSegmentata").setTextureName("romecraft:loricasegmentata");
 		LanguageRegistry.addName(itemLoricaSegmentata, "Lorica Segmentata");
 		// Galea
-		itemGalea = (ItemArmor) (new RomeCraftArmor(nextItemID++, EnumArmorMaterial.IRON, 2, 0)).setUnlocalizedName("galea").setTextureName("romecraft:galea");
+		itemGalea = (ItemArmor) (new RomeCraftArmor(ConfigManager.itemGaleaId, EnumArmorMaterial.IRON, 2, 0)).setUnlocalizedName("galea").setTextureName(
+				"romecraft:galea");
 		LanguageRegistry.addName(itemGalea, "Galea");
 		// Cingulum
-		itemCingulum = (ItemArmor) (new RomeCraftArmor(nextItemID++, EnumArmorMaterial.IRON, 2, 2)).setUnlocalizedName("cingulum").setTextureName(
-				"romecraft:cingulum");
+		itemCingulum = (ItemArmor) (new RomeCraftArmor(ConfigManager.itemCingulumId, EnumArmorMaterial.IRON, 2, 2)).setUnlocalizedName("cingulum")
+				.setTextureName("romecraft:cingulum");
 		LanguageRegistry.addName(itemCingulum, "Cingulum");
 		// Caligae
-		itemCaligae = (ItemArmor) (new RomeCraftArmor(nextItemID++, EnumArmorMaterial.IRON, 2, 3)).setUnlocalizedName("caligae").setTextureName(
+		itemCaligae = (ItemArmor) (new RomeCraftArmor(ConfigManager.itemCaligaeId, EnumArmorMaterial.IRON, 2, 3)).setUnlocalizedName("caligae").setTextureName(
 				"romecraft:caligae");
 		LanguageRegistry.addName(itemCaligae, "Caligae");
 		// Pilum
-		itemPilum = new ItemPilum(nextItemID++).setUnlocalizedName("pilum").setTextureName("romecraft:pilum");
+		itemPilum = new ItemPilum(ConfigManager.itemPilumId).setUnlocalizedName("pilum").setTextureName("romecraft:pilum");
 		LanguageRegistry.addName(itemPilum, "Pilum");
 		// Verutum
-		itemVerutum = new RomeCraftItem(nextItemID++).setUnlocalizedName("verutum").setTextureName("romecraft:verutum");
+		itemVerutum = new RomeCraftItem(ConfigManager.itemVerutumId).setUnlocalizedName("verutum").setTextureName("romecraft:verutum");
 		LanguageRegistry.addName(itemVerutum, "Verutum");
 		// Pugio
-		itemPugio = new RomeCraftItem(nextItemID++).setUnlocalizedName("pugio").setTextureName("romecraft:pugio");
+		itemPugio = new RomeCraftItem(ConfigManager.itemPugioId).setUnlocalizedName("pugio").setTextureName("romecraft:pugio");
 		LanguageRegistry.addName(itemPugio, "Pugio");
 		// Sarcina
-		itemSarcina = new RomeCraftItem(nextItemID++).setUnlocalizedName("sarcina").setTextureName("romecraft:sarcina");
+		itemSarcina = new RomeCraftItem(ConfigManager.itemSarcinaId).setUnlocalizedName("sarcina").setTextureName("romecraft:sarcina");
 		LanguageRegistry.addName(itemSarcina, "Sarcina");
 		// Sudis
-		itemSudis = new RomeCraftItem(nextItemID++).setUnlocalizedName("sudis").setTextureName("romecraft:sudis");
+		itemSudis = new RomeCraftItem(ConfigManager.itemSudisId).setUnlocalizedName("sudis").setTextureName("romecraft:sudis");
 		LanguageRegistry.addName(itemSudis, "Sudis");
 
 		// Legionary Equipment
-		itemLegionaryEquipment = new RomeCraftItem(nextItemID++).setUnlocalizedName("itemLegionaryEquipment").setTextureName("romecraft:legionaryequipment");
+		itemLegionaryEquipment = new RomeCraftItem(ConfigManager.itemLegionaryEquipmentId).setUnlocalizedName("itemLegionaryEquipment").setTextureName(
+				"romecraft:legionaryequipment");
 		LanguageRegistry.addName(itemLegionaryEquipment, "Legionary Equipment");
 
 		// Blacksmith Equipment
-		itemBlacksmithEquipment = new RomeCraftItem(nextItemID++).setUnlocalizedName("itemBlacksmithEquipment").setTextureName("romecraft:blacksmithequipment");
+		itemBlacksmithEquipment = new RomeCraftItem(ConfigManager.itemBlacksmithEquipmentId).setUnlocalizedName("itemBlacksmithEquipment").setTextureName(
+				"romecraft:blacksmithequipment");
 		LanguageRegistry.addName(itemBlacksmithEquipment, "Blacksmith Equipment");
 
 		// Scepter
-		itemScepter = new ItemScepter(nextItemID++).setUnlocalizedName("scepter").setTextureName("romecraft:scepter");
+		itemScepter = new ItemScepter(ConfigManager.itemScepterId).setUnlocalizedName("scepter").setTextureName("romecraft:scepter");
 
 		// Iron Bloom
-		itemIronBloom = new RomeCraftItem(nextItemID++).setUnlocalizedName("itemIronBloom").setTextureName("romecraft:ironbloom");
+		itemIronBloom = new RomeCraftItem(ConfigManager.itemIronBloomId).setUnlocalizedName("itemIronBloom").setTextureName("romecraft:ironbloom");
 		LanguageRegistry.addName(itemIronBloom, "Iron Bloom");
 	}
 }

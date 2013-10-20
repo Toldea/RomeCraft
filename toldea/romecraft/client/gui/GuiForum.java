@@ -61,7 +61,6 @@ public class GuiForum extends GuiScreen {
 
 	private void drawForeground() {
 		fontRenderer.drawStringWithShadow("Forum", guiLeft + 8, guiTop + 6, 0xFFFFFF);
-		//fontRenderer.drawString("Forum", guiLeft + 8, guiTop + 6, 0x404040);
 
 		int x = guiLeft + 14;
 		int y = guiTop + 20;
