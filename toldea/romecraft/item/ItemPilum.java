@@ -1,26 +1,26 @@
 package toldea.romecraft.item;
 
-import com.google.common.collect.Multimap;
-
-import toldea.romecraft.entity.EntityPilum;
-import toldea.romecraft.managers.ItemManager;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.item.EnumAction;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.ArrowLooseEvent;
 import net.minecraftforge.event.entity.player.ArrowNockEvent;
+import toldea.romecraft.entity.EntityPilum;
+import toldea.romecraft.managers.ItemManager;
+
+import com.google.common.collect.Multimap;
 
 public class ItemPilum extends RomeCraftItem {
 	// Stone Sword like melee damage
 	private float meleeDamage = 5f;
+	private int sprintTime = 0;
 
 	public ItemPilum(int id) {
 		super(id);
@@ -110,23 +110,36 @@ public class ItemPilum extends RomeCraftItem {
 		return EnumAction.bow;
 	}
 
+	public void onUpdate(ItemStack itemstack, World world, Entity entity, int par4, boolean par5) {
+		if (entity instanceof EntityPlayer) {
+			EntityPlayer player = (EntityPlayer) entity;
+			if (player.isSprinting()) {
+				sprintTime++;
+			}
+		}
+	}
+
 	/**
 	 * Called whenever this item is equipped and the right mouse button is pressed. Args: itemStack, world, entityPlayer
 	 */
-	public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer) {
-		ArrowNockEvent event = new ArrowNockEvent(par3EntityPlayer, par1ItemStack);
+	public ItemStack onItemRightClick(ItemStack itemStack, World par2World, EntityPlayer player) {
+		ArrowNockEvent event = new ArrowNockEvent(player, itemStack);
 		MinecraftForge.EVENT_BUS.post(event);
+
 		if (event.isCanceled()) {
 			return event.result;
 		}
 
-		if (par3EntityPlayer.isSprinting()) {
-			onPlayerStoppedUsing(par1ItemStack, par2World, par3EntityPlayer, ItemManager.itemPilum.itemID);
-		} else if (par3EntityPlayer.capabilities.isCreativeMode || par3EntityPlayer.inventory.hasItem(ItemManager.itemPilum.itemID)) {
-			par3EntityPlayer.setItemInUse(par1ItemStack, this.getMaxItemUseDuration(par1ItemStack));
+		if (player.isSprinting() && !par2World.isRemote) {
+			onPlayerStoppedUsing(itemStack, par2World, player, this.getMaxItemUseDuration(itemStack) - (sprintTime / 2));
+			sprintTime = 0;
+		} else {
+			if (player.capabilities.isCreativeMode || player.inventory.hasItem(ItemManager.itemPilum.itemID)) {
+				player.setItemInUse(itemStack, this.getMaxItemUseDuration(itemStack));
+			}
 		}
-
-		return par1ItemStack;
+		
+		return itemStack;
 	}
 
 	/**

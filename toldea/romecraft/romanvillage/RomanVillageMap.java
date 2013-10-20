@@ -22,7 +22,7 @@ public class RomanVillageMap extends MapData {
 		this.mapSize = mapSize;
 		colors = new byte[mapSize * mapSize];
 	}
-
+	
 	public void updateMapData(World par1World) {
 		if (par1World.provider.dimensionId == this.dimension) {
 			int mapScale = 1 << this.scale;
@@ -191,7 +191,7 @@ public class RomanVillageMap extends MapData {
 			}
 		}
 	}
-
+	
 	/**
 	 * reads in data from the NBTTagCompound into this MapDataBase
 	 */
