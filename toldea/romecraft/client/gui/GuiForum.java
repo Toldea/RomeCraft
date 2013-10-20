@@ -29,6 +29,7 @@ public class GuiForum extends GuiScreen {
 		this.forum = forum;
 		village = forum.getRomanVillage();
 		if (village != null) {
+			village.updateMapData(forum.worldObj);
 			RomanVillageMap mapData = village.getVillageMapData();
 			mapRenderer.renderMapToImage(mapData);
 			// For some reason we have to draw the map twice as large to get all the pixels.
@@ -60,6 +61,10 @@ public class GuiForum extends GuiScreen {
 	}
 
 	private void drawForeground() {
+		if (village == null) {
+			return;
+		}
+		
 		fontRenderer.drawStringWithShadow("Forum", guiLeft + 8, guiTop + 6, 0xFFFFFF);
 
 		int x = guiLeft + 14;

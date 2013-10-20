@@ -67,6 +67,10 @@ public class RomanVillage {
 		villageMapData.xCenter = (int) (Math.round(villageForumLocation.posX / (double) i) * (long) i);
 		villageMapData.zCenter = (int) (Math.round(villageForumLocation.posZ / (double) i) * (long) i);
 		villageMapData.dimension = (byte) world.provider.dimensionId;
+		updateMapData(world);
+	}
+	
+	public void updateMapData(World world) {
 		villageMapData.updateMapData(world);
 		villageMapData.markDirty();
 	}
