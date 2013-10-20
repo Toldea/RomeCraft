@@ -50,7 +50,7 @@ public class RomeCraft {
 
 		EventManager.registerEvents();
 		TickManager.registerTickHandler();
-		
+
 		GuiManager.registerGuiManager();
 
 		proxy.registerRenderers();
