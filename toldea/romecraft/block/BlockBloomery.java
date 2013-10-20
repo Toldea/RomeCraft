@@ -233,6 +233,12 @@ public class BlockBloomery extends RomeCraftBlockContainer {
 			if (applyingBellows) {
 				world.spawnParticle("smoke", x + xMod, y + 1.7, z + zMod, 0, upwardsVelocity, 0);
 			}
+			
+			if (applyingBellows) {
+				world.playSound(x + .5, y + .5, z + .5, "fire.fire", world.rand.nextFloat() * .5f + .5f, world.rand.nextFloat() * .5f + .5f, false);
+			} else {
+				world.playSound(x + .5, y + .5, z + .5, "fire.fire", world.rand.nextFloat() * .2f, 0f, false);
+			}
 		}
 	}
 }

@@ -42,6 +42,7 @@ public class TileEntityBellows extends TileEntity {
 				if (bloomery != null && bloomery.getIsValid() && bloomery.getIsMaster()) {
 					bloomery.applyBellowsBoost(this.worldObj);
 				}
+				this.worldObj.playSound(xCoord + .5, yCoord + .5, zCoord + .5, "dig.cloth", 10.0F, 1.0F, false);
 
 				return true;
 			}

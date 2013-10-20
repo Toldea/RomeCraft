@@ -403,6 +403,10 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 			if (bloomeryItems[0].stackSize <= 0) {
 				bloomeryItems[0] = null;
 			}
+			
+			if (!this.worldObj.isRemote)  {
+				this.worldObj.playSoundEffect(xCoord + .5, yCoord + .5, zCoord + .5, "liquid.lavapop", 2.0F, 0.0F);
+	        }
 		}
 	}
 
