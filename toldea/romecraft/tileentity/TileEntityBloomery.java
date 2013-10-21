@@ -58,6 +58,8 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 	}
 
 	public void invalidateMultiblock() {
+		updateValidityOther(false);
+		
 		isValidBloomeryMultiblock = false;
 		isActive = false;
 		isMaster = false;
@@ -68,8 +70,6 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 		int metadata = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
 		metadata = metadata & BlockHelper.MASK_DIR;
 		worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, metadata, 2);
-
-		updateValidityOther(false);
 	}
 
 	public boolean checkIfProperlyFormed() {
@@ -519,6 +519,7 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 				} else {
 					itemstack = itemstack.splitStack(count);
 					onInventoryChanged();
+					worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 				}
 			}
 			return itemstack;
@@ -551,8 +552,8 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 				if (itemstack != null && itemstack.stackSize > getInventoryStackLimit()) {
 					itemstack.stackSize = getInventoryStackLimit();
 				}
-
 				onInventoryChanged();
+				worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 			}
 		} else {
 			getMasterTileEntity().setInventorySlotContents(i, itemstack);

@@ -53,7 +53,7 @@ public class EntityLegionary extends EntityCreature implements INpc {
 		// this.setSneaking(true);
 
 		// this.tasks.addTask(1, new EntityAIThrowingAttack(this, 1.0D, 20, 60, pilumRange));
-		
+
 		this.tasks.addTask(1, new EntityAIChargeThrow(this, 5, pilumChargeRange));
 		this.tasks.addTask(2, new EntityAIMeleeAttack(this));
 		this.tasks.addTask(3, new EntityAIFormationMoveTowardsEntity(this, movementSpeed, 32.0f));
@@ -63,7 +63,7 @@ public class EntityLegionary extends EntityCreature implements INpc {
 		// this.tasks.addTask(3, new EntityAIMoveThroughVillage(this, 0.6D, true));
 		// this.tasks.addTask(4, new EntityAIMoveTowardsRestriction(this, 1.0D));
 		// this.tasks.addTask(5, new EntityAILookAtVillager(this));
-		//this.tasks.addTask(6, new EntityAIWander(this, movementSpeed));
+		// this.tasks.addTask(6, new EntityAIWander(this, movementSpeed));
 		// this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
 		// this.tasks.addTask(8, new EntityAILookIdle(this));
 		// this.targetTasks.addTask(1, new EntityAIDefendVillage(this));
@@ -110,10 +110,10 @@ public class EntityLegionary extends EntityCreature implements INpc {
 		pilaLeft = 1;
 
 		// Give the Legionary its default equipment.
-		//equipItem(LEGIONARY_EQUIPMENT.LORICA_SEGMENTATA);
-		//equipItem(LEGIONARY_EQUIPMENT.GALEA);
-		//equipItem(LEGIONARY_EQUIPMENT.CALIGAE);
-		//equipItem(LEGIONARY_EQUIPMENT.CINGULUM);
+		// equipItem(LEGIONARY_EQUIPMENT.LORICA_SEGMENTATA);
+		// equipItem(LEGIONARY_EQUIPMENT.GALEA);
+		// equipItem(LEGIONARY_EQUIPMENT.CALIGAE);
+		// equipItem(LEGIONARY_EQUIPMENT.CINGULUM);
 
 		// equipItem(LEGIONARY_EQUIPMENT.GLADIUS);
 		// equipItem(LEGIONARY_EQUIPMENT.PILUM);
