@@ -16,12 +16,12 @@ public class EntityManager {
 
 	public static void registerEntities() {
 		// Legionary
-		EntityRegistry.registerModEntity(EntityLegionary.class, "entityLegionary", nextModEntityId++, RomeCraft.instance, 32, 5, true);
+		EntityRegistry.registerModEntity(EntityLegionary.class, "entityLegionary", nextModEntityId++, RomeCraft.instance, 32, 3, true);
 		registerEntityEgg(EntityLegionary.class, 0xff0000, 0xf0ff00);
 		LanguageRegistry.instance().addStringLocalization("entity.entityLegionary.name", "Legionary");
 
 		// Pleb
-		EntityRegistry.registerModEntity(EntityPleb.class, "entityPleb", nextModEntityId++, RomeCraft.instance, 32, 5, true);
+		EntityRegistry.registerModEntity(EntityPleb.class, "entityPleb", nextModEntityId++, RomeCraft.instance, 32, 3, true);
 		registerEntityEgg(EntityPleb.class, 0xce272e, 0x780308);
 		LanguageRegistry.instance().addStringLocalization("entity.entityPleb.name", "Pleb");
 

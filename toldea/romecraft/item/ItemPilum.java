@@ -138,7 +138,6 @@ public class ItemPilum extends RomeCraftItem {
 				player.setItemInUse(itemStack, this.getMaxItemUseDuration(itemStack));
 			}
 		}
-		
 		return itemStack;
 	}
 

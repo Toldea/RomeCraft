@@ -2,13 +2,13 @@ package toldea.romecraft.entity;
 
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EntityLivingData;
-import net.minecraft.entity.IRangedAttackMob;
+import net.minecraft.entity.INpc;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
-import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -25,7 +25,8 @@ import toldea.romecraft.entity.ai.EntityAIMeleeAttack;
 import toldea.romecraft.entity.ai.SquadManager;
 import toldea.romecraft.managers.ItemManager;
 
-public class EntityLegionary extends EntityMob implements IRangedAttackMob {
+//public class EntityLegionary extends EntityMob implements IRangedAttackMob {
+public class EntityLegionary extends EntityCreature implements INpc {
 	public enum LEGIONARY_EQUIPMENT {
 		LORICA_SEGMENTATA, GALEA, CINGULUM, CALIGAE, GLADIUS, PUGIO, SCUTUM, PILUM, VERUTUM, SARCINA, SUDIS, SHOVEL, WATERSKIN
 	}
@@ -35,7 +36,7 @@ public class EntityLegionary extends EntityMob implements IRangedAttackMob {
 	private static final float pilumChargeRange = 15f;
 	private static final float pilumRange = 20f;
 	private static final float pathSearchRange = 64f;
-	private static final double movementSpeed = .6d;
+	private static final double movementSpeed = .6;
 
 	private int contuberniumId = 1;
 	private int pilaLeft;
@@ -62,7 +63,7 @@ public class EntityLegionary extends EntityMob implements IRangedAttackMob {
 		// this.tasks.addTask(3, new EntityAIMoveThroughVillage(this, 0.6D, true));
 		// this.tasks.addTask(4, new EntityAIMoveTowardsRestriction(this, 1.0D));
 		// this.tasks.addTask(5, new EntityAILookAtVillager(this));
-		// this.tasks.addTask(6, new EntityAIWander(this, 0.6D));
+		//this.tasks.addTask(6, new EntityAIWander(this, movementSpeed));
 		// this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
 		// this.tasks.addTask(8, new EntityAILookIdle(this));
 		// this.targetTasks.addTask(1, new EntityAIDefendVillage(this));
@@ -109,10 +110,10 @@ public class EntityLegionary extends EntityMob implements IRangedAttackMob {
 		pilaLeft = 1;
 
 		// Give the Legionary its default equipment.
-		equipItem(LEGIONARY_EQUIPMENT.LORICA_SEGMENTATA);
-		equipItem(LEGIONARY_EQUIPMENT.GALEA);
-		equipItem(LEGIONARY_EQUIPMENT.CALIGAE);
-		equipItem(LEGIONARY_EQUIPMENT.CINGULUM);
+		//equipItem(LEGIONARY_EQUIPMENT.LORICA_SEGMENTATA);
+		//equipItem(LEGIONARY_EQUIPMENT.GALEA);
+		//equipItem(LEGIONARY_EQUIPMENT.CALIGAE);
+		//equipItem(LEGIONARY_EQUIPMENT.CINGULUM);
 
 		// equipItem(LEGIONARY_EQUIPMENT.GLADIUS);
 		// equipItem(LEGIONARY_EQUIPMENT.PILUM);

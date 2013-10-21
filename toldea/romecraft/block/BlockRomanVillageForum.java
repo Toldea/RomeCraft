@@ -6,7 +6,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import toldea.romecraft.RomeCraft;
@@ -41,9 +40,9 @@ public class BlockRomanVillageForum extends RomeCraftBlockContainer {
 		if (tileEntity != null) {
 			if (!tileEntity.getIsValid()) {
 				if (tileEntity.checkIfProperlyFormed()) {
-					if (world.isRemote) {
-						player.sendChatToPlayer(ChatMessageComponent.createFromText("Roman Village Forum MultiBlock Created!"));
-					}
+					// if (world.isRemote) {
+					// player.sendChatToPlayer(ChatMessageComponent.createFromText("Roman Village Forum MultiBlock Created!"));
+					// }
 				}
 			}
 
