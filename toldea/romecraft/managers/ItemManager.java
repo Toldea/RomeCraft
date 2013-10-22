@@ -80,7 +80,8 @@ public class ItemManager {
 
 		// Scepter
 		itemScepter = new ItemScepter(ConfigManager.itemScepterId).setUnlocalizedName("scepter").setTextureName("romecraft:scepter");
-
+		LanguageRegistry.addName(itemScepter, "Scepter");
+		
 		// Iron Bloom
 		itemIronBloom = new RomeCraftItem(ConfigManager.itemIronBloomId).setUnlocalizedName("itemIronBloom").setTextureName("romecraft:ironbloom");
 		LanguageRegistry.addName(itemIronBloom, "Iron Bloom");

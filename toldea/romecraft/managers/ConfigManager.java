@@ -60,7 +60,7 @@ public class ConfigManager {
 		itemGladiusId = config.getItem("itemGladius", 1650).getInt();
 		itemScutumId = config.getItem("itemScutum", 1651).getInt();
 		itemGaleaId = config.getItem("itemGalea", 1652).getInt();
-		itemLoricaSegmentataId = config.getItem("itemGalea", 1653).getInt();
+		itemLoricaSegmentataId = config.getItem("itemLoricaSegmentata", 1653).getInt();
 		itemCingulumId = config.getItem("itemCingulum", 1654).getInt();
 		itemCaligaeId = config.getItem("itemCaligae", 1655).getInt();
 		itemPilumId = config.getItem("itemPilum", 1656).getInt();

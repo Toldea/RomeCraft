@@ -3,16 +3,13 @@ package toldea.romecraft.entity.ai;
 import java.util.ArrayList;
 import java.util.List;
 
-import toldea.romecraft.entity.EntityLegionary;
-
-import net.minecraft.block.ITileEntityProvider;
-import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Vec3;
-import net.minecraft.world.World;
+import toldea.romecraft.command.EntitySelectorLegionary;
+import toldea.romecraft.entity.EntityLegionary;
 
 public class Contubernium {
 	public static final int maxSize = 8;
@@ -46,9 +43,13 @@ public class Contubernium {
 	private EntityLivingBase targetEntity = null;
 	private boolean shouldFollowPlayer = true;
 	private Facing facing = Facing.NORTH;
+	
+	private List<EntityLivingBase> targetEntitiesList;
 
 	public Contubernium() {
 		squadMembersList = new ArrayList<EntityLegionary>();
+		targetEntitiesList = new ArrayList<EntityLivingBase>();
+		
 	}
 
 	public void registerSquadMember(EntityLegionary squadMember) {
@@ -174,15 +175,31 @@ public class Contubernium {
 			// Update the 'target location' to this entity's current position. When the entity is disposed, the squad will move to this position.
 			// This also clears the squad's active paths and updates the Contubernium's facing towards the entity.
 			setTargetLocation(entity.getPosition(1.0f));
+			// Also look for any nearby other targets.
+			findNearbyTargetsForMainTargetEntity(entity);
 		}
 		this.targetEntity = entity;
 	}
 
 	public EntityLivingBase getTargetEntity() {
 		if (this.targetEntity != null && !this.targetEntity.isEntityAlive()) {
-			this.targetEntity = null;
+			if (this.targetEntitiesList.size() > 0) {
+				System.out.println("selecting next entity in the list!");
+				this.targetEntity = this.targetEntitiesList.remove(0);
+			} else {
+				this.targetEntity = null;
+			}
 		}
 		return this.targetEntity;
+	}
+	
+	public void findNearbyTargetsForMainTargetEntity(EntityLivingBase entity) {
+		// Find any other targets in a range around the target entity.
+		List list = entity.worldObj.selectEntitiesWithinAABB(EntityLiving.class, entity.boundingBox.expand(EntityLegionary.enemySearchRange, 4.0D, EntityLegionary.enemySearchRange), EntitySelectorLegionary.instance);
+		// Remove the original 'main target' entity.
+		list.remove(entity);
+		this.targetEntitiesList.addAll(list);
+		System.out.println("found " + list.size() + " nearby valid targets!");
 	}
 
 	/**

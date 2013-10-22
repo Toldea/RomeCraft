@@ -1,13 +1,7 @@
 package toldea.romecraft.entity.ai;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
-
-import toldea.romecraft.RomeCraft;
-import toldea.romecraft.entity.EntityLegionary;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -15,6 +9,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
+import toldea.romecraft.entity.EntityLegionary;
 
 public class SquadManager implements IExtendedEntityProperties {
 	public static SquadManager instance = new SquadManager();
@@ -24,7 +19,9 @@ public class SquadManager implements IExtendedEntityProperties {
 	private SquadManager() {
 	}
 
-	// Get the Contubernium from it's id. Create it if it doesn't exist yet.
+	/**
+	 * Get the Contubernium from it's id. Create it if it doesn't exist yet.
+	 */
 	public static Contubernium getContubernium(int contuberniumId) {
 		if (contuberniumMap.get(contuberniumId) == null) {
 			contuberniumMap.put(contuberniumId, new Contubernium());

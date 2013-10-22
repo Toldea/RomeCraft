@@ -35,7 +35,8 @@ public class EntityLegionary extends EntityCreature implements INpc {
 	private static final float accuracy = 5f;
 	private static final float pilumChargeRange = 15f;
 	private static final float pilumRange = 20f;
-	private static final float pathSearchRange = 64f;
+	private static final float pathSearchRange = 64f; // TODO: revert this to 16 and implement better pathfinding
+	public static final float enemySearchRange = 16f;
 	private static final double movementSpeed = .6;
 
 	private int contuberniumId = 1;
@@ -110,12 +111,12 @@ public class EntityLegionary extends EntityCreature implements INpc {
 		pilaLeft = 1;
 
 		// Give the Legionary its default equipment.
-		// equipItem(LEGIONARY_EQUIPMENT.LORICA_SEGMENTATA);
-		// equipItem(LEGIONARY_EQUIPMENT.GALEA);
-		// equipItem(LEGIONARY_EQUIPMENT.CALIGAE);
-		// equipItem(LEGIONARY_EQUIPMENT.CINGULUM);
+		equipItem(LEGIONARY_EQUIPMENT.LORICA_SEGMENTATA);
+		equipItem(LEGIONARY_EQUIPMENT.GALEA);
+		equipItem(LEGIONARY_EQUIPMENT.CALIGAE);
+		equipItem(LEGIONARY_EQUIPMENT.CINGULUM);
 
-		// equipItem(LEGIONARY_EQUIPMENT.GLADIUS);
+		equipItem(LEGIONARY_EQUIPMENT.GLADIUS);
 		// equipItem(LEGIONARY_EQUIPMENT.PILUM);
 
 		return par1EntityLivingData;
