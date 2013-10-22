@@ -57,7 +57,7 @@ public class EntityLegionary extends EntityCreature implements INpc {
 
 		this.tasks.addTask(1, new EntityAIChargeThrow(this, 5, pilumChargeRange));
 		this.tasks.addTask(2, new EntityAIMeleeAttack(this));
-		this.tasks.addTask(3, new EntityAIFormationMoveTowardsEntity(this, movementSpeed, 32.0f));
+		this.tasks.addTask(3, new EntityAIFormationMoveTowardsEntity(this, movementSpeed));
 		this.tasks.addTask(4, new EntityAIFormationMoveTowardsLocation(this, movementSpeed));
 
 		// this.tasks.addTask(2, new EntityAIMoveTowardsTarget(this, 0.9D, 32.0F));

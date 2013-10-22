@@ -1,12 +1,10 @@
 package toldea.romecraft.entity.ai;
 
-import toldea.romecraft.entity.EntityLegionary;
-import toldea.romecraft.entity.ai.Contubernium.Facing;
-import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.entity.ai.RandomPositionGenerator;
 import net.minecraft.util.Vec3;
+import toldea.romecraft.entity.EntityLegionary;
+import toldea.romecraft.entity.ai.Contubernium.Facing;
 
 public class EntityAIFormationMoveTowardsEntity extends EntityAIBase {
 	private EntityLegionary entityLegionary;
@@ -16,17 +14,9 @@ public class EntityAIFormationMoveTowardsEntity extends EntityAIBase {
 	private double zPosition;
 	private double speed;
 
-	/**
-	 * If the distance to the target entity is further than this, this AI task will not run.
-	 */
-	private float maxTargetDistance;
-
-	public EntityAIFormationMoveTowardsEntity(EntityLegionary par1EntityLegionary, double par2, float par4) {
+	public EntityAIFormationMoveTowardsEntity(EntityLegionary par1EntityLegionary, double speed) {
 		this.entityLegionary = par1EntityLegionary;
-		this.speed = par2;
-		this.maxTargetDistance = par4;
-		// this.setMutexBits(1);
-		// this.setMutexBits(3);
+		this.speed = speed;
 		this.setMutexBits(0);
 	}
 
@@ -42,8 +32,6 @@ public class EntityAIFormationMoveTowardsEntity extends EntityAIBase {
 		this.targetEntity = contubernium.getTargetEntity();
 
 		if (this.targetEntity == null) {
-			return false;
-		} else if (this.targetEntity.getDistanceSqToEntity(this.entityLegionary) > (double) (this.maxTargetDistance * this.maxTargetDistance)) {
 			return false;
 		} else {
 			Vec3 vec3 = targetEntity.getPosition(1.0f);
@@ -93,8 +81,7 @@ public class EntityAIFormationMoveTowardsEntity extends EntityAIBase {
 	 * Returns whether an in-progress EntityAIBase should continue executing
 	 */
 	public boolean continueExecuting() {
-		return !this.entityLegionary.getNavigator().noPath() && this.targetEntity.isEntityAlive()
-				&& this.targetEntity.getDistanceSqToEntity(this.entityLegionary) < (double) (this.maxTargetDistance * this.maxTargetDistance);
+		return !this.entityLegionary.getNavigator().noPath() && this.targetEntity.isEntityAlive();
 	}
 
 	/**
@@ -108,7 +95,6 @@ public class EntityAIFormationMoveTowardsEntity extends EntityAIBase {
 	 * Execute a one shot task or start executing a continuous task
 	 */
 	public void startExecuting() {
-		// public void updateTask() {
-		this.entityLegionary.getNavigator().tryMoveToXYZ(this.xPosition, this.yPosition, this.zPosition, this.speed);
+		EntityAIHelper.moveTowardsTargetPosition(entityLegionary, xPosition, yPosition, zPosition, 3d, speed);
 	}
 }

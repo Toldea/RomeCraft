@@ -81,6 +81,6 @@ public class EntityAIFormationMoveTowardsLocation extends EntityAIBase {
 	}
 
 	public void startExecuting() {
-		this.entityLegionary.getNavigator().tryMoveToXYZ(this.xPosition, this.yPosition, this.zPosition, this.speed);
+		EntityAIHelper.moveTowardsTargetPosition(entityLegionary, xPosition, yPosition, zPosition, 3d, speed);
 	}
 }

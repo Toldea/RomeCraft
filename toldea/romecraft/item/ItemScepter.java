@@ -1,24 +1,18 @@
 package toldea.romecraft.item;
 
-import java.util.List;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumMovingObjectType;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.world.World;
 
 import org.lwjgl.input.Keyboard;
 
 import toldea.romecraft.command.EntitySelectorLegionary;
 import toldea.romecraft.entity.ai.SquadManager;
 import toldea.romecraft.utility.RayTracer;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.EnumMovingObjectType;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
-import net.minecraft.world.World;
 
 public class ItemScepter extends RomeCraftItem {
 	public ItemScepter(int id) {
@@ -33,14 +27,14 @@ public class ItemScepter extends RomeCraftItem {
 		MovingObjectPosition entityRayTrace = RayTracer.entityRayTrace(1.0f, distance);
 		if (entityRayTrace != null && entityRayTrace.typeOfHit == EnumMovingObjectType.ENTITY) {
 			System.out.println("Entity Selected: " + entityRayTrace.entityHit);
-			
+
 			Entity entity = entityRayTrace.entityHit;
 			if (EntitySelectorLegionary.instance.isEntityApplicable(entity)) {
-				SquadManager.giveAttackOrder(1, entity);
+				SquadManager.giveAttackOrder(1, (EntityLivingBase) entity);
 				return;
 			}
-		} 
-		
+		}
+
 		MovingObjectPosition blockRayTrace = RayTracer.blockRayTrace(entityplayer, world, distance);
 		if (blockRayTrace != null && blockRayTrace.typeOfHit == EnumMovingObjectType.TILE) {
 			System.out.println("Tile Selected: " + blockRayTrace.hitVec);

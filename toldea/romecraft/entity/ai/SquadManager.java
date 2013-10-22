@@ -54,14 +54,13 @@ public class SquadManager implements IExtendedEntityProperties {
 		contubernium.setShouldFollowPlayer(targetLocation == null);
 	}
 
-	public static void giveAttackOrder(int contuberniumId, Entity entity) {
+	public static void giveAttackOrder(int contuberniumId, EntityLivingBase entity) {
 		if (!(entity instanceof EntityLivingBase)) {
 			return;
 		}
 		System.out.println("Attack order received for Contubernium: " + contuberniumId + ", Target Entity: " + entity);
 		Contubernium contubernium = getContubernium(contuberniumId);
-		//contubernium.setTargetLocation(null);
-		contubernium.setTargetEntity((EntityLivingBase)entity);
+		contubernium.setTargetEntity(entity);
 		contubernium.setShouldFollowPlayer(false);
 	}
 	
