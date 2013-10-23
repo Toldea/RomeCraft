@@ -19,6 +19,7 @@ import net.minecraft.world.World;
 import toldea.romecraft.command.EntitySelectorLegionary;
 import toldea.romecraft.entity.ai.Contubernium;
 import toldea.romecraft.entity.ai.EntityAIChargeThrow;
+import toldea.romecraft.entity.ai.EntityAIFormationLookForward;
 import toldea.romecraft.entity.ai.EntityAIFormationMoveTowardsEntity;
 import toldea.romecraft.entity.ai.EntityAIFormationMoveTowardsLocation;
 import toldea.romecraft.entity.ai.EntityAIMeleeAttack;
@@ -59,6 +60,7 @@ public class EntityLegionary extends EntityCreature implements INpc {
 		this.tasks.addTask(2, new EntityAIMeleeAttack(this));
 		this.tasks.addTask(3, new EntityAIFormationMoveTowardsEntity(this, movementSpeed));
 		this.tasks.addTask(4, new EntityAIFormationMoveTowardsLocation(this, movementSpeed));
+		this.tasks.addTask(5, new EntityAIFormationLookForward(this));
 
 		// this.tasks.addTask(2, new EntityAIMoveTowardsTarget(this, 0.9D, 32.0F));
 		// this.tasks.addTask(3, new EntityAIMoveThroughVillage(this, 0.6D, true));

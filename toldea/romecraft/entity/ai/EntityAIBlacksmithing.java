@@ -170,7 +170,7 @@ public class EntityAIBlacksmithing extends EntityAIBase {
 			System.out.println("Selecting next task: " + currentTask);
 			return;
 		}
-		
+
 		boolean hasFuel = bloomery.hasFuel();
 		boolean hasIronOre = bloomery.hasIronOre();
 		boolean hasIronBloom = bloomery.hasIronBloom();
@@ -285,17 +285,13 @@ public class EntityAIBlacksmithing extends EntityAIBase {
 				Vec3 vec3 = RandomPositionGenerator.findRandomTargetBlockTowards(this.entityPleb, 14, 3, this.entityPleb.worldObj.getWorldVec3Pool()
 						.getVecFromPool((double) targetEntity.xCoord + .5d, (double) targetEntity.yCoord + .5d, (double) targetEntity.zCoord + .5d));
 				if (vec3 != null) {
-					// this.entityPleb.getNavigator().tryMoveToXYZ(vec3.xCoord, vec3.yCoord, vec3.zCoord, 1.0D);
-					this.entityPleb.getNavigator().tryMoveToXYZ(vec3.xCoord, vec3.yCoord, vec3.zCoord, .6D); // TODO: Check if this causes the glitchy movement
-																												// if set to 1.0?
+					this.entityPleb.getNavigator().tryMoveToXYZ(vec3.xCoord, vec3.yCoord, vec3.zCoord, .6D);
 					currentNavigationTarget = currentTargetLocation;
 					return;
 				}
 			} else {
-				// this.entityPleb.getNavigator().tryMoveToXYZ((double) targetEntity.xCoord + .5d, (double) targetEntity.yCoord + .5d, (double)
-				// targetEntity.zCoord + .5d, 1.0D);
 				this.entityPleb.getNavigator().tryMoveToXYZ((double) targetEntity.xCoord + .5d, (double) targetEntity.yCoord + .5d,
-						(double) targetEntity.zCoord + .5d, .6D); // TODO: Check if this causes the glitchy movement if set to 1.0?
+						(double) targetEntity.zCoord + .5d, .6D);
 				currentNavigationTarget = currentTargetLocation;
 				return;
 			}
@@ -428,7 +424,7 @@ public class EntityAIBlacksmithing extends EntityAIBase {
 				return;
 			}
 		}
-		
+
 		if (firstEmptySlot != -1) {
 			System.out.println("Ikenai! " + firstEmptySlot);
 			chestItemStack = equippedItem.copy();
@@ -471,13 +467,14 @@ public class EntityAIBlacksmithing extends EntityAIBase {
 		}
 		return false;
 	}
-	
+
 	public void updateTask() {
 		if (this.currentTargetLocation != BlacksmithTargetLocation.NONE) {
 			TileEntity tileEntity = getTileEntityForTargetLocation();
 			if (tileEntity != null) {
-				this.entityPleb.getLookHelper().setLookPosition(tileEntity.xCoord, tileEntity.yCoord + .5d, tileEntity.zCoord, 10.0F, (float)this.entityPleb.getVerticalFaceSpeed());
+				this.entityPleb.getLookHelper().setLookPosition(tileEntity.xCoord, tileEntity.yCoord + .5d, tileEntity.zCoord, 10.0F,
+						(float) this.entityPleb.getVerticalFaceSpeed());
 			}
-	    }
+		}
 	}
 }
