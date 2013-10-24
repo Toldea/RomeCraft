@@ -18,6 +18,7 @@ public class ConfigManager {
 	public static int blockRomanVillageForumId;
 	public static int blockBloomeryId;
 	public static int blockBellowsId;
+	public static int blockRomanAnvilId;
 	
 	public static int itemGladiusId;
 	public static int itemScutumId;
@@ -56,6 +57,7 @@ public class ConfigManager {
 		blockRomanVillageForumId = config.getBlock("blockRomanVillageForum", 1560).getInt();
 		blockBloomeryId = config.getBlock("blockBloomery", 1561).getInt();
 		blockBellowsId = config.getBlock("blockBellows", 1562).getInt();
+		blockRomanAnvilId = config.getBlock("blockRomanAnvil", 1563).getInt();
 		
 		itemGladiusId = config.getItem("itemGladius", 1650).getInt();
 		itemScutumId = config.getItem("itemScutum", 1651).getInt();

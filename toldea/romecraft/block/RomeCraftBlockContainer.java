@@ -7,9 +7,8 @@ import net.minecraft.world.World;
 import toldea.romecraft.managers.CreativeTabsManager;
 
 public abstract class RomeCraftBlockContainer extends BlockContainer {
-
-	protected RomeCraftBlockContainer(int par1, Material par2Material) {
-		super(par1, par2Material);
+	public RomeCraftBlockContainer(int blockId, Material material) {
+		super(blockId, material);
 		setCreativeTab(CreativeTabsManager.tabRomeCraft);
 	}
 

@@ -6,6 +6,7 @@ import net.minecraft.item.Item;
 import toldea.romecraft.block.BlockBellows;
 import toldea.romecraft.block.BlockBloomery;
 import toldea.romecraft.block.BlockMarbleMosaicSlab;
+import toldea.romecraft.block.BlockRomanAnvil;
 import toldea.romecraft.block.BlockRomanBrickSlab;
 import toldea.romecraft.block.BlockRomanVillageForum;
 import toldea.romecraft.block.RomeCraftBlock;
@@ -33,6 +34,8 @@ public class BlockManager {
 
 	public static Block blockBloomery = null;
 	public static Block blockBellows = null;
+	
+	public static Block blockRomanAnvil = null;
 
 	public static void registerBlocks() {
 		// Roman Bricks
@@ -106,5 +109,10 @@ public class BlockManager {
 		blockBellows = new BlockBellows(ConfigManager.blockBellowsId, Material.wood).setUnlocalizedName("blockBellows").setTextureName("romecraft:bellows");
 		GameRegistry.registerBlock(blockBellows, "blockBellows");
 		LanguageRegistry.addName(blockBellows, "Bellows");
+		
+		// Roman Anvil Block
+		blockRomanAnvil = new BlockRomanAnvil(ConfigManager.blockRomanAnvilId, Material.iron).setUnlocalizedName("blockRomanAnvil").setTextureName("romecraft:romananvil");
+		GameRegistry.registerBlock(blockRomanAnvil, "blockRomanAnvil");
+		LanguageRegistry.addName(blockRomanAnvil, "Roman Anvil");
 	}
 }
