@@ -2,6 +2,8 @@ package toldea.romecraft.entity;
 
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.enchantment.EnchantmentThorns;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -9,12 +11,14 @@ import net.minecraft.entity.EntityLivingData;
 import net.minecraft.entity.INpc;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
+import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import toldea.romecraft.command.EntitySelectorLegionary;
 import toldea.romecraft.entity.ai.Contubernium;
@@ -23,6 +27,7 @@ import toldea.romecraft.entity.ai.EntityAIFormationLookForward;
 import toldea.romecraft.entity.ai.EntityAIFormationMoveTowardsEntity;
 import toldea.romecraft.entity.ai.EntityAIFormationMoveTowardsLocation;
 import toldea.romecraft.entity.ai.EntityAIMeleeAttack;
+import toldea.romecraft.entity.ai.EntityAIMeleeAttack2;
 import toldea.romecraft.entity.ai.SquadManager;
 import toldea.romecraft.managers.ItemManager;
 
@@ -39,6 +44,7 @@ public class EntityLegionary extends EntityCreature implements INpc {
 	private static final float pathSearchRange = 64f; // TODO: revert this to 16 and implement better pathfinding
 	public static final float enemySearchRange = 16f;
 	private static final double movementSpeed = .6;
+	private static final double meleeEngageRange = 8d;
 
 	private int contuberniumId = 1;
 	private int pilaLeft;
@@ -56,11 +62,19 @@ public class EntityLegionary extends EntityCreature implements INpc {
 
 		// this.tasks.addTask(1, new EntityAIThrowingAttack(this, 1.0D, 20, 60, pilumRange));
 
+		this.tasks.addTask(0, new EntityAISwimming(this));
+
+		
 		this.tasks.addTask(1, new EntityAIChargeThrow(this, 5, pilumChargeRange));
-		this.tasks.addTask(2, new EntityAIMeleeAttack(this));
-		this.tasks.addTask(3, new EntityAIFormationMoveTowardsEntity(this, movementSpeed));
-		this.tasks.addTask(4, new EntityAIFormationMoveTowardsLocation(this, movementSpeed));
-		this.tasks.addTask(5, new EntityAIFormationLookForward(this));
+		
+		// this.tasks.addTask(1, new EntityAIAttackOnCollide(this, EntityZombie.class, movementSpeed, false));
+		this.tasks.addTask(2, new EntityAIMeleeAttack2(this, movementSpeed, meleeEngageRange));
+
+		
+		this.tasks.addTask(3, new EntityAIMeleeAttack(this));
+		this.tasks.addTask(4, new EntityAIFormationMoveTowardsEntity(this, movementSpeed));
+		this.tasks.addTask(5, new EntityAIFormationMoveTowardsLocation(this, movementSpeed));
+		this.tasks.addTask(6, new EntityAIFormationLookForward(this));
 
 		// this.tasks.addTask(2, new EntityAIMoveTowardsTarget(this, 0.9D, 32.0F));
 		// this.tasks.addTask(3, new EntityAIMoveThroughVillage(this, 0.6D, true));
@@ -188,6 +202,39 @@ public class EntityLegionary extends EntityCreature implements INpc {
 		}
 	}
 
+	public boolean attackEntityAsMob(Entity par1Entity) {
+		float f = (float) this.getEntityAttribute(SharedMonsterAttributes.attackDamage).getAttributeValue();
+		int i = 0;
+
+		if (par1Entity instanceof EntityLivingBase) {
+			f += EnchantmentHelper.getEnchantmentModifierLiving(this, (EntityLivingBase) par1Entity);
+			i += EnchantmentHelper.getKnockbackModifier(this, (EntityLivingBase) par1Entity);
+		}
+
+		boolean flag = par1Entity.attackEntityFrom(DamageSource.causeMobDamage(this), f);
+
+		if (flag) {
+			if (i > 0) {
+				par1Entity.addVelocity((double) (-MathHelper.sin(this.rotationYaw * (float) Math.PI / 180.0F) * (float) i * 0.5F), 0.1D,
+						(double) (MathHelper.cos(this.rotationYaw * (float) Math.PI / 180.0F) * (float) i * 0.5F));
+				this.motionX *= 0.6D;
+				this.motionZ *= 0.6D;
+			}
+
+			int j = EnchantmentHelper.getFireAspectModifier(this);
+
+			if (j > 0) {
+				par1Entity.setFire(j * 4);
+			}
+
+			if (par1Entity instanceof EntityLivingBase) {
+				EnchantmentThorns.func_92096_a(this, (EntityLivingBase) par1Entity, this.rand);
+			}
+		}
+
+		return flag;
+	}
+
 	public void attackEntityWithRangedAttack(EntityLivingBase par1EntityLivingBase, float rangeDamagePenalty) {
 		EntityPilum entityPilum = new EntityPilum(this.worldObj, this, par1EntityLivingBase, 1.6F, accuracy);
 		int i = EnchantmentHelper.getEnchantmentLevel(Enchantment.power.effectId, this.getHeldItem());
@@ -241,6 +288,8 @@ public class EntityLegionary extends EntityCreature implements INpc {
 		super.applyEntityAttributes();
 		// Set it's 'followRange' to a much larger value as the default one.
 		this.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.followRange).setAttribute(pathSearchRange);
+		this.getAttributeMap().func_111150_b(SharedMonsterAttributes.attackDamage);
+		this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(3.0D);
 	}
 
 	public void writeEntityToNBT(NBTTagCompound par1NBTTagCompound) {

@@ -27,25 +27,18 @@ public class EntityAIChargeThrow extends EntityAIBase {
 	private float maxDistanceToTarget;
 	private float maxDistanceToTargetSquared;
 
-	public EntityAIChargeThrow(EntityLegionary par1IRangedAttackMob, int par4, float par5) {
-		this(par1IRangedAttackMob, par4, par4, par5);
+	public EntityAIChargeThrow(EntityLegionary legionary, int par4, float maxDistanceToTarget) {
+		this(legionary, par4, par4, maxDistanceToTarget);
 	}
 
-	public EntityAIChargeThrow(EntityLegionary par1IRangedAttackMob, int par4, int par5maxRangedAttackTime,
-			float par6maxDistanceToTarget) {
+	public EntityAIChargeThrow(EntityLegionary legionary, int par4, int maxRangedAttackTime, float maxDistanceToTarget) {
 		this.rangedAttackTime = -1;
-
-		if (!(par1IRangedAttackMob instanceof EntityLivingBase)) {
-			throw new IllegalArgumentException("ArrowAttackGoal requires Mob implements RangedAttackMob");
-		} else {
-			this.entityLegionary = par1IRangedAttackMob;
-			this.field_96561_g = par4;
-			this.maxRangedAttackTime = par5maxRangedAttackTime;
-			this.maxDistanceToTarget = par6maxDistanceToTarget;
-			this.maxDistanceToTargetSquared = par6maxDistanceToTarget * par6maxDistanceToTarget;
-			//this.setMutexBits(3);
-			this.setMutexBits(0);
-		}
+		this.entityLegionary = legionary;
+		this.field_96561_g = par4;
+		this.maxRangedAttackTime = maxRangedAttackTime;
+		this.maxDistanceToTarget = maxDistanceToTarget;
+		this.maxDistanceToTargetSquared = maxDistanceToTarget * maxDistanceToTarget;
+		this.setMutexBits(0);
 	}
 
 	/**
@@ -59,7 +52,7 @@ public class EntityAIChargeThrow extends EntityAIBase {
 		if (!entityLegionary.isRegistered()) {
 			return false;
 		}
-		
+
 		int contuberniumId = entityLegionary.getContuberniumId();
 		Contubernium contubernium = SquadManager.getContubernium(contuberniumId);
 		if (contubernium == null || contubernium.getTargetEntity() == null) {
@@ -97,15 +90,16 @@ public class EntityAIChargeThrow extends EntityAIBase {
 	public void updateTask() {
 		int contuberniumId = entityLegionary.getContuberniumId();
 		Contubernium contubernium = SquadManager.getContubernium(contuberniumId);
-		// If we have an active attack target, prioritize that over this behavior. 
+		// If we have an active attack target, prioritize that over this behavior.
 		if (contubernium == null) {
 			return;
 		}
-		//System.out.println("center: " + contubernium.getContuberniumCenter() + ", legionary position: " + entityLegionary.getPosition(1.0f));
-		//double derpsz = this.entityLegionary.getDistanceSq(this.attackTarget.posX, this.attackTarget.boundingBox.minY, this.attackTarget.posZ);
-		double d0 = contubernium.getCenter().distanceTo(Vec3.createVectorHelper(this.attackTarget.posX, this.attackTarget.boundingBox.minY, this.attackTarget.posZ));
+		// System.out.println("center: " + contubernium.getContuberniumCenter() + ", legionary position: " + entityLegionary.getPosition(1.0f));
+		// double derpsz = this.entityLegionary.getDistanceSq(this.attackTarget.posX, this.attackTarget.boundingBox.minY, this.attackTarget.posZ);
+		double d0 = contubernium.getCenter().distanceTo(
+				Vec3.createVectorHelper(this.attackTarget.posX, this.attackTarget.boundingBox.minY, this.attackTarget.posZ));
 		d0 *= d0;
-		//System.out.println("derpz: " + derpsz + ", d0: " + d0);
+		// System.out.println("derpz: " + derpsz + ", d0: " + d0);
 		boolean flag = this.entityLegionary.getEntitySenses().canSee(this.attackTarget);
 
 		this.entityLegionary.getLookHelper().setLookPositionWithEntity(this.attackTarget, 30.0F, 30.0F);
@@ -114,9 +108,9 @@ public class EntityAIChargeThrow extends EntityAIBase {
 		if (d0 > (double) this.maxDistanceToTargetSquared || !flag) {
 			return;
 		}
-		
+
 		entityLegionary.equipItem(LEGIONARY_EQUIPMENT.PILUM);
-		
+
 		if (--this.rangedAttackTime == 0) {
 			f = MathHelper.sqrt_double(d0) / this.maxDistanceToTarget;
 			float f1 = f;

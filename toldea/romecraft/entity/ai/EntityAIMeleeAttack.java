@@ -1,14 +1,10 @@
 package toldea.romecraft.entity.ai;
 
-import toldea.romecraft.entity.EntityLegionary;
-import toldea.romecraft.entity.EntityLegionary.LEGIONARY_EQUIPMENT;
-import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.pathfinding.PathEntity;
-import net.minecraft.pathfinding.PathPoint;
-import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import toldea.romecraft.entity.EntityLegionary;
+import toldea.romecraft.entity.EntityLegionary.LEGIONARY_EQUIPMENT;
 
 public class EntityAIMeleeAttack extends EntityAIBase {
 	World worldObj;
@@ -78,22 +74,29 @@ public class EntityAIMeleeAttack extends EntityAIBase {
 	 * Updates the task
 	 */
 	public void updateTask() {
+		//this.legionaryEntityHost.swingItem();
+		
 		EntityLivingBase entitylivingbase = this.legionaryEntityHost.getAttackTarget();
+		
+		this.legionaryEntityHost.attackEntityAsMob(entitylivingbase);
+		/*
 		this.legionaryEntityHost.getLookHelper().setLookPositionWithEntity(entitylivingbase, 30.0F, 30.0F);
 
 		this.attackTick = Math.max(this.attackTick - 1, 0);
 		double d0 = (double) (this.legionaryEntityHost.width * 2.0F * this.legionaryEntityHost.width * 2.0F + entitylivingbase.width);
-
+		
 		if (this.legionaryEntityHost.getDistanceSq(entitylivingbase.posX, entitylivingbase.boundingBox.minY, entitylivingbase.posZ) <= d0) {
 			if (this.attackTick <= 0) {
 				this.attackTick = 20;
 
 				if (this.legionaryEntityHost.getHeldItem() != null) {
+					System.out.println("Tabete tabete!");
 					this.legionaryEntityHost.swingItem();
 				}
 
 				this.legionaryEntityHost.attackEntityAsMob(entitylivingbase);
 			}
 		}
+		*/
 	}
 }
