@@ -3,16 +3,54 @@ package toldea.romecraft.tileentity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import toldea.romecraft.managers.ItemManager;
 
 public class TileEntityRomanAnvil extends TileEntity implements ISidedInventory {
 	private ItemStack[] anvilItems;
-	
+
 	private static final int[] slots_invald = new int[] {};
 
 	public TileEntityRomanAnvil() {
 		anvilItems = new ItemStack[2];
+	}
+
+	@Override
+	public void writeToNBT(NBTTagCompound compound) {
+		NBTTagList itemsList = new NBTTagList();
+
+		if (anvilItems != null) {
+			for (int i = 0; i < anvilItems.length; i++) {
+				if (anvilItems[i] != null) {
+					NBTTagCompound slotTag = new NBTTagCompound();
+					slotTag.setByte("Slot", (byte) i);
+					anvilItems[i].writeToNBT(slotTag);
+					itemsList.appendTag(slotTag);
+				}
+				compound.setTag("Items", itemsList);
+			}
+
+		}
+	}
+
+	@Override
+	public void readFromNBT(NBTTagCompound compound) {
+		super.readFromNBT(compound);
+
+		NBTTagList itemsTag = compound.getTagList("Items");
+
+		anvilItems = new ItemStack[3];
+
+		for (int i = 0; i < itemsTag.tagCount(); i++) {
+			NBTTagCompound slotTag = (NBTTagCompound) itemsTag.tagAt(i);
+			byte slot = slotTag.getByte("Slot");
+
+			if (slot >= 0 && slot < anvilItems.length)
+				anvilItems[slot] = ItemStack.loadItemStackFromNBT(slotTag);
+		}
+
 	}
 
 	@Override
@@ -101,9 +139,9 @@ public class TileEntityRomanAnvil extends TileEntity implements ISidedInventory 
 	public boolean isItemValidForSlot(int slot, ItemStack itemStack) {
 		switch (slot) {
 		case 0:
-			return false;
-		case 1:
 			return itemStack.itemID == ItemManager.itemIronBloom.itemID;
+		case 1:
+			return false;
 		default:
 			return false;
 		}
