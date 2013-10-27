@@ -56,11 +56,11 @@ public class RenderTileEntityBloomery extends TileEntitySpecialRenderer {
 					}
 					// Render the fuel if there is any inside the bloomery.
 					if (tileEntityBloomery.hasFuel()) {
-						renderFuelInsideBloomery(tileEntityBloomery, tileEntity.worldObj, tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
+						renderFuelInsideBloomery(tileEntityBloomery);
 					}
 					// Render the smelted iron bloom if there is one inside the bloomery.
 					if (tileEntityBloomery.hasIronBloom()) {
-						renderSmeltedIronBloomInsideBloomery(tileEntityBloomery, tileEntity.worldObj, tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
+						renderSmeltedIronBloomInsideBloomery(tileEntityBloomery);
 					}
 
 					renderTileEntityBloomery(tileEntityBloomery, tileEntity.worldObj, tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord,
@@ -161,7 +161,7 @@ public class RenderTileEntityBloomery extends TileEntitySpecialRenderer {
 		GL11.glEnable(GL11.GL_LIGHTING);
 	}
 
-	private void renderFuelInsideBloomery(TileEntityBloomery bloomery, World world, int x, int y, int z) {
+	private void renderFuelInsideBloomery(TileEntityBloomery bloomery) {
 		GL11.glPushMatrix();
 		GL11.glTranslatef(0.5F, 0.5f, 0.5F);
 		int dir = (bloomery.getBlockMetadata() & BlockHelper.MASK_DIR);
@@ -199,7 +199,7 @@ public class RenderTileEntityBloomery extends TileEntitySpecialRenderer {
 		GL11.glPopMatrix();
 	}
 
-	private void renderSmeltedIronBloomInsideBloomery(TileEntityBloomery bloomery, World world, int x, int y, int z) {
+	private void renderSmeltedIronBloomInsideBloomery(TileEntityBloomery bloomery) {
 		GL11.glDisable(GL11.GL_LIGHTING);
 
 		float origin_x = .5f - BLOOMERY_INSIDE_WIDTH / 2f;

@@ -52,6 +52,11 @@ public class TileEntityRomanAnvil extends TileEntity implements ISidedInventory 
 		}
 
 	}
+	
+	public boolean hasIronBloom() {
+		ItemStack itemstack = getStackInSlot(0);
+		return (itemstack != null && itemstack.stackSize > 0);
+	}
 
 	@Override
 	public int getSizeInventory() {
