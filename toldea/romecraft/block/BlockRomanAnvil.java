@@ -7,6 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import toldea.romecraft.client.renderer.RenderBlockRomanAnvil;
 import toldea.romecraft.managers.ItemManager;
 import toldea.romecraft.tileentity.TileEntityRomanAnvil;
 
@@ -35,6 +36,11 @@ public class BlockRomanAnvil extends RomeCraftBlockContainer {
 	@Override
 	public boolean renderAsNormalBlock() {
 		return false;
+	}
+	
+	@Override
+	public int getRenderType() {
+		return RenderBlockRomanAnvil.renderID;
 	}
 
 	@Override
