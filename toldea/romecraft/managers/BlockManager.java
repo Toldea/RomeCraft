@@ -111,7 +111,7 @@ public class BlockManager {
 		LanguageRegistry.addName(blockBellows, "Bellows");
 		
 		// Roman Anvil Block
-		blockRomanAnvil = new BlockRomanAnvil(ConfigManager.blockRomanAnvilId, Material.iron).setUnlocalizedName("blockRomanAnvil").setTextureName("romecraft:romananvil");
+		blockRomanAnvil = new BlockRomanAnvil(ConfigManager.blockRomanAnvilId, Material.iron).setHardness(5.0F).setStepSound(Block.soundAnvilFootstep).setResistance(2000.0F).setUnlocalizedName("blockRomanAnvil");//.setTextureName("romecraft:romananvil");
 		GameRegistry.registerBlock(blockRomanAnvil, "blockRomanAnvil");
 		LanguageRegistry.addName(blockRomanAnvil, "Roman Anvil");
 	}

@@ -19,7 +19,7 @@ public class ConfigManager {
 	public static int blockBloomeryId;
 	public static int blockBellowsId;
 	public static int blockRomanAnvilId;
-	
+
 	public static int itemGladiusId;
 	public static int itemScutumId;
 	public static int itemGaleaId;
@@ -35,7 +35,8 @@ public class ConfigManager {
 	public static int itemBlacksmithEquipmentId;
 	public static int itemScepterId;
 	public static int itemIronBloomId;
-	
+	public static int itemHammerId;
+
 	private ConfigManager() {
 	}
 
@@ -43,7 +44,7 @@ public class ConfigManager {
 		Configuration config = new Configuration(file);
 
 		config.load();
-		
+
 		blockRomanBricksId = config.getBlock("blockRomanBricks", 1550).getInt();
 		blockRomanBricksHalfSlabId = config.getBlock("blockRomanBricksHalfSlab", 1551).getInt();
 		blockRomanBricksDoubleSlabId = config.getBlock("blockRomanBricksDoubleSlab", 1552).getInt();
@@ -58,7 +59,7 @@ public class ConfigManager {
 		blockBloomeryId = config.getBlock("blockBloomery", 1561).getInt();
 		blockBellowsId = config.getBlock("blockBellows", 1562).getInt();
 		blockRomanAnvilId = config.getBlock("blockRomanAnvil", 1563).getInt();
-		
+
 		itemGladiusId = config.getItem("itemGladius", 1650).getInt();
 		itemScutumId = config.getItem("itemScutum", 1651).getInt();
 		itemGaleaId = config.getItem("itemGalea", 1652).getInt();
@@ -74,8 +75,8 @@ public class ConfigManager {
 		itemBlacksmithEquipmentId = config.getItem("itemBlacksmithEquipment", 1662).getInt();
 		itemScepterId = config.getItem("itemScepter", 1663).getInt();
 		itemIronBloomId = config.getItem("itemIronBloom", 1664).getInt();
-		
+		itemHammerId = config.getItem("itemHammer", 1665).getInt();
+
 		config.save();
 	}
 }
-

@@ -27,6 +27,7 @@ public class ItemManager {
 	public static Item itemBlacksmithEquipment = null;
 	public static Item itemScepter = null;
 	public static Item itemIronBloom = null;
+	public static Item itemHammer = null;
 
 	public static void registerItems() {
 		// Gladius
@@ -81,9 +82,13 @@ public class ItemManager {
 		// Scepter
 		itemScepter = new ItemScepter(ConfigManager.itemScepterId).setUnlocalizedName("scepter").setTextureName("romecraft:scepter");
 		LanguageRegistry.addName(itemScepter, "Scepter");
-		
+
 		// Iron Bloom
 		itemIronBloom = new RomeCraftItem(ConfigManager.itemIronBloomId).setUnlocalizedName("itemIronBloom").setTextureName("romecraft:ironbloom");
 		LanguageRegistry.addName(itemIronBloom, "Iron Bloom");
+
+		// Hammer
+		itemHammer = new RomeCraftItem(ConfigManager.itemHammerId).setUnlocalizedName("itemHammer").setTextureName("romecraft:hammer").setFull3D();
+		LanguageRegistry.addName(itemHammer, "Hammer");
 	}
 }
