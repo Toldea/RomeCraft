@@ -48,40 +48,46 @@ public class BlockRomanAnvil extends RomeCraftBlockContainer {
 		if (player.isSneaking()) {
 			return false;
 		}
-
+		
 		TileEntityRomanAnvil tileEntity = (TileEntityRomanAnvil) world.getBlockTileEntity(x, y, z);
 
 		if (tileEntity != null) {
 			ItemStack itemstack = player.getCurrentEquippedItem();
 			if (itemstack != null) {
 				int id = itemstack.itemID;
-				int slot = -1;
-
-				if (id == ItemManager.itemIronBloom.itemID) {
-					slot = 0;
-				}
-
-				if (slot != -1 && tileEntity.isItemValidForSlot(slot, itemstack)) {
-					ItemStack anvilItemStack = tileEntity.getStackInSlot(slot);
-					if (anvilItemStack == null) {
-						anvilItemStack = itemstack.copy();
-						anvilItemStack.stackSize = 1;
-					} else {
-						if (anvilItemStack.stackSize < tileEntity.getInventoryStackLimit()) {
-							anvilItemStack.stackSize++;
-						} else {
-							return true;
-						}
-					}
-
-					if (!player.capabilities.isCreativeMode) {
-						--itemstack.stackSize;
-					}
-					tileEntity.setInventorySlotContents(slot, anvilItemStack);
-					if (itemstack.stackSize <= 0) {
-						player.inventory.setInventorySlotContents(player.inventory.currentItem, (ItemStack) null);
-					}
+				
+				if (id == ItemManager.itemHammer.itemID) {
+					tileEntity.hammerIron(world);
 					return true;
+				} else {
+					int slot = -1;
+	
+					if (id == ItemManager.itemIronBloom.itemID) {
+						slot = 0;
+					}
+	
+					if (slot != -1 && tileEntity.isItemValidForSlot(slot, itemstack)) {
+						ItemStack anvilItemStack = tileEntity.getStackInSlot(slot);
+						if (anvilItemStack == null) {
+							anvilItemStack = itemstack.copy();
+							anvilItemStack.stackSize = 1;
+						} else {
+							if (anvilItemStack.stackSize < tileEntity.getInventoryStackLimit()) {
+								anvilItemStack.stackSize++;
+							} else {
+								return true;
+							}
+						}
+	
+						if (!player.capabilities.isCreativeMode) {
+							--itemstack.stackSize;
+						}
+						tileEntity.setInventorySlotContents(slot, anvilItemStack);
+						if (itemstack.stackSize <= 0) {
+							player.inventory.setInventorySlotContents(player.inventory.currentItem, (ItemStack) null);
+						}
+						return true;
+					}
 				}
 			}
 		}

@@ -6,6 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 import toldea.romecraft.managers.ItemManager;
 
 public class TileEntityRomanAnvil extends TileEntity implements ISidedInventory {
@@ -15,6 +16,12 @@ public class TileEntityRomanAnvil extends TileEntity implements ISidedInventory 
 
 	public TileEntityRomanAnvil() {
 		anvilItems = new ItemStack[2];
+	}
+	
+	public void hammerIron(World world) {
+		if (world.isRemote) {
+			world.playSound(xCoord + .5, yCoord + .5, zCoord + .5, "romecraft:hammer_use", 1f, 1f, false);
+		}
 	}
 
 	@Override

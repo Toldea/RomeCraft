@@ -1,6 +1,7 @@
 package toldea.romecraft.managers;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.client.event.sound.SoundLoadEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
@@ -22,6 +23,11 @@ public class EventManager {
 	@ForgeSubscribe
 	public void onWorldUnload(WorldEvent.Unload event) {
 		SquadManager.onWorldUnload();
+	}
+	
+	@ForgeSubscribe
+	public void onSound(SoundLoadEvent event) {
+		event.manager.addSound("romecraft:hammer_use.ogg");
 	}
 
 	/*
