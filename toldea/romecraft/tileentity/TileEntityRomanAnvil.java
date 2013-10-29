@@ -14,18 +14,51 @@ public class TileEntityRomanAnvil extends TileEntity implements ISidedInventory 
 
 	private static final int[] slots_invald = new int[] {};
 
+	private int anvilHammeredCount = 0;
+	private int anvilNotHammeredTime = 0;
+	
+	private static final int MAX_ANVIL_NOT_HAMMERED_TIME = 100;
+	
 	public TileEntityRomanAnvil() {
 		anvilItems = new ItemStack[2];
 	}
 	
 	public void hammerIron(World world) {
 		if (world.isRemote) {
-			world.playSound(xCoord + .5, yCoord + .5, zCoord + .5, "romecraft:hammer_use", 1f, 1f, false);
+			if (hasIronBloom()) {
+				world.playSound(xCoord + .5, yCoord + .5, zCoord + .5, "romecraft:hammer_use", 1f, 1f, false);
+			} else {
+				world.playSound(xCoord + .5, yCoord + .5, zCoord + .5, "romecraft:hammer_use", .4f, .7f, false);
+			}
 		}
+		if (hasIronBloom()) {
+			anvilHammeredCount++;
+			if (anvilHammeredCount >= 10) {
+				createItem();
+			}
+		}
+	}
+	
+	public void updateEntity() {
+		if (anvilHammeredCount > 0) {
+			anvilNotHammeredTime++;
+			if (anvilNotHammeredTime > MAX_ANVIL_NOT_HAMMERED_TIME) {
+				anvilNotHammeredTime = anvilHammeredCount = 0;
+			}
+		}
+	}
+	
+	public void createItem() {
+		// Reset the anvil hammer data and remove the iron bloom.
+		anvilHammeredCount = anvilNotHammeredTime = 0;
+		this.setInventorySlotContents(0, null);
 	}
 
 	@Override
 	public void writeToNBT(NBTTagCompound compound) {
+		compound.setShort("anvilHammeredCount", (short) anvilHammeredCount);
+		compound.setShort("anvilNotHammeredTime", (short) anvilNotHammeredTime);
+		
 		NBTTagList itemsList = new NBTTagList();
 
 		if (anvilItems != null) {
@@ -45,6 +78,9 @@ public class TileEntityRomanAnvil extends TileEntity implements ISidedInventory 
 	@Override
 	public void readFromNBT(NBTTagCompound compound) {
 		super.readFromNBT(compound);
+		
+		anvilHammeredCount = compound.getShort("anvilHammeredCount");
+		anvilNotHammeredTime = compound.getShort("anvilNotHammeredTime");
 
 		NBTTagList itemsTag = compound.getTagList("Items");
 
@@ -62,6 +98,11 @@ public class TileEntityRomanAnvil extends TileEntity implements ISidedInventory 
 	
 	public boolean hasIronBloom() {
 		ItemStack itemstack = getStackInSlot(0);
+		return (itemstack != null && itemstack.stackSize > 0);
+	}
+	
+	public boolean hasFinishedItem() {
+		ItemStack itemstack = getStackInSlot(1);
 		return (itemstack != null && itemstack.stackSize > 0);
 	}
 
@@ -151,7 +192,7 @@ public class TileEntityRomanAnvil extends TileEntity implements ISidedInventory 
 	public boolean isItemValidForSlot(int slot, ItemStack itemStack) {
 		switch (slot) {
 		case 0:
-			return itemStack.itemID == ItemManager.itemIronBloom.itemID;
+			return (!hasFinishedItem() && itemStack.itemID == ItemManager.itemIronBloom.itemID);
 		case 1:
 			return false;
 		default:
