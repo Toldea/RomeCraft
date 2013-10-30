@@ -5,8 +5,12 @@ import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.network.INetworkManager;
+import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import toldea.romecraft.item.crafting.RomanAnvilRecipes;
 import toldea.romecraft.managers.ItemManager;
 
 public class TileEntityRomanAnvil extends TileEntity implements ISidedInventory {
@@ -24,18 +28,17 @@ public class TileEntityRomanAnvil extends TileEntity implements ISidedInventory 
 	}
 	
 	public void hammerIron(World world) {
-		if (world.isRemote) {
-			if (hasIronBloom()) {
-				world.playSound(xCoord + .5, yCoord + .5, zCoord + .5, "romecraft:hammer_use", 1f, 1f, false);
-			} else {
-				world.playSound(xCoord + .5, yCoord + .5, zCoord + .5, "romecraft:hammer_use", .4f, .7f, false);
-			}
-		}
 		if (hasIronBloom()) {
 			anvilHammeredCount++;
 			if (anvilHammeredCount >= 10) {
 				createItem();
+			} else if (world.isRemote) {
+				// Play a 'hammer on the iron bloom' sound.
+				world.playSound(xCoord + .5, yCoord + .5, zCoord + .5, "romecraft:hammer_use", 1f, 1f, false);
 			}
+		} else if (world.isRemote) {
+			// Play a 'there is nothing on the anvil so hit the anvil' sound.
+			world.playSound(xCoord + .5, yCoord + .5, zCoord + .5, "romecraft:hammer_use", .4f, .7f, false);
 		}
 	}
 	
@@ -48,19 +51,42 @@ public class TileEntityRomanAnvil extends TileEntity implements ISidedInventory 
 		}
 	}
 	
+	private boolean canCreateItem() {
+		if (anvilItems == null || anvilItems[0] == null)
+			return false;
+		else {
+			ItemStack itemStack = RomanAnvilRecipes.instance().getRecipeResult(anvilItems[0]);
+			if (itemStack != null && anvilItems[1] == null) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+	}
+	
 	public void createItem() {
-		// Reset the anvil hammer data and remove the iron bloom.
-		anvilHammeredCount = anvilNotHammeredTime = 0;
-		this.setInventorySlotContents(0, null);
+		if (canCreateItem()) {
+			ItemStack itemStack = RomanAnvilRecipes.instance().getRecipeResult(anvilItems[0]);
+			anvilItems[1] = itemStack.copy();
+
+			anvilHammeredCount = anvilNotHammeredTime = 0;
+			anvilItems[0] = null;
+			
+			if (!this.worldObj.isRemote)  {
+				this.worldObj.playSoundEffect(xCoord + .5, yCoord + .5, zCoord + .5, "random.anvil_land", 1.0F, 1.0F);
+	        }
+		}
 	}
 
 	@Override
 	public void writeToNBT(NBTTagCompound compound) {
+		super.writeToNBT(compound);
+		
 		compound.setShort("anvilHammeredCount", (short) anvilHammeredCount);
 		compound.setShort("anvilNotHammeredTime", (short) anvilNotHammeredTime);
 		
 		NBTTagList itemsList = new NBTTagList();
-
+		
 		if (anvilItems != null) {
 			for (int i = 0; i < anvilItems.length; i++) {
 				if (anvilItems[i] != null) {
@@ -71,7 +97,6 @@ public class TileEntityRomanAnvil extends TileEntity implements ISidedInventory 
 				}
 				compound.setTag("Items", itemsList);
 			}
-
 		}
 	}
 
@@ -84,16 +109,25 @@ public class TileEntityRomanAnvil extends TileEntity implements ISidedInventory 
 
 		NBTTagList itemsTag = compound.getTagList("Items");
 
-		anvilItems = new ItemStack[3];
-
+		anvilItems = new ItemStack[2];
 		for (int i = 0; i < itemsTag.tagCount(); i++) {
 			NBTTagCompound slotTag = (NBTTagCompound) itemsTag.tagAt(i);
 			byte slot = slotTag.getByte("Slot");
 
-			if (slot >= 0 && slot < anvilItems.length)
+			if (slot >= 0 && slot < anvilItems.length) {
 				anvilItems[slot] = ItemStack.loadItemStackFromNBT(slotTag);
+			}
 		}
+	}
+	
+	public Packet getDescriptionPacket() {
+		NBTTagCompound nbtTag = new NBTTagCompound();
+		this.writeToNBT(nbtTag);
+		return new Packet132TileEntityData(this.xCoord, this.yCoord, this.zCoord, 1, nbtTag);
+	}
 
+	public void onDataPacket(INetworkManager net, Packet132TileEntityData packet) {
+		readFromNBT(packet.data);
 	}
 	
 	public boolean hasIronBloom() {
@@ -172,7 +206,7 @@ public class TileEntityRomanAnvil extends TileEntity implements ISidedInventory 
 
 	@Override
 	public int getInventoryStackLimit() {
-		return 1;
+		return 8;
 	}
 
 	@Override
