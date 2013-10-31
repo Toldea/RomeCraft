@@ -29,9 +29,13 @@ public class RomanAnvilRecipes {
 	}
 
 	private RomanAnvilRecipes() {
+		this.addRecipe(ItemManager.itemIronBloom.itemID, 1, new ItemStack(ItemManager.itemPilum), .7f);
+		//this.addRecipe(ItemManager.itemIronBloom.itemID, 2, new ItemStack(ItemManager.itemPugio), .7f);
+		this.addRecipe(ItemManager.itemIronBloom.itemID, 2, new ItemStack(ItemManager.itemScutum), .7f);
 		this.addRecipe(ItemManager.itemIronBloom.itemID, 3, new ItemStack(ItemManager.itemGladius), .7f);
+		this.addRecipe(ItemManager.itemIronBloom.itemID, 4, new ItemStack(ItemManager.itemCingulum), .7f);
 		this.addRecipe(ItemManager.itemIronBloom.itemID, 5, new ItemStack(ItemManager.itemGalea), .7f);
-		this.addRecipe(ItemManager.itemIronBloom.itemID, 8, new ItemStack(ItemManager.itemLoricaSegmentata), .7f);
+		this.addRecipe(ItemManager.itemIronBloom.itemID, 6, new ItemStack(ItemManager.itemLoricaSegmentata), .7f);
 	}
 
 	public void addRecipe(int rawMaterialId, int rawMaterialQuantity, ItemStack finishedItem, float experience) {

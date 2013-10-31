@@ -135,9 +135,22 @@ public class TileEntityRomanAnvil extends TileEntity implements ISidedInventory 
 		return (itemstack != null && itemstack.stackSize > 0);
 	}
 	
+	public int getIronBloomCount() {
+		ItemStack itemstack = getStackInSlot(0);
+		if (itemstack == null) {
+			return 0;
+		} else {
+			return itemstack.stackSize;
+		}
+	}
+	
 	public boolean hasFinishedItem() {
 		ItemStack itemstack = getStackInSlot(1);
 		return (itemstack != null && itemstack.stackSize > 0);
+	}
+	
+	public ItemStack getFinishedItemStack() {
+		return getStackInSlot(1);
 	}
 
 	@Override
@@ -206,7 +219,7 @@ public class TileEntityRomanAnvil extends TileEntity implements ISidedInventory 
 
 	@Override
 	public int getInventoryStackLimit() {
-		return 8;
+		return 6;
 	}
 
 	@Override

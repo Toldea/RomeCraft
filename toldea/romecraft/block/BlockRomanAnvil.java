@@ -46,28 +46,6 @@ public class BlockRomanAnvil extends RomeCraftBlockContainer {
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9) {
 		TileEntityRomanAnvil tileEntity = (TileEntityRomanAnvil) world.getBlockTileEntity(x, y, z);
-		
-		if (player.isSneaking()) {
-			// TODO: Somehow this function never gets called when we are sneaking. Find out why.
-			/*
-			ItemStack itemstack = player.getCurrentEquippedItem();
-			// If a player is holding an iron bloom, try to retreive more of them out of the bloomery if we are sneaking.
-			if (itemstack != null && itemstack.itemID == ItemManager.itemIronBloom.itemID && itemstack.stackSize < 64) {
-				ItemStack anvilSlotStack = tileEntity.getStackInSlot(0);
-				if (anvilSlotStack != null && anvilSlotStack.stackSize > 0) {
-					anvilSlotStack.stackSize--;
-					itemstack.stackSize++;
-					if (anvilSlotStack.stackSize <= 0) {
-						tileEntity.setInventorySlotContents(0, null);
-					} else {
-						tileEntity.setInventorySlotContents(0, anvilSlotStack);
-					}
-					return true;
-				}
-			}
-			*/
-			return false;
-		}
 
 		if (tileEntity != null) {
 			ItemStack itemstack = player.getCurrentEquippedItem();
@@ -116,7 +94,6 @@ public class BlockRomanAnvil extends RomeCraftBlockContainer {
 					anvilSlotStack = tileEntity.getStackInSlot(slot);
 				}
 				if (anvilSlotStack != null) {
-					// TODO: Maybe once we can sneak remove iron blooms change this to just retreive one item at a time instead of the whole stack.
 					itemstack = anvilSlotStack.copy();
 					player.inventory.setInventorySlotContents(player.inventory.currentItem, itemstack);
 					tileEntity.setInventorySlotContents(slot, null);

@@ -1,19 +1,20 @@
 package toldea.romecraft.item;
 
+import net.minecraft.client.model.ModelBiped;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.EnumArmorMaterial;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemArmor;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import toldea.romecraft.client.model.ModelLegionaryArmor;
 import toldea.romecraft.managers.CreativeTabsManager;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.client.model.ModelBiped;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.EnumArmorMaterial;
-import net.minecraft.item.ItemArmor;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 
-public class RomeCraftArmor extends ItemArmor {
+public class RomeCraftArmor extends ItemArmor implements IRomeCraftItem {
+	private ResourceLocation resourceLocation = null;
 	private ModelBiped armorModel;
 	ResourceLocation textureLoricaSegmentata = new ResourceLocation("romecraft", "textures/models/armor/legionaryarmor.png");
 
@@ -33,4 +34,19 @@ public class RomeCraftArmor extends ItemArmor {
 	public String getArmorTexture(ItemStack stack, Entity entity, int slot, String type) {
 		return textureLoricaSegmentata.toString();
 	}
+	
+	public ResourceLocation getResourceLocation() {
+		return resourceLocation;
+	}
+	
+	@Override
+	public Item setTextureName(String textureName) {
+		if (resourceLocation == null) {
+			String[] textureNameParts = textureName.split(":");
+			if (textureNameParts.length == 2) {
+				resourceLocation = new ResourceLocation(textureNameParts[0], "textures/items/" + textureNameParts[1] + ".png");
+			}
+		}
+		return super.setTextureName(textureName);
+    }
 }
