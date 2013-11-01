@@ -1,45 +1,56 @@
 package toldea.romecraft.client.model;
 
-import toldea.romecraft.managers.ItemManager;
 import net.minecraft.client.model.ModelBase;
-import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.MathHelper;
 
-public class ModelScutum extends RomeCraftArmorModel {
+public class ModelScutum extends ModelBase {//RomeCraftArmorModel {
 	private boolean renderScutum = false;
 	
-	private ModelRenderer Scutum;
-	private ModelRenderer ScutumDetail;
+	private boolean isSneak = false;
+	
+	private ModelRenderer scutum;
+	private ModelRenderer scutumDetail;
+	
+	public float rotateAngleX = .0f;
+	public float rotateAngleY = .0f;
+	public float rotateAngleZ = .0f;
 
 	public ModelScutum() {
 		textureWidth = 32;
 		textureHeight = 32;
 
-		Scutum = new ModelRenderer(this, 0, 0);
-		Scutum.addBox(-5F, -8F, -0.5F, 10, 16, 1);
-		Scutum.setRotationPoint(5F, 2F, 0F);
-		Scutum.setTextureSize(textureWidth, textureHeight);
+		scutum = new ModelRenderer(this, 0, 0);
+		scutum.addBox(-5F, -8F, -0.5F, 10, 16, 1);
+		scutum.setRotationPoint(5F, 2F, 0F);
+		scutum.setTextureSize(textureWidth, textureHeight);
 
-		ScutumDetail = new ModelRenderer(this, 22, 0);
-		ScutumDetail.addBox(-1F, -1F, -1.5F, 2, 2, 1);
-		ScutumDetail.setRotationPoint(5F, 2F, 0F);
-		ScutumDetail.setTextureSize(textureWidth, textureHeight);
+		scutumDetail = new ModelRenderer(this, 22, 0);
+		scutumDetail.addBox(-1F, -1F, -1.5F, 2, 2, 1);
+		scutumDetail.setRotationPoint(5F, 2F, 0F);
+		scutumDetail.setTextureSize(textureWidth, textureHeight);
 	}
 
-	public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
-		renderScutum = isItemIdEquippedInSlot(entity, 0, ItemManager.itemScutum.itemID);
-		System.out.println("Holding Scutum: " + isItemIdEquippedInSlot(entity, 0, ItemManager.itemScutum.itemID));
+	public void render(Entity entity) {
+		//renderScutum = isItemIdEquippedInSlot(entity, 0, ItemManager.itemScutum.itemID);
+		//System.out.println("Holding Scutum: " + isItemIdEquippedInSlot(entity, 0, ItemManager.itemScutum.itemID));
 		this.isSneak = entity.isSneaking();
-		setRotationAngles(f, f1, f2, f3, f4, f5, entity);
+		//setRotationAngles(f, f1, f2, f3, f4, f5, entity);
+		setRotationAngles();
 
-		if (renderScutum) {
-			Scutum.render(f5);
-			ScutumDetail.render(f5);
-		}
+		//if (renderScutum) {
+			scutum.render(0.0625F);
+			scutumDetail.render(0.0625F);
+		//}
 	}
-
+	
+	public void setRotationAngles() {
+		scutum.rotateAngleX = scutumDetail.rotateAngleX = rotateAngleX;
+		scutum.rotateAngleY = scutumDetail.rotateAngleY = rotateAngleY;
+		scutum.rotateAngleZ = scutumDetail.rotateAngleZ = rotateAngleZ;
+	}
+	
+	/*
 	@Override
 	public void setRotationAngles(float par1, float par2, float par3, float par4, float par5, float par6, Entity par7Entity) {
 		float headAngleX = par5 / (180F / (float) Math.PI);
@@ -84,7 +95,7 @@ public class ModelScutum extends RomeCraftArmorModel {
 			rightLegAngleY = ((float) Math.PI / 10F);
 			leftLegAngleY = -((float) Math.PI / 10F);
 		}
-
+		/*
 		if (this.heldItemLeft != 0) {
 			leftArmAngleX = leftArmAngleX * 0.5F - ((float) Math.PI / 10F) * (float) this.heldItemLeft;
 		}
@@ -92,7 +103,8 @@ public class ModelScutum extends RomeCraftArmorModel {
 		if (this.heldItemRight != 0) {
 			rightArmAngleX = rightArmAngleX * 0.5F - ((float) Math.PI / 10F) * (float) this.heldItemRight;
 		}
-
+		 */
+	/*
 		float f6;
 		float f7;
 
@@ -148,4 +160,5 @@ public class ModelScutum extends RomeCraftArmorModel {
 		Scutum.rotationPointX = ScutumDetail.rotationPointX = leftArmRotationPointX;
 		Scutum.rotationPointZ = ScutumDetail.rotationPointZ = leftArmRotationPointZ;
 	}
+	*/
 }

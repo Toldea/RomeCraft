@@ -426,7 +426,6 @@ public class EntityAIBlacksmithing extends EntityAIBase {
 		}
 
 		if (firstEmptySlot != -1) {
-			System.out.println("Ikenai! " + firstEmptySlot);
 			chestItemStack = equippedItem.copy();
 			chestItemStack.stackSize = 1;
 			insertOrMergeEquippedItemWithChestStackInSlot(equippedItem, chestItemStack, firstEmptySlot);

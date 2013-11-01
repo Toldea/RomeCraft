@@ -1,12 +1,24 @@
 package toldea.romecraft.managers;
 
+import java.lang.reflect.Field;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.ModelBiped;
+import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.client.event.sound.SoundLoadEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.world.WorldEvent;
+
+import org.lwjgl.opengl.GL11;
+
+import toldea.romecraft.client.model.ModelScutum;
 import toldea.romecraft.entity.ai.SquadManager;
+import toldea.romecraft.item.RomeCraftItem;
 
 public class EventManager {
 	public static void registerEvents() {
@@ -29,14 +41,35 @@ public class EventManager {
 	public void onSound(SoundLoadEvent event) {
 		event.manager.addSound("romecraft:hammer_use.ogg");
 	}
-
-	/*
+	
+	private ModelScutum modelScutum = new ModelScutum();
 	@ForgeSubscribe
-	public void onRenderPlayerPre(RenderPlayerEvent.Pre event) throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
-		// event.setCanceled(true);
+	public void onRenderSpecials(RenderPlayerEvent.Specials.Post event) throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
 		EntityPlayer player = event.entityPlayer;
 		ItemStack heldItem = player.getHeldItem();
 		RenderPlayer renderer = event.renderer;
+		
+		if (heldItem != null && heldItem.itemID == ItemManager.itemScutum.itemID) {
+			Field field = RenderPlayer.class.getDeclaredField("modelBipedMain");
+			field.setAccessible(true);
+			Object value = field.get(renderer);
+			if (value instanceof ModelBiped) {
+				ModelBiped bipedMain = (ModelBiped)value;
+				
+				GL11.glPushMatrix();
+				GL11.glTranslatef(0f, .4f, -.2f);
+				Minecraft.getMinecraft().getTextureManager().bindTexture(((RomeCraftItem)ItemManager.itemScutum).getResourceLocation());
+				modelScutum.rotateAngleX = bipedMain.bipedLeftArm.rotateAngleX;
+				modelScutum.rotateAngleY = bipedMain.bipedLeftArm.rotateAngleY;
+				modelScutum.rotateAngleZ = bipedMain.bipedLeftArm.rotateAngleZ;
+				modelScutum.render(player);
+				GL11.glPopMatrix();
+			}
+		}
+	}
+	
+	/*@ForgeSubscribe
+	public void onRenderPlayerPre(RenderPlayerEvent.Pre event) throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
 		if (heldItem != null && heldItem.itemID == ItemManager.itemPilum.itemID) {
 			//event.setCanceled(true);
 			Field field = RenderPlayer.class.getDeclaredField("modelBipedMain");
