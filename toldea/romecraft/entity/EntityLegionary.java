@@ -132,7 +132,8 @@ public class EntityLegionary extends EntityCreature implements INpc {
 		equipItem(LEGIONARY_EQUIPMENT.CALIGAE);
 		equipItem(LEGIONARY_EQUIPMENT.CINGULUM);
 
-		equipItem(LEGIONARY_EQUIPMENT.GLADIUS);
+		//equipItem(LEGIONARY_EQUIPMENT.GLADIUS);
+		equipItem(LEGIONARY_EQUIPMENT.SCUTUM);
 		// equipItem(LEGIONARY_EQUIPMENT.PILUM);
 
 		return par1EntityLivingData;
@@ -175,6 +176,7 @@ public class EntityLegionary extends EntityCreature implements INpc {
 		case PUGIO:
 			break;
 		case SCUTUM:
+			equipItemToSlot(ItemManager.itemScutum, 0);
 			break;
 		case PILUM:
 			equipItemToSlot(ItemManager.itemPilum, 0);

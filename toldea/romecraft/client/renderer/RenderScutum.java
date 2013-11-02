@@ -1,51 +1,36 @@
 package toldea.romecraft.client.renderer;
 
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
-
-import cpw.mods.fml.client.FMLClientHandler;
-
-import toldea.romecraft.client.model.ModelScutum;
-import toldea.romecraft.entity.EntityPilum;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.entity.Render;
-import net.minecraft.client.renderer.entity.RenderItem;
-import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Icon;
-import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.IItemRenderer;
-import net.minecraftforge.client.IItemRenderer.ItemRenderType;
 
-public class RenderScutum extends Render implements IItemRenderer {
+import org.lwjgl.opengl.GL11;
+
+import toldea.romecraft.client.model.ModelScutum;
+import toldea.romecraft.item.RomeCraftItem;
+import toldea.romecraft.managers.ItemManager;
+
+public class RenderScutum implements IItemRenderer {
 	private static final ResourceLocation scutumTexture = new ResourceLocation("romecraft", "textures/models/armor/scutum.png");
 	private ModelScutum modelScutum;
-	
-	public RenderScutum() {
-		super();
-		modelScutum = new ModelScutum();
-		this.setRenderManager(RenderManager.instance);
-	}
-	
-	@Override
-	public void doRender(Entity entity, double d0, double d1, double d2, float f, float f1) {
-	}
 
-	@Override
-	protected ResourceLocation getEntityTexture(Entity entity) {
-		return scutumTexture;
+	public RenderScutum() {
+		modelScutum = new ModelScutum();
 	}
 
 	@Override
 	public boolean handleRenderType(ItemStack item, ItemRenderType type) {
-		return false;//(type == ItemRenderType.EQUIPPED_FIRST_PERSON);
+		switch (type) {
+		case EQUIPPED:
+			return true;
+		case EQUIPPED_FIRST_PERSON:
+			return true;
+		default:
+			return false;
+		}
 	}
 
 	@Override
@@ -56,22 +41,25 @@ public class RenderScutum extends Render implements IItemRenderer {
 	@Override
 	public void renderItem(ItemRenderType type, ItemStack item, Object... data) {
 		if (type == ItemRenderType.EQUIPPED_FIRST_PERSON) {
-			//renderScutum((Entity)data[1]);
+			renderFirstPersonScutum((Entity) data[1]);
 		}
 	}
-	
-	public void renderScutum(Entity entity) {
+
+	public void renderFirstPersonScutum(Entity entity) {
 		GL11.glPushMatrix();
-		
-		//GL11.glRotatef(180f, 1f, 0f, 0f);
-		//GL11.glRotatef(45f, 0f, 0f, 1f);
-		
-		//GL11.glTranslatef(0f, 0f, -1f);
-		
-		bindTexture(scutumTexture);
-		
-		this.modelScutum.render(entity, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
-		
+		Minecraft.getMinecraft().getTextureManager().bindTexture(scutumTexture);
+		this.modelScutum.render(entity);
+		GL11.glPopMatrix();
+	}
+	
+	public void renderThirdPersonScutum(Entity entity, ModelRenderer bipedLeftArm) {
+		GL11.glPushMatrix();
+		GL11.glTranslatef(0f, .4f, -.2f);
+		Minecraft.getMinecraft().getTextureManager().bindTexture(((RomeCraftItem)ItemManager.itemScutum).getResourceLocation());
+		modelScutum.rotateAngleX = bipedLeftArm.rotateAngleX;
+		modelScutum.rotateAngleY = bipedLeftArm.rotateAngleY;
+		modelScutum.rotateAngleZ = bipedLeftArm.rotateAngleZ;
+		modelScutum.render(entity);
 		GL11.glPopMatrix();
 	}
 }

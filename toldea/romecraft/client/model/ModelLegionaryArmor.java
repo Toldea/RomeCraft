@@ -1,13 +1,9 @@
 package toldea.romecraft.client.model;
 
-import toldea.romecraft.managers.ItemManager;
-import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
+import toldea.romecraft.managers.ItemManager;
 
 public class ModelLegionaryArmor extends RomeCraftArmorModel {
 	private boolean renderGalea = false;
@@ -136,7 +132,7 @@ public class ModelLegionaryArmor extends RomeCraftArmorModel {
 	}
 
 	public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
-		aimedPilum = isItemIdEquippedInSlot(entity, 0, ItemManager.itemPilum.itemID);
+		aimedPilum = isItemIdEquippedInSlot(entity, 0, ItemManager.itemPilum.itemID);		
 		renderLoricaSegmentata = isItemIdEquippedInSlot(entity, 3, ItemManager.itemLoricaSegmentata.itemID);
 		renderGalea = isItemIdEquippedInSlot(entity, 4, ItemManager.itemGalea.itemID);
 		renderCaligae = isItemIdEquippedInSlot(entity, 1, ItemManager.itemCaligae.itemID);
