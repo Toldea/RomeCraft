@@ -10,8 +10,6 @@ import net.minecraftforge.client.IItemRenderer;
 import org.lwjgl.opengl.GL11;
 
 import toldea.romecraft.client.model.ModelScutum;
-import toldea.romecraft.item.RomeCraftItem;
-import toldea.romecraft.managers.ItemManager;
 
 public class RenderScutum implements IItemRenderer {
 	private static final ResourceLocation scutumTexture = new ResourceLocation("romecraft", "textures/models/armor/scutum.png");
@@ -54,8 +52,7 @@ public class RenderScutum implements IItemRenderer {
 	
 	public void renderThirdPersonScutum(Entity entity, ModelRenderer bipedLeftArm) {
 		GL11.glPushMatrix();
-		GL11.glTranslatef(0f, .4f, -.2f);
-		Minecraft.getMinecraft().getTextureManager().bindTexture(((RomeCraftItem)ItemManager.itemScutum).getResourceLocation());
+		Minecraft.getMinecraft().getTextureManager().bindTexture(scutumTexture);//((RomeCraftItem)ItemManager.itemScutum).getResourceLocation());
 		modelScutum.rotateAngleX = bipedLeftArm.rotateAngleX;
 		modelScutum.rotateAngleY = bipedLeftArm.rotateAngleY;
 		modelScutum.rotateAngleZ = bipedLeftArm.rotateAngleZ;
