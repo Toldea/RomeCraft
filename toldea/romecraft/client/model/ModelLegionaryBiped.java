@@ -49,7 +49,10 @@ public class ModelLegionaryBiped extends ModelBiped {
 	}
 	
 	public void renderEquippedScutum(Entity entity) {
-		renderScutum = isItemIdEquippedInSlot(entity, 0, ItemManager.itemScutum.itemID);
+		renderScutum = isItemIdEquippedInSlot(entity, 0, ItemManager.itemGladiusScutum.itemID);
+		if (!renderScutum) {
+			renderScutum = isItemIdEquippedInSlot(entity, 0, ItemManager.itemScutum.itemID);
+		}
 		if (renderScutum) {
 			if (scutumRenderer == null) {
 				scutumRenderer = new RenderScutum();

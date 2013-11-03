@@ -22,6 +22,7 @@ public class ConfigManager {
 
 	public static int itemGladiusId;
 	public static int itemScutumId;
+	public static int itemGladiusScutumId;
 	public static int itemGaleaId;
 	public static int itemLoricaSegmentataId;
 	public static int itemCingulumId;
@@ -62,20 +63,21 @@ public class ConfigManager {
 
 		itemGladiusId = config.getItem("itemGladius", 1650).getInt();
 		itemScutumId = config.getItem("itemScutum", 1651).getInt();
-		itemGaleaId = config.getItem("itemGalea", 1652).getInt();
-		itemLoricaSegmentataId = config.getItem("itemLoricaSegmentata", 1653).getInt();
-		itemCingulumId = config.getItem("itemCingulum", 1654).getInt();
-		itemCaligaeId = config.getItem("itemCaligae", 1655).getInt();
-		itemPilumId = config.getItem("itemPilum", 1656).getInt();
-		itemVerutumId = config.getItem("itemVerutum", 1657).getInt();
-		itemPugioId = config.getItem("itemPugio", 1658).getInt();
-		itemSarcinaId = config.getItem("itemSarcina", 1659).getInt();
-		itemSudisId = config.getItem("itemSudis", 1660).getInt();
-		itemLegionaryEquipmentId = config.getItem("itemLegionaryEquipment", 1661).getInt();
-		itemBlacksmithEquipmentId = config.getItem("itemBlacksmithEquipment", 1662).getInt();
-		itemScepterId = config.getItem("itemScepter", 1663).getInt();
-		itemIronBloomId = config.getItem("itemIronBloom", 1664).getInt();
-		itemHammerId = config.getItem("itemHammer", 1665).getInt();
+		itemGladiusScutumId = config.getItem("itemGladiusScutum", 1652).getInt();
+		itemGaleaId = config.getItem("itemGalea", 1653).getInt();
+		itemLoricaSegmentataId = config.getItem("itemLoricaSegmentata", 1654).getInt();
+		itemCingulumId = config.getItem("itemCingulum", 1655).getInt();
+		itemCaligaeId = config.getItem("itemCaligae", 1656).getInt();
+		itemPilumId = config.getItem("itemPilum", 1657).getInt();
+		itemVerutumId = config.getItem("itemVerutum", 1658).getInt();
+		itemPugioId = config.getItem("itemPugio", 1659).getInt();
+		itemSarcinaId = config.getItem("itemSarcina", 1660).getInt();
+		itemSudisId = config.getItem("itemSudis", 1661).getInt();
+		itemLegionaryEquipmentId = config.getItem("itemLegionaryEquipment", 1662).getInt();
+		itemBlacksmithEquipmentId = config.getItem("itemBlacksmithEquipment", 1663).getInt();
+		itemScepterId = config.getItem("itemScepter", 1664).getInt();
+		itemIronBloomId = config.getItem("itemIronBloom", 1665).getInt();
+		itemHammerId = config.getItem("itemHammer", 1666).getInt();
 
 		config.save();
 	}

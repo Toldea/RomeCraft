@@ -14,6 +14,7 @@ import cpw.mods.fml.common.registry.LanguageRegistry;
 public class ItemManager {
 	public static Item itemGladius = null;
 	public static Item itemScutum = null;
+	public static Item itemGladiusScutum = null;
 	public static ItemArmor itemGalea = null;
 	public static ItemArmor itemLoricaSegmentata = null;
 	public static ItemArmor itemCingulum = null;
@@ -37,6 +38,10 @@ public class ItemManager {
 		// Scutum
 		itemScutum = new RomeCraftItem(ConfigManager.itemScutumId).setUnlocalizedName("scutum").setTextureName("romecraft:scutum").setFull3D();
 		LanguageRegistry.addName(itemScutum, "Scutum");
+		// Gladius + Scutum
+		itemGladiusScutum = new RomeCraftItemMeleeWeapon(ConfigManager.itemGladiusScutumId, EnumToolMaterial.IRON).setUnlocalizedName("gladiusScutum")
+				.setTextureName("romecraft:gladius").setFull3D();
+		LanguageRegistry.addName(itemGladiusScutum, "Gladius & Scutum");
 		// Lorica Segmentata
 		itemLoricaSegmentata = (ItemArmor) (new RomeCraftArmor(ConfigManager.itemLoricaSegmentataId, EnumArmorMaterial.IRON, 2, 1)).setUnlocalizedName(
 				"loricaSegmentata").setTextureName("romecraft:loricasegmentata");

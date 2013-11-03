@@ -34,7 +34,7 @@ import toldea.romecraft.managers.ItemManager;
 //public class EntityLegionary extends EntityMob implements IRangedAttackMob {
 public class EntityLegionary extends EntityCreature implements INpc {
 	public enum LEGIONARY_EQUIPMENT {
-		LORICA_SEGMENTATA, GALEA, CINGULUM, CALIGAE, GLADIUS, PUGIO, SCUTUM, PILUM, VERUTUM, SARCINA, SUDIS, SHOVEL, WATERSKIN
+		LORICA_SEGMENTATA, GALEA, CINGULUM, CALIGAE, GLADIUS, PUGIO, SCUTUM, GLADIUS_SCUTUM, PILUM, VERUTUM, SARCINA, SUDIS, SHOVEL, WATERSKIN
 	}
 
 	private static final EntitySelectorLegionary enemySelector = EntitySelectorLegionary.instance;
@@ -133,7 +133,8 @@ public class EntityLegionary extends EntityCreature implements INpc {
 		equipItem(LEGIONARY_EQUIPMENT.CINGULUM);
 
 		//equipItem(LEGIONARY_EQUIPMENT.GLADIUS);
-		equipItem(LEGIONARY_EQUIPMENT.SCUTUM);
+		//equipItem(LEGIONARY_EQUIPMENT.SCUTUM);
+		equipItem(LEGIONARY_EQUIPMENT.GLADIUS_SCUTUM);
 		// equipItem(LEGIONARY_EQUIPMENT.PILUM);
 
 		return par1EntityLivingData;
@@ -177,6 +178,9 @@ public class EntityLegionary extends EntityCreature implements INpc {
 			break;
 		case SCUTUM:
 			equipItemToSlot(ItemManager.itemScutum, 0);
+			break;
+		case GLADIUS_SCUTUM:
+			equipItemToSlot(ItemManager.itemGladiusScutum, 0);
 			break;
 		case PILUM:
 			equipItemToSlot(ItemManager.itemPilum, 0);
