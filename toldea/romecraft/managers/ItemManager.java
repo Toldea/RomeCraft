@@ -4,8 +4,10 @@ import net.minecraft.item.EnumArmorMaterial;
 import net.minecraft.item.EnumToolMaterial;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
+import toldea.romecraft.item.ItemGladiusScutum;
 import toldea.romecraft.item.ItemPilum;
 import toldea.romecraft.item.ItemScepter;
+import toldea.romecraft.item.ItemScutum;
 import toldea.romecraft.item.RomeCraftArmor;
 import toldea.romecraft.item.RomeCraftItem;
 import toldea.romecraft.item.RomeCraftItemMeleeWeapon;
@@ -36,10 +38,10 @@ public class ItemManager {
 				"romecraft:gladius");
 		LanguageRegistry.addName(itemGladius, "Gladius");
 		// Scutum
-		itemScutum = new RomeCraftItem(ConfigManager.itemScutumId).setUnlocalizedName("scutum").setTextureName("romecraft:scutum").setFull3D();
+		itemScutum = new ItemScutum(ConfigManager.itemScutumId).setUnlocalizedName("scutum").setTextureName("romecraft:scutum").setFull3D();
 		LanguageRegistry.addName(itemScutum, "Scutum");
 		// Gladius + Scutum
-		itemGladiusScutum = new RomeCraftItemMeleeWeapon(ConfigManager.itemGladiusScutumId, EnumToolMaterial.IRON).setUnlocalizedName("gladiusScutum")
+		itemGladiusScutum = new ItemGladiusScutum(ConfigManager.itemGladiusScutumId, EnumToolMaterial.IRON).setUnlocalizedName("gladiusScutum")
 				.setTextureName("romecraft:gladius").setFull3D();
 		LanguageRegistry.addName(itemGladiusScutum, "Gladius & Scutum");
 		// Lorica Segmentata

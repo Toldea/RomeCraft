@@ -27,7 +27,6 @@ import toldea.romecraft.entity.ai.EntityAIFormationLookForward;
 import toldea.romecraft.entity.ai.EntityAIFormationMoveTowardsEntity;
 import toldea.romecraft.entity.ai.EntityAIFormationMoveTowardsLocation;
 import toldea.romecraft.entity.ai.EntityAIMeleeAttack;
-import toldea.romecraft.entity.ai.EntityAIMeleeAttack2;
 import toldea.romecraft.entity.ai.SquadManager;
 import toldea.romecraft.managers.ItemManager;
 
@@ -63,15 +62,10 @@ public class EntityLegionary extends EntityCreature implements INpc {
 		// this.tasks.addTask(1, new EntityAIThrowingAttack(this, 1.0D, 20, 60, pilumRange));
 
 		this.tasks.addTask(0, new EntityAISwimming(this));
-
-		
 		this.tasks.addTask(1, new EntityAIChargeThrow(this, 5, pilumChargeRange));
-		
-		// this.tasks.addTask(1, new EntityAIAttackOnCollide(this, EntityZombie.class, movementSpeed, false));
-		this.tasks.addTask(2, new EntityAIMeleeAttack2(this, movementSpeed, meleeEngageRange));
+		this.tasks.addTask(2, new EntityAIMeleeAttack(this, movementSpeed, meleeEngageRange));
 
-		
-		this.tasks.addTask(3, new EntityAIMeleeAttack(this));
+		//this.tasks.addTask(3, new EntityAIMeleeAttackOld(this));
 		this.tasks.addTask(4, new EntityAIFormationMoveTowardsEntity(this, movementSpeed));
 		this.tasks.addTask(5, new EntityAIFormationMoveTowardsLocation(this, movementSpeed));
 		this.tasks.addTask(6, new EntityAIFormationLookForward(this));

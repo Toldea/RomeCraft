@@ -28,7 +28,8 @@ public class ModelScutum extends ModelBase {// RomeCraftArmorModel {
 		armRotationPoint.setRotationPoint(5F, 2F, 0F);
 		
 		handRotationPoint = new ModelRenderer(this, 0, 0);
-		handRotationPoint.setRotationPoint(1F, 10F, 0F);
+		//handRotationPoint.setRotationPoint(1F, 10F, 0F); // Original rotation point
+		handRotationPoint.setRotationPoint(1F, 10.7F, 0F); // Slightly offset rotation point to prevent the hand from clipping at angles.
 		
 		scutum = new ModelRenderer(this, 0, 0);
 		scutum.addBox(-5F, -.5F, -8F, 10, 1, 16);
@@ -42,6 +43,8 @@ public class ModelScutum extends ModelBase {// RomeCraftArmorModel {
 		handRotationPoint.addChild(scutumDetail);
 		
 		armRotationPoint.addChild(handRotationPoint);
+		
+		handRotationPoint.rotateAngleX = -(float)Math.PI / 6f;
 	}
 
 	public void render(Entity entity) {

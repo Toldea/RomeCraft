@@ -146,7 +146,7 @@ public class ModelLegionaryArmor extends RomeCraftArmorModel {
 		this.isSneak = entity.isSneaking();
 		setRotationAngles(f, f1, f2, f3, f4, f5, entity);
 		if (equippedScutum) {
-			leftshoulderupper.rotateAngleX = leftshouldermiddle.rotateAngleX = leftshoulderlower.rotateAngleX = -(float)Math.PI / 2.0f;
+			leftshoulderupper.rotateAngleX = leftshouldermiddle.rotateAngleX = leftshoulderlower.rotateAngleX = -(float)Math.PI / 3.0f;
 		}
 
 		if (renderLoricaSegmentata) {

@@ -35,6 +35,7 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRomanAnvil.class, new RenderTileEntityRomanAnvil());
 		
 		MinecraftForgeClient.registerItemRenderer(ItemManager.itemScutum.itemID, new RenderScutum());
+		//MinecraftForgeClient.registerItemRenderer(ItemManager.itemGladiusScutum.itemID, new RenderScutum());
 		MinecraftForgeClient.registerItemRenderer(ItemManager.itemPilum.itemID, new RenderItemPilum());
 		
 		RenderingRegistry.registerBlockHandler(new RenderBlockBellows());

@@ -43,8 +43,19 @@ public class RenderScutum implements IItemRenderer {
 		}
 	}
 
+	float derp = .0f;
+	
 	public void renderFirstPersonScutum(Entity entity) {
 		GL11.glPushMatrix();
+		
+		GL11.glRotatef(-45, 0f, 0f, 1f);
+		GL11.glRotatef(-75, 0f, 1f, 0f);
+		GL11.glRotatef(15, 1f, 0f, 0f);
+		GL11.glRotatef(-15, 0f, 1f, 0f);
+		GL11.glRotatef(10, 0f, 1f, 10f);
+		
+		GL11.glTranslatef(-2f, 0f, 0f);
+		
 		Minecraft.getMinecraft().getTextureManager().bindTexture(scutumTexture);
 		this.modelScutum.render(entity);
 		GL11.glPopMatrix();
@@ -52,7 +63,7 @@ public class RenderScutum implements IItemRenderer {
 	
 	public void renderThirdPersonScutum(Entity entity, ModelRenderer bipedLeftArm) {
 		GL11.glPushMatrix();
-		Minecraft.getMinecraft().getTextureManager().bindTexture(scutumTexture);//((RomeCraftItem)ItemManager.itemScutum).getResourceLocation());
+		Minecraft.getMinecraft().getTextureManager().bindTexture(scutumTexture);
 		modelScutum.rotateAngleX = bipedLeftArm.rotateAngleX;
 		modelScutum.rotateAngleY = bipedLeftArm.rotateAngleY;
 		modelScutum.rotateAngleZ = bipedLeftArm.rotateAngleZ;
