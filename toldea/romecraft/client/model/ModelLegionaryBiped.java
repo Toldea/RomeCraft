@@ -46,6 +46,9 @@ public class ModelLegionaryBiped extends ModelBiped {
 			this.bipedRightArm.rotateAngleZ += MathHelper.cos(par3 * 0.09F) * 0.05F + 0.05F;
 			this.bipedRightArm.rotateAngleX += MathHelper.sin(par3 * 0.067F) * 0.05F;
 		}
+		if (this.renderScutum) {
+			this.bipedLeftArm.rotateAngleX = -(float)Math.PI / 2.0f;
+		}
 	}
 	
 	public void renderEquippedScutum(Entity entity) {

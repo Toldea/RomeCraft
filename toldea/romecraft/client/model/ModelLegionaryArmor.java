@@ -11,6 +11,7 @@ public class ModelLegionaryArmor extends RomeCraftArmorModel {
 	private boolean renderCaligae = false;
 	private boolean renderCingulum = false;
 	private boolean aimedPilum = false;
+	private boolean equippedScutum = false;
 
 	private ModelRenderer lowertorso;
 	private ModelRenderer uppertorso;
@@ -137,9 +138,16 @@ public class ModelLegionaryArmor extends RomeCraftArmorModel {
 		renderGalea = isItemIdEquippedInSlot(entity, 4, ItemManager.itemGalea.itemID);
 		renderCaligae = isItemIdEquippedInSlot(entity, 1, ItemManager.itemCaligae.itemID);
 		renderCingulum = isItemIdEquippedInSlot(entity, 2, ItemManager.itemCingulum.itemID);
+		equippedScutum = isItemIdEquippedInSlot(entity, 0, ItemManager.itemGladiusScutum.itemID);
+		if (!equippedScutum) {
+			equippedScutum = isItemIdEquippedInSlot(entity, 0, ItemManager.itemScutum.itemID);
+		}
 
 		this.isSneak = entity.isSneaking();
 		setRotationAngles(f, f1, f2, f3, f4, f5, entity);
+		if (equippedScutum) {
+			leftshoulderupper.rotateAngleX = leftshouldermiddle.rotateAngleX = leftshoulderlower.rotateAngleX = -(float)Math.PI / 2.0f;
+		}
 
 		if (renderLoricaSegmentata) {
 			uppertorso.render(f5);

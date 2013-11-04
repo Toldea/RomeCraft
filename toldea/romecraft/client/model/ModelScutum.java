@@ -7,6 +7,8 @@ import net.minecraft.entity.Entity;
 public class ModelScutum extends ModelBase {// RomeCraftArmorModel {
 	// private boolean isSneak = false;
 
+	private ModelRenderer armRotationPoint;
+	private ModelRenderer handRotationPoint;
 	private ModelRenderer scutum;
 	private ModelRenderer scutumDetail;
 
@@ -21,34 +23,36 @@ public class ModelScutum extends ModelBase {// RomeCraftArmorModel {
 	public ModelScutum() {
 		textureWidth = 64;
 		textureHeight = 32;
-
+		
+		armRotationPoint = new ModelRenderer(this, 0, 0);
+		armRotationPoint.setRotationPoint(5F, 2F, 0F);
+		
+		handRotationPoint = new ModelRenderer(this, 0, 0);
+		handRotationPoint.setRotationPoint(1F, 10F, 0F);
+		
 		scutum = new ModelRenderer(this, 0, 0);
-		scutum.addBox(-4F, 10F, -8F, 10, 1, 16);
-		scutum.setRotationPoint(5F, 2F, 0F);
+		scutum.addBox(-5F, -.5F, -8F, 10, 1, 16);
 		scutum.setTextureSize(textureWidth, textureHeight);
 
-		scutumDetail = new ModelRenderer(this, 52, 0);
-		scutumDetail.addBox(0F, 11F, -1F, 2, 1, 2);
-		scutumDetail.setRotationPoint(5F, 2F, 0F);
+		scutumDetail = new ModelRenderer(this, 0, 0);
+		scutumDetail.addBox(-1f, .5f, -1f, 2, 1, 2);
 		scutumDetail.setTextureSize(textureWidth, textureHeight);
+		
+		handRotationPoint.addChild(scutum);
+		handRotationPoint.addChild(scutumDetail);
+		
+		armRotationPoint.addChild(handRotationPoint);
 	}
 
 	public void render(Entity entity) {
 		// this.isSneak = entity.isSneaking();
 		setRotationAngles();
-		scutum.render(0.0625F);
-		scutumDetail.render(0.0625F);
+		armRotationPoint.render(0.0625F);
 	}
 
 	public void setRotationAngles() {
-		scutum.rotateAngleX = scutumDetail.rotateAngleX = rotateAngleX;
-		scutum.rotateAngleY = scutumDetail.rotateAngleY = rotateAngleY;
-		scutum.rotateAngleZ = scutumDetail.rotateAngleZ = rotateAngleZ;
-
-		/*
-		scutum.rotationPointX = scutumDetail.rotationPointX = rotationPointX;
-		scutum.rotationPointY = scutumDetail.rotationPointY = rotationPointY;
-		scutum.rotationPointZ = scutumDetail.rotationPointZ = rotationPointZ;
-		*/
+		armRotationPoint.rotateAngleX = rotateAngleX;
+		armRotationPoint.rotateAngleY = rotateAngleY;
+		armRotationPoint.rotateAngleZ = rotateAngleZ;
 	}
 }
