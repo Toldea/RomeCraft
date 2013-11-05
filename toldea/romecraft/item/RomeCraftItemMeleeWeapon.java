@@ -9,8 +9,8 @@ import toldea.romecraft.managers.CreativeTabsManager;
 public class RomeCraftItemMeleeWeapon extends ItemSword implements IRomeCraftItem {
 	private ResourceLocation resourceLocation = null;
 	
-	public RomeCraftItemMeleeWeapon(int par1, EnumToolMaterial par2EnumToolMaterial) {
-		super(par1, par2EnumToolMaterial);
+	public RomeCraftItemMeleeWeapon(int par1, EnumToolMaterial toolMaterial) {
+		super(par1, toolMaterial);
 		this.setCreativeTab(CreativeTabsManager.tabRomeCraft);
 	}
 
