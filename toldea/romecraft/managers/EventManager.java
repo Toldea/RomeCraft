@@ -44,13 +44,30 @@ public class EventManager {
 		ItemStack heldItem = player.getHeldItem();
 		RenderPlayer renderer = event.renderer;
 		
-		if (heldItem != null && heldItem.itemID == ItemManager.itemScutum.itemID) {
-			Field field = RenderPlayer.class.getDeclaredField("modelBipedMain");
-			field.setAccessible(true);
-			Object value = field.get(renderer);
-			if (value instanceof ModelBiped) {
-				ModelBiped bipedMain = (ModelBiped)value;
-				renderScutum.renderThirdPersonScutum(player, bipedMain.bipedLeftArm);
+		if (heldItem != null) { 
+			boolean shouldRenderScutum = (heldItem.itemID == ItemManager.itemScutum.itemID);
+			if (!shouldRenderScutum) {
+				if (heldItem.itemID == ItemManager.itemGladius.itemID || heldItem.itemID == ItemManager.itemPilum.itemID) {
+					int hotbarSlot = player.inventory.currentItem;
+					int itemSlot = hotbarSlot == 0 ? 8 : hotbarSlot + 1;
+					ItemStack nearbyStack = null;
+					if (hotbarSlot < 8) {
+						nearbyStack = player.inventory.getStackInSlot(itemSlot);
+						if (nearbyStack != null && nearbyStack.itemID == ItemManager.itemScutum.itemID) {
+							shouldRenderScutum = true;
+						}
+					}
+				}
+			}
+			
+			if (shouldRenderScutum) {
+				Field field = RenderPlayer.class.getDeclaredField("modelBipedMain");
+				field.setAccessible(true);
+				Object value = field.get(renderer);
+				if (value instanceof ModelBiped) {
+					ModelBiped bipedMain = (ModelBiped)value;
+					renderScutum.renderThirdPersonScutum(player, bipedMain.bipedLeftArm);
+				}
 			}
 		}
 	}
