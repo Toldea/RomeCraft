@@ -186,7 +186,7 @@ public class RenderEntityLegionary extends RenderLiving {
 		float f1 = 1.0F;
 		GL11.glColor3f(f1, f1, f1);
 		super.renderEquippedItems(par1EntityLiving, par2);
-		this.modelBipedMain.renderEquippedScutum(par1EntityLiving);
+		this.modelBipedMain.renderEquippedScutum((EntityLegionary)par1EntityLiving);
 		ItemStack itemstack = par1EntityLiving.getHeldItem();
 		ItemStack itemstack1 = par1EntityLiving.func_130225_q(3);
 		float f2;

@@ -52,7 +52,7 @@ public class EntityAIMeleeAttack extends EntityAIBase {
 				this.entityPathEntity = legionary.getNavigator().getPathToEntityLiving(entitylivingbase);
 				this.attackTimer = 4 + legionary.getRNG().nextInt(7);
 			}
-			legionary.equipItem(LEGIONARY_EQUIPMENT.GLADIUS_SCUTUM);
+			legionary.equipItem(LEGIONARY_EQUIPMENT.GLADIUS);
 			return true;
 		}
 	}

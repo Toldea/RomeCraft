@@ -29,7 +29,7 @@ public class PacketManager implements IPacketHandler {
 
 		byte packetId = reader.readByte();
 		
-		int x, y, z;
+		int x, y, z, entityId;
 		TileEntity te;
 
 		switch (packetId) {
@@ -71,10 +71,10 @@ public class PacketManager implements IPacketHandler {
 			dataStream.writeInt(bellows.xCoord);
 			dataStream.writeInt(bellows.yCoord);
 			dataStream.writeInt(bellows.zCoord);
-
+			
 			PacketDispatcher.sendPacketToAllPlayers(PacketDispatcher.getPacket(CHANNEL, byteStream.toByteArray()));
 		} catch (IOException ex) {
-			System.err.append("Failed to send PushBellows packet");
+			System.err.append("RomeCraft: Failed to send PushBellows packet!");
 		}
 	}
 
@@ -90,7 +90,7 @@ public class PacketManager implements IPacketHandler {
 
 			PacketDispatcher.sendPacketToServer(PacketDispatcher.getPacket(CHANNEL, byteStream.toByteArray()));
 		} catch (IOException ex) {
-			System.err.append("Failed to send ApplyBellowsBoost packet");
+			System.err.append("RomeCraft: Failed to send ApplyBellowsBoost packet!");
 		}
 	}
 }

@@ -30,10 +30,9 @@ import toldea.romecraft.entity.ai.EntityAIMeleeAttack;
 import toldea.romecraft.entity.ai.SquadManager;
 import toldea.romecraft.managers.ItemManager;
 
-//public class EntityLegionary extends EntityMob implements IRangedAttackMob {
 public class EntityLegionary extends EntityCreature implements INpc {
 	public enum LEGIONARY_EQUIPMENT {
-		LORICA_SEGMENTATA, GALEA, CINGULUM, CALIGAE, GLADIUS, PUGIO, SCUTUM, GLADIUS_SCUTUM, PILUM, VERUTUM, SARCINA, SUDIS, SHOVEL, WATERSKIN
+		LORICA_SEGMENTATA, GALEA, CINGULUM, CALIGAE, GLADIUS, PUGIO, SCUTUM, PILUM, VERUTUM, SARCINA, SUDIS, SHOVEL, WATERSKIN
 	}
 
 	private static final EntitySelectorLegionary enemySelector = EntitySelectorLegionary.instance;
@@ -48,6 +47,8 @@ public class EntityLegionary extends EntityCreature implements INpc {
 	private int contuberniumId = 1;
 	private int pilaLeft;
 	private boolean registered = false;
+	
+	private boolean holdingScutum = false;
 
 	public EntityLegionary(World par1World) {
 		super(par1World);
@@ -65,7 +66,7 @@ public class EntityLegionary extends EntityCreature implements INpc {
 		this.tasks.addTask(1, new EntityAIChargeThrow(this, 5, pilumChargeRange));
 		this.tasks.addTask(2, new EntityAIMeleeAttack(this, movementSpeed, meleeEngageRange));
 
-		//this.tasks.addTask(3, new EntityAIMeleeAttackOld(this));
+		// this.tasks.addTask(3, new EntityAIMeleeAttackOld(this));
 		this.tasks.addTask(4, new EntityAIFormationMoveTowardsEntity(this, movementSpeed));
 		this.tasks.addTask(5, new EntityAIFormationMoveTowardsLocation(this, movementSpeed));
 		this.tasks.addTask(6, new EntityAIFormationLookForward(this));
@@ -81,9 +82,13 @@ public class EntityLegionary extends EntityCreature implements INpc {
 		// this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
 
 		this.targetTasks.addTask(1, new EntityAINearestAttackableTarget(this, EntityLiving.class, 0, false, true, enemySelector));
-
 	}
 
+	protected void entityInit() {
+		super.entityInit();
+		this.getDataWatcher().addObject(20, (byte)0);
+	}
+	
 	protected boolean isAIEnabled() {
 		return true;
 	}
@@ -115,8 +120,8 @@ public class EntityLegionary extends EntityCreature implements INpc {
 		}
 	}
 
-	public EntityLivingData onSpawnWithEgg(EntityLivingData par1EntityLivingData) {
-		par1EntityLivingData = super.onSpawnWithEgg(par1EntityLivingData);
+	public EntityLivingData onSpawnWithEgg(EntityLivingData entityLivingData) {
+		entityLivingData = super.onSpawnWithEgg(entityLivingData);
 
 		pilaLeft = 1;
 
@@ -127,11 +132,10 @@ public class EntityLegionary extends EntityCreature implements INpc {
 		equipItem(LEGIONARY_EQUIPMENT.CINGULUM);
 
 		//equipItem(LEGIONARY_EQUIPMENT.GLADIUS);
-		//equipItem(LEGIONARY_EQUIPMENT.SCUTUM);
-		equipItem(LEGIONARY_EQUIPMENT.GLADIUS_SCUTUM);
-		// equipItem(LEGIONARY_EQUIPMENT.PILUM);
+		equipItem(LEGIONARY_EQUIPMENT.SCUTUM);
+		equipItem(LEGIONARY_EQUIPMENT.PILUM);
 
-		return par1EntityLivingData;
+		return entityLivingData;
 	}
 
 	public boolean getPilumLeft() {
@@ -149,6 +153,11 @@ public class EntityLegionary extends EntityCreature implements INpc {
 		} else {
 			return false;
 		}
+	}
+	
+	public boolean isHoldingScutum() {
+		holdingScutum = (this.getDataWatcher().getWatchableObjectByte(20) == (byte)1);
+		return holdingScutum;
 	}
 
 	public void equipItem(LEGIONARY_EQUIPMENT equipment) {
@@ -171,10 +180,10 @@ public class EntityLegionary extends EntityCreature implements INpc {
 		case PUGIO:
 			break;
 		case SCUTUM:
-			equipItemToSlot(ItemManager.itemScutum, 0);
-			break;
-		case GLADIUS_SCUTUM:
-			equipItemToSlot(ItemManager.itemGladiusScutum, 0);
+			holdingScutum = true;
+			if (!this.worldObj.isRemote) {
+				this.getDataWatcher().updateObject(20, (byte)1);
+			}
 			break;
 		case PILUM:
 			equipItemToSlot(ItemManager.itemPilum, 0);
@@ -292,18 +301,23 @@ public class EntityLegionary extends EntityCreature implements INpc {
 		this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(3.0D);
 	}
 
-	public void writeEntityToNBT(NBTTagCompound par1NBTTagCompound) {
-		super.writeEntityToNBT(par1NBTTagCompound);
+	public void writeEntityToNBT(NBTTagCompound compound) {
+		super.writeEntityToNBT(compound);
 
 		pilaLeft = 1; // TODO: temporary cheat to easily reload legionary ammo.
 
-		par1NBTTagCompound.setInteger("Contubernium", this.contuberniumId);
-		par1NBTTagCompound.setInteger("pilaLeft", this.pilaLeft);
+		compound.setInteger("Contubernium", this.contuberniumId);
+		compound.setInteger("pilaLeft", this.pilaLeft);
+		compound.setBoolean("holdingScutum", this.holdingScutum);
 	}
 
-	public void readEntityFromNBT(NBTTagCompound par1NBTTagCompound) {
-		super.readEntityFromNBT(par1NBTTagCompound);
-		this.contuberniumId = par1NBTTagCompound.getInteger("Contubernium");
-		this.pilaLeft = par1NBTTagCompound.getInteger("pilaLeft");
+	public void readEntityFromNBT(NBTTagCompound compound) {
+		super.readEntityFromNBT(compound);
+		this.contuberniumId = compound.getInteger("Contubernium");
+		this.pilaLeft = compound.getInteger("pilaLeft");
+		this.holdingScutum = compound.getBoolean("holdingScutum");
+		if (!this.worldObj.isRemote) {
+			this.getDataWatcher().updateObject(20, (byte)1);
+		}
 	}
 }

@@ -3,6 +3,7 @@ package toldea.romecraft.client.model;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.MathHelper;
+import toldea.romecraft.entity.EntityLegionary;
 import toldea.romecraft.managers.ItemManager;
 
 public class ModelLegionaryArmor extends RomeCraftArmorModel {
@@ -133,18 +134,21 @@ public class ModelLegionaryArmor extends RomeCraftArmorModel {
 	}
 
 	public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
-		aimedPilum = isItemIdEquippedInSlot(entity, 0, ItemManager.itemPilum.itemID);		
+		aimedPilum = isItemIdEquippedInSlot(entity, 0, ItemManager.itemPilum.itemID);
 		renderLoricaSegmentata = isItemIdEquippedInSlot(entity, 3, ItemManager.itemLoricaSegmentata.itemID);
 		renderGalea = isItemIdEquippedInSlot(entity, 4, ItemManager.itemGalea.itemID);
 		renderCaligae = isItemIdEquippedInSlot(entity, 1, ItemManager.itemCaligae.itemID);
 		renderCingulum = isItemIdEquippedInSlot(entity, 2, ItemManager.itemCingulum.itemID);
-		equippedScutum = isItemIdEquippedInSlot(entity, 0, ItemManager.itemGladiusScutum.itemID);
-		if (!equippedScutum) {
+		
+		if (entity instanceof EntityLegionary) {
+			equippedScutum = ((EntityLegionary)entity).isHoldingScutum();
+		} else {
 			equippedScutum = isItemIdEquippedInSlot(entity, 0, ItemManager.itemScutum.itemID);
 		}
-
+		
 		this.isSneak = entity.isSneaking();
 		setRotationAngles(f, f1, f2, f3, f4, f5, entity);
+		
 		if (equippedScutum) {
 			leftshoulderupper.rotateAngleX = leftshouldermiddle.rotateAngleX = leftshoulderlower.rotateAngleX = -(float)Math.PI / 3.0f;
 		}

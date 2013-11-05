@@ -1,20 +1,10 @@
 package toldea.romecraft.entity.ai;
 
-import java.util.Collections;
-import java.util.List;
-
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.ai.EntityAIBase;
+import net.minecraft.util.MathHelper;
 import toldea.romecraft.entity.EntityLegionary;
 import toldea.romecraft.entity.EntityLegionary.LEGIONARY_EQUIPMENT;
-import net.minecraft.command.IEntitySelector;
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.IRangedAttackMob;
-import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
-import net.minecraft.entity.ai.EntityAINearestAttackableTargetSorter;
-import net.minecraft.entity.ai.EntityAITarget;
-import net.minecraft.util.MathHelper;
 
 public class EntityAIThrowingAttack extends EntityAIBase {
 	/**

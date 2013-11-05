@@ -45,7 +45,7 @@ public class EntityAIMeleeAttackOld extends EntityAIBase {
 			double d0 = (double) (this.legionaryEntityHost.width * 2.0F * this.legionaryEntityHost.width * 2.0F + entitylivingbase.width);
 			if (this.legionaryEntityHost.getDistanceSq(entitylivingbase.posX, entitylivingbase.boundingBox.minY, entitylivingbase.posZ) <= d0) {
 				// If within melee range, equip 'Gladius' sword and return true.
-				legionaryEntityHost.equipItem(LEGIONARY_EQUIPMENT.GLADIUS_SCUTUM);
+				legionaryEntityHost.equipItem(LEGIONARY_EQUIPMENT.GLADIUS);
 				return true;
 			} else {
 				return false;

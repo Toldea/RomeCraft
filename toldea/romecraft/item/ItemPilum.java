@@ -43,7 +43,7 @@ public class ItemPilum extends RomeCraftItem {
 
 		boolean flag = par3EntityPlayer.capabilities.isCreativeMode || EnchantmentHelper.getEnchantmentLevel(Enchantment.infinity.effectId, par1ItemStack) > 0;
 
-		if (flag || par3EntityPlayer.inventory.hasItem(ItemManager.itemPilum.itemID)) {
+		if (flag || par3EntityPlayer.inventory.hasItem(ItemManager.itemPilum.itemID) || par3EntityPlayer.inventory.hasItem(ItemManager.itemPilum.itemID)) {
 			float f = (float) j / 20.0F;
 			f = (f * f + f * 2.0F) / 3.0F;
 

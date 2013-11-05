@@ -44,7 +44,7 @@ public class EventManager {
 		ItemStack heldItem = player.getHeldItem();
 		RenderPlayer renderer = event.renderer;
 		
-		if (heldItem != null && (heldItem.itemID == ItemManager.itemScutum.itemID || heldItem.itemID == ItemManager.itemGladiusScutum.itemID)) {
+		if (heldItem != null && heldItem.itemID == ItemManager.itemScutum.itemID) {
 			Field field = RenderPlayer.class.getDeclaredField("modelBipedMain");
 			field.setAccessible(true);
 			Object value = field.get(renderer);

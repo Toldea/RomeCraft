@@ -2,7 +2,9 @@ package toldea.romecraft.client.renderer;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.IItemRenderer;
@@ -13,6 +15,7 @@ import toldea.romecraft.client.model.ModelScutum;
 
 public class RenderScutum implements IItemRenderer {
 	private static final ResourceLocation scutumTexture = new ResourceLocation("romecraft", "textures/models/armor/scutum.png");
+	private static final ItemRenderer itemRenderer = new ItemRenderer(Minecraft.getMinecraft());
 	private ModelScutum modelScutum;
 
 	public RenderScutum() {
@@ -39,13 +42,11 @@ public class RenderScutum implements IItemRenderer {
 	@Override
 	public void renderItem(ItemRenderType type, ItemStack item, Object... data) {
 		if (type == ItemRenderType.EQUIPPED_FIRST_PERSON) {
-			renderFirstPersonScutum((Entity) data[1]);
+			renderFirstPersonScutum((EntityPlayer) data[1]);
 		}
 	}
-
-	float derp = .0f;
 	
-	public void renderFirstPersonScutum(Entity entity) {
+	public void renderFirstPersonScutum(EntityPlayer player) {
 		GL11.glPushMatrix();
 		
 		GL11.glRotatef(-45, 0f, 0f, 1f);
@@ -54,10 +55,10 @@ public class RenderScutum implements IItemRenderer {
 		GL11.glRotatef(-15, 0f, 1f, 0f);
 		GL11.glRotatef(10, 0f, 1f, 10f);
 		
-		GL11.glTranslatef(-2f, 0f, 0f);
+		GL11.glTranslatef(-2f, 0f, -.5f);
 		
 		Minecraft.getMinecraft().getTextureManager().bindTexture(scutumTexture);
-		this.modelScutum.render(entity);
+		this.modelScutum.render(player);
 		GL11.glPopMatrix();
 	}
 	

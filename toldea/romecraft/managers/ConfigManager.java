@@ -28,6 +28,7 @@ public class ConfigManager {
 	public static int itemCingulumId;
 	public static int itemCaligaeId;
 	public static int itemPilumId;
+	public static int itemPilumScutumId;
 	public static int itemVerutumId;
 	public static int itemPugioId;
 	public static int itemSarcinaId;
@@ -69,15 +70,16 @@ public class ConfigManager {
 		itemCingulumId = config.getItem("itemCingulum", 1655).getInt();
 		itemCaligaeId = config.getItem("itemCaligae", 1656).getInt();
 		itemPilumId = config.getItem("itemPilum", 1657).getInt();
-		itemVerutumId = config.getItem("itemVerutum", 1658).getInt();
-		itemPugioId = config.getItem("itemPugio", 1659).getInt();
-		itemSarcinaId = config.getItem("itemSarcina", 1660).getInt();
-		itemSudisId = config.getItem("itemSudis", 1661).getInt();
-		itemLegionaryEquipmentId = config.getItem("itemLegionaryEquipment", 1662).getInt();
-		itemBlacksmithEquipmentId = config.getItem("itemBlacksmithEquipment", 1663).getInt();
-		itemScepterId = config.getItem("itemScepter", 1664).getInt();
-		itemIronBloomId = config.getItem("itemIronBloom", 1665).getInt();
-		itemHammerId = config.getItem("itemHammer", 1666).getInt();
+		itemPilumScutumId = config.getItem("itemPilumScutum", 1658).getInt();
+		itemVerutumId = config.getItem("itemVerutum", 1659).getInt();
+		itemPugioId = config.getItem("itemPugio", 1660).getInt();
+		itemSarcinaId = config.getItem("itemSarcina", 1661).getInt();
+		itemSudisId = config.getItem("itemSudis", 1662).getInt();
+		itemLegionaryEquipmentId = config.getItem("itemLegionaryEquipment", 1663).getInt();
+		itemBlacksmithEquipmentId = config.getItem("itemBlacksmithEquipment", 1664).getInt();
+		itemScepterId = config.getItem("itemScepter", 1665).getInt();
+		itemIronBloomId = config.getItem("itemIronBloom", 1666).getInt();
+		itemHammerId = config.getItem("itemHammer", 1667).getInt();
 
 		config.save();
 	}
