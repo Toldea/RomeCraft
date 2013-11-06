@@ -10,6 +10,7 @@ import toldea.romecraft.client.renderer.RenderBlockRomanAnvil;
 import toldea.romecraft.client.renderer.RenderEntityLegionary;
 import toldea.romecraft.client.renderer.RenderEntityPilum;
 import toldea.romecraft.client.renderer.RenderEntityPleb;
+import toldea.romecraft.client.renderer.RenderItemGladius;
 import toldea.romecraft.client.renderer.RenderItemPilum;
 import toldea.romecraft.client.renderer.RenderScutum;
 import toldea.romecraft.client.renderer.RenderTileEntityBellows;
@@ -35,6 +36,7 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRomanAnvil.class, new RenderTileEntityRomanAnvil());
 		
 		MinecraftForgeClient.registerItemRenderer(ItemManager.itemScutum.itemID, new RenderScutum());
+		MinecraftForgeClient.registerItemRenderer(ItemManager.itemGladius.itemID, new RenderItemGladius());
 		MinecraftForgeClient.registerItemRenderer(ItemManager.itemPilum.itemID, new RenderItemPilum());
 		
 		RenderingRegistry.registerBlockHandler(new RenderBlockBellows());

@@ -49,7 +49,7 @@ public class EventManager {
 			if (!shouldRenderScutum) {
 				if (heldItem.itemID == ItemManager.itemGladius.itemID || heldItem.itemID == ItemManager.itemPilum.itemID) {
 					int hotbarSlot = player.inventory.currentItem;
-					int itemSlot = hotbarSlot == 0 ? 8 : hotbarSlot + 1;
+					int itemSlot = hotbarSlot + 1;
 					ItemStack nearbyStack = null;
 					if (hotbarSlot < 8) {
 						nearbyStack = player.inventory.getStackInSlot(itemSlot);
