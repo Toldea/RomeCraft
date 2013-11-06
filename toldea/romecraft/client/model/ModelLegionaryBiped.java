@@ -51,7 +51,6 @@ public class ModelLegionaryBiped extends ModelBiped {
 	
 	public void renderEquippedScutum(EntityLegionary legionary) {
 		renderScutum = legionary.isHoldingScutum();
-		//System.out.println("renderScutum: " + renderScutum);
 		if (renderScutum) {
 			if (scutumRenderer == null) {
 				scutumRenderer = new RenderScutum();

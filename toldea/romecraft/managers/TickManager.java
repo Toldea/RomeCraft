@@ -2,11 +2,9 @@ package toldea.romecraft.managers;
 
 import java.util.EnumSet;
 
-import toldea.romecraft.romanvillage.RomanVillageCollection;
-
 import net.minecraft.world.World;
 import net.minecraft.world.storage.MapStorage;
-
+import toldea.romecraft.romanvillage.RomanVillageCollection;
 import cpw.mods.fml.common.ITickHandler;
 import cpw.mods.fml.common.TickType;
 import cpw.mods.fml.common.registry.TickRegistry;
@@ -45,7 +43,6 @@ public class TickManager implements ITickHandler {
 				romanVillageCollection.linkWorld(world);
 				
 				//romanVillageCollection.markDirty();
-				//System.out.println("herp derp roman village collection is dirty :D");
 			}
 		} else if (type.equals(EnumSet.of(TickType.WORLD))) {
 			if (romanVillageCollection != null) {

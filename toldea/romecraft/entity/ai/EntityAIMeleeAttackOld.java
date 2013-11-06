@@ -90,7 +90,6 @@ public class EntityAIMeleeAttackOld extends EntityAIBase {
 				this.attackTick = 20;
 
 				if (this.legionaryEntityHost.getHeldItem() != null) {
-					System.out.println("Tabete tabete!");
 					this.legionaryEntityHost.swingItem();
 				}
 

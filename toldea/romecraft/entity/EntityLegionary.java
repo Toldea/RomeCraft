@@ -131,9 +131,9 @@ public class EntityLegionary extends EntityCreature implements INpc {
 		equipItem(LEGIONARY_EQUIPMENT.CALIGAE);
 		equipItem(LEGIONARY_EQUIPMENT.CINGULUM);
 
-		//equipItem(LEGIONARY_EQUIPMENT.GLADIUS);
+		equipItem(LEGIONARY_EQUIPMENT.GLADIUS);
 		equipItem(LEGIONARY_EQUIPMENT.SCUTUM);
-		equipItem(LEGIONARY_EQUIPMENT.PILUM);
+		//equipItem(LEGIONARY_EQUIPMENT.PILUM);
 
 		return entityLivingData;
 	}
