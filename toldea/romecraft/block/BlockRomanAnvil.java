@@ -14,6 +14,7 @@ import toldea.romecraft.tileentity.TileEntityRomanAnvil;
 public class BlockRomanAnvil extends RomeCraftBlockContainer {
 	public BlockRomanAnvil(int blockId, Material material) {
 		super(blockId, material);
+		this.setLightOpacity(0);
 	}
 
 	@Override
@@ -24,7 +25,7 @@ public class BlockRomanAnvil extends RomeCraftBlockContainer {
 	// This will tell minecraft not to render any side of our cube.
 	@Override
 	public boolean shouldSideBeRendered(IBlockAccess iblockaccess, int i, int j, int k, int l) {
-		return false;
+		return true;
 	}
 
 	// And this tell it that you can see through this block, and neighbor blocks should be rendered.
@@ -37,7 +38,7 @@ public class BlockRomanAnvil extends RomeCraftBlockContainer {
 	public boolean renderAsNormalBlock() {
 		return false;
 	}
-	
+
 	@Override
 	public int getRenderType() {
 		return RenderBlockRomanAnvil.renderID;
@@ -51,17 +52,17 @@ public class BlockRomanAnvil extends RomeCraftBlockContainer {
 			ItemStack itemstack = player.getCurrentEquippedItem();
 			if (itemstack != null) {
 				int id = itemstack.itemID;
-				
+
 				if (id == ItemManager.itemHammer.itemID) {
 					tileEntity.hammerIron(world);
 					return true;
 				} else {
 					int slot = -1;
-	
+
 					if (id == ItemManager.itemIronBloom.itemID) {
 						slot = 0;
 					}
-	
+
 					if (slot != -1 && tileEntity.isItemValidForSlot(slot, itemstack)) {
 						ItemStack anvilItemStack = tileEntity.getStackInSlot(slot);
 						if (anvilItemStack == null) {
@@ -74,7 +75,7 @@ public class BlockRomanAnvil extends RomeCraftBlockContainer {
 								return true;
 							}
 						}
-	
+
 						if (!player.capabilities.isCreativeMode) {
 							--itemstack.stackSize;
 						}
@@ -86,7 +87,7 @@ public class BlockRomanAnvil extends RomeCraftBlockContainer {
 					}
 				}
 			} else { // If itemstack is null aka we arent holding anything.
-				int slot = 1; 
+				int slot = 1;
 				ItemStack anvilSlotStack = tileEntity.getStackInSlot(slot);
 				// If the 'finished items' slot is empty, try and withdraw from the 'raw items' slot.
 				if (anvilSlotStack == null) {

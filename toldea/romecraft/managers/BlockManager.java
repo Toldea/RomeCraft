@@ -95,12 +95,12 @@ public class BlockManager {
 		LanguageRegistry.addName(blockMarbleMosaicStairs, "Marble Mosaic Stairs");
 
 		// RomanVillageForum Block
-		blockRomanVillageForum = new BlockRomanVillageForum(ConfigManager.blockRomanVillageForumId, Material.rock).setUnlocalizedName("romanVillageForum").setTextureName("romecraft:forum");
+		blockRomanVillageForum = new BlockRomanVillageForum(ConfigManager.blockRomanVillageForumId, Material.rock).setHardness(2.0F).setResistance(5.0F).setStepSound(Block.soundWoodFootstep).setUnlocalizedName("romanVillageForum").setTextureName("romecraft:forum");
 		GameRegistry.registerBlock(blockRomanVillageForum, "blockRomanVillageForum");
 		LanguageRegistry.addName(blockRomanVillageForum, "Forum");
 
 		// Bloomery Block
-		blockBloomery = new BlockBloomery(ConfigManager.blockBloomeryId, Material.clay).setHardness(0.5F).setStepSound(Block.soundGravelFootstep)
+		blockBloomery = new BlockBloomery(ConfigManager.blockBloomeryId, Material.clay).setHardness(1.25F).setResistance(7.0f).setStepSound(Block.soundStoneFootstep)
 				.setUnlocalizedName("bloomery").setTextureName("romecraft:bloomery");
 		GameRegistry.registerBlock(blockBloomery, "blockBloomery");
 		LanguageRegistry.addName(blockBloomery, "Bloomery Block");
@@ -111,7 +111,7 @@ public class BlockManager {
 		LanguageRegistry.addName(blockBellows, "Bellows");
 		
 		// Roman Anvil Block
-		blockRomanAnvil = new BlockRomanAnvil(ConfigManager.blockRomanAnvilId, Material.iron).setHardness(5.0F).setStepSound(Block.soundAnvilFootstep).setResistance(2000.0F).setUnlocalizedName("blockRomanAnvil");//.setTextureName("romecraft:romananvil");
+		blockRomanAnvil = new BlockRomanAnvil(ConfigManager.blockRomanAnvilId, Material.iron).setHardness(5.0F).setStepSound(Block.soundAnvilFootstep).setResistance(2000.0F).setUnlocalizedName("blockRomanAnvil").setTextureName("romecraft:romananvil_base");
 		GameRegistry.registerBlock(blockRomanAnvil, "blockRomanAnvil");
 		LanguageRegistry.addName(blockRomanAnvil, "Roman Anvil");
 	}
