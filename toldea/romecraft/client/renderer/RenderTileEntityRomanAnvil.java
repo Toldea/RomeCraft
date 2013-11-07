@@ -5,6 +5,7 @@ import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.util.ResourceLocation;
@@ -13,6 +14,7 @@ import org.lwjgl.opengl.GL11;
 
 import toldea.romecraft.client.model.ModelRomanAnvil;
 import toldea.romecraft.item.IRomeCraftItem;
+import toldea.romecraft.item.crafting.RomanAnvilRecipes;
 import toldea.romecraft.managers.ItemManager;
 import toldea.romecraft.tileentity.TileEntityRomanAnvil;
 
@@ -34,19 +36,28 @@ public class RenderTileEntityRomanAnvil extends TileEntitySpecialRenderer {
 
 			GL11.glPushMatrix();
 			GL11.glTranslatef((float) d0, (float) d1, (float) d2);
-
-			if (romanAnvil.hasIronBloom()) {
-				renderIronBlooms(romanAnvil.getIronBloomCount());
-			} else if (romanAnvil.hasFinishedItem()) {
-				renderFinishedItem(romanAnvil.getFinishedItemStack().getItem());
-			}
-
+			
 			GL11.glTranslatef(.5f, .5f, .5f);
 			GL11.glRotatef(180f, 0F, 0F, 1F);
 
 			bindTexture(romanAnvilTexture);
 			modelRomanAnvil.renderAnvil(.0625f);
+			
+			GL11.glRotatef(-180f, 0F, 0F, 1F);
+			GL11.glTranslatef(-.5f, -.5f, -.5f);
 
+			if (romanAnvil.hasIronBloom()) {
+				renderIronBlooms(romanAnvil.getIronBloomCount());
+				if (romanAnvil.didRecentlyChangeIronBloomCount()) {
+					ItemStack phantomItemStack = RomanAnvilRecipes.instance().getRecipeResult(romanAnvil.getStackInSlot(0));
+					if (phantomItemStack != null) {
+						renderPhantomFinishedItem(phantomItemStack.getItem(), romanAnvil.getNewIronBloomTimer(), TileEntityRomanAnvil.NEW_IRON_BLOOM_TIME);
+					}
+				}
+			} else if (romanAnvil.hasFinishedItem()) {
+				renderFinishedItem(romanAnvil.getFinishedItemStack().getItem());
+			}
+			
 			GL11.glPopMatrix();
 		}
 	}
@@ -122,6 +133,28 @@ public class RenderTileEntityRomanAnvil extends TileEntitySpecialRenderer {
 			break;
 		}
 		
+		GL11.glPopMatrix();
+	}
+	
+	private void renderPhantomFinishedItem(Item phantomItem, int timerCurrent, int timerMax) {
+		GL11.glPushMatrix();
+		GL11.glTranslatef(0f, 1.1f, 0f);
+		GL11.glRotatef(90f, 1F, 0F, 0F);
+		
+		GL11.glEnable(GL11.GL_BLEND);
+        
+        float alpha = .8f;
+        if (timerCurrent < timerMax / 2) {
+        	alpha = (timerCurrent / (timerMax / 2f) * .8f);
+        }
+        GL11.glColor4f(1f, 1f, 1f, alpha);
+		
+        Icon icon = phantomItem.getIconFromDamage(0);
+		bindTexture(((IRomeCraftItem)phantomItem).getResourceLocation());
+		itemRenderer.renderItemIn2D(Tessellator.instance, 0f, 0f, 1f, 1f, icon.getIconWidth(), icon.getIconHeight(), 0.0625f);
+		
+		GL11.glColor4f(1f, 1f, 1f, 1f);
+		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glPopMatrix();
 	}
 	

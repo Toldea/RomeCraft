@@ -18,15 +18,18 @@ public class TileEntityRomanAnvil extends TileEntity implements ISidedInventory 
 
 	private static final int[] slots_invald = new int[] {};
 
+	private static final int MAX_ANVIL_NOT_HAMMERED_TIME = 100;
+	public static final int NEW_IRON_BLOOM_TIME = 15;
+
 	private int anvilHammeredCount = 0;
 	private int anvilNotHammeredTime = 0;
-	
-	private static final int MAX_ANVIL_NOT_HAMMERED_TIME = 100;
-	
+
+	private int anvilNewIronBloomTimer = 0;
+
 	public TileEntityRomanAnvil() {
 		anvilItems = new ItemStack[2];
 	}
-	
+
 	public void hammerIron(World world) {
 		if (hasIronBloom()) {
 			anvilHammeredCount++;
@@ -41,8 +44,11 @@ public class TileEntityRomanAnvil extends TileEntity implements ISidedInventory 
 			world.playSound(xCoord + .5, yCoord + .5, zCoord + .5, "romecraft:hammer_use", .4f, .7f, false);
 		}
 	}
-	
+
 	public void updateEntity() {
+		if (anvilNewIronBloomTimer > 0) {
+			anvilNewIronBloomTimer--;
+		}
 		if (anvilHammeredCount > 0) {
 			anvilNotHammeredTime++;
 			if (anvilNotHammeredTime > MAX_ANVIL_NOT_HAMMERED_TIME) {
@@ -50,7 +56,7 @@ public class TileEntityRomanAnvil extends TileEntity implements ISidedInventory 
 			}
 		}
 	}
-	
+
 	private boolean canCreateItem() {
 		if (anvilItems == null || anvilItems[0] == null)
 			return false;
@@ -63,7 +69,7 @@ public class TileEntityRomanAnvil extends TileEntity implements ISidedInventory 
 			}
 		}
 	}
-	
+
 	public void createItem() {
 		if (canCreateItem()) {
 			ItemStack itemStack = RomanAnvilRecipes.instance().getRecipeResult(anvilItems[0]);
@@ -71,22 +77,22 @@ public class TileEntityRomanAnvil extends TileEntity implements ISidedInventory 
 
 			anvilHammeredCount = anvilNotHammeredTime = 0;
 			anvilItems[0] = null;
-			
-			if (!this.worldObj.isRemote)  {
+
+			if (!this.worldObj.isRemote) {
 				this.worldObj.playSoundEffect(xCoord + .5, yCoord + .5, zCoord + .5, "random.anvil_land", 1.0F, 1.0F);
-	        }
+			}
 		}
 	}
 
 	@Override
 	public void writeToNBT(NBTTagCompound compound) {
 		super.writeToNBT(compound);
-		
+
 		compound.setShort("anvilHammeredCount", (short) anvilHammeredCount);
 		compound.setShort("anvilNotHammeredTime", (short) anvilNotHammeredTime);
-		
+
 		NBTTagList itemsList = new NBTTagList();
-		
+
 		if (anvilItems != null) {
 			for (int i = 0; i < anvilItems.length; i++) {
 				if (anvilItems[i] != null) {
@@ -103,7 +109,7 @@ public class TileEntityRomanAnvil extends TileEntity implements ISidedInventory 
 	@Override
 	public void readFromNBT(NBTTagCompound compound) {
 		super.readFromNBT(compound);
-		
+
 		anvilHammeredCount = compound.getShort("anvilHammeredCount");
 		anvilNotHammeredTime = compound.getShort("anvilNotHammeredTime");
 
@@ -119,7 +125,7 @@ public class TileEntityRomanAnvil extends TileEntity implements ISidedInventory 
 			}
 		}
 	}
-	
+
 	public Packet getDescriptionPacket() {
 		NBTTagCompound nbtTag = new NBTTagCompound();
 		this.writeToNBT(nbtTag);
@@ -129,12 +135,12 @@ public class TileEntityRomanAnvil extends TileEntity implements ISidedInventory 
 	public void onDataPacket(INetworkManager net, Packet132TileEntityData packet) {
 		readFromNBT(packet.data);
 	}
-	
+
 	public boolean hasIronBloom() {
 		ItemStack itemstack = getStackInSlot(0);
 		return (itemstack != null && itemstack.stackSize > 0);
 	}
-	
+
 	public int getIronBloomCount() {
 		ItemStack itemstack = getStackInSlot(0);
 		if (itemstack == null) {
@@ -144,11 +150,19 @@ public class TileEntityRomanAnvil extends TileEntity implements ISidedInventory 
 		}
 	}
 	
+	public boolean didRecentlyChangeIronBloomCount() {
+		return (anvilNewIronBloomTimer > 0);
+	}
+	
+	public final int getNewIronBloomTimer() {
+		return anvilNewIronBloomTimer;
+	}
+
 	public boolean hasFinishedItem() {
 		ItemStack itemstack = getStackInSlot(1);
 		return (itemstack != null && itemstack.stackSize > 0);
 	}
-	
+
 	public ItemStack getFinishedItemStack() {
 		return getStackInSlot(1);
 	}
@@ -180,7 +194,6 @@ public class TileEntityRomanAnvil extends TileEntity implements ISidedInventory 
 			} else {
 				itemStack = itemStack.splitStack(count);
 				onInventoryChanged();
-				// worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 			}
 		}
 		return itemStack;
@@ -202,8 +215,12 @@ public class TileEntityRomanAnvil extends TileEntity implements ISidedInventory 
 				itemStack.stackSize = getInventoryStackLimit();
 			}
 
+			// If we are adding another iron bloom, set a 'new' timer that in rendering will display a phantom item of the final crafting result.
+			if (slot == 0 && itemStack != null && itemStack.stackSize > 0) {
+				anvilNewIronBloomTimer = NEW_IRON_BLOOM_TIME;
+			}
+
 			onInventoryChanged();
-			// worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 		}
 	}
 
