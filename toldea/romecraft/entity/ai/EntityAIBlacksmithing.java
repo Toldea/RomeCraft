@@ -11,6 +11,7 @@ import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import toldea.romecraft.entity.EntityPleb;
+import toldea.romecraft.entity.EntityPleb.PLEB_PROFESSION;
 import toldea.romecraft.managers.ItemManager;
 import toldea.romecraft.managers.TickManager;
 import toldea.romecraft.romanvillage.RomanVillage;
@@ -53,7 +54,7 @@ public class EntityAIBlacksmithing extends EntityAIBase {
 	@Override
 	public boolean shouldExecute() {
 		// Make sure the pleb is a blacksmith, it is day and it is not raining. Return false if any of these fail.
-		if (entityPleb.getProfession() != 1 || !entityPleb.worldObj.isDaytime() || entityPleb.worldObj.isRaining()) {
+		if (entityPleb.getProfession() != PLEB_PROFESSION.BLACKSMITH || !entityPleb.worldObj.isDaytime() || entityPleb.worldObj.isRaining()) {
 			return false;
 		}
 
@@ -128,7 +129,7 @@ public class EntityAIBlacksmithing extends EntityAIBase {
 			return true;
 		}
 		// Make sure the pleb is still a blacksmith, it is still day and it is still not raining.
-		if (entityPleb.getProfession() != 1 || !entityPleb.worldObj.isDaytime() || entityPleb.worldObj.isRaining()) {
+		if (entityPleb.getProfession() != PLEB_PROFESSION.BLACKSMITH || !entityPleb.worldObj.isDaytime() || entityPleb.worldObj.isRaining()) {
 			return false;
 		}
 		// Make sure the bloomery still is valid and has work to do or the pleb is carrying some item, else stop this behavior.

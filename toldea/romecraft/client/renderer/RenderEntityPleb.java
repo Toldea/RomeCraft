@@ -176,7 +176,7 @@ public class RenderEntityPleb extends RenderLiving {
 
 	protected ResourceLocation getTexture(EntityPleb entityPleb) {
 		switch (entityPleb.getProfession()) {
-		case 1:
+		case BLACKSMITH:
 			return blacksmithTexture;
 		default:
 			return plebTexture;
