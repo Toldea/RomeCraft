@@ -5,25 +5,45 @@ import net.minecraft.client.model.ModelRenderer;
 
 public class ModelRomanAnvil extends ModelBase {
 	ModelRenderer anvilTop;
-	ModelRenderer anvilBottom;
+	ModelRenderer anvilRim;
+	ModelRenderer anvilShaft;
+	ModelRenderer anvilBase;
 
 	public ModelRomanAnvil() {
-		int textureWidth = 64;
-		int textureHeight = 32;
+		textureWidth = 72;
+		textureHeight = 38;
 
 		anvilTop = new ModelRenderer(this, 0, 0);
-		anvilTop.addBox(-8F, -8F, -8F, 16, 9, 16);
-		anvilTop.setRotationPoint(0F, 0F, 0F);
+		anvilTop.addBox(-8F, -8F, -8F, 16, 16, 7);
 		anvilTop.setTextureSize(textureWidth, textureHeight);
+		setRotation(anvilTop, -1.570796F, 0F, 0F);
+		
+		anvilRim = new ModelRenderer(this, 28, 23);
+		anvilRim.addBox(-6F, -6F, -1F, 12, 12, 3);
+		anvilRim.setTextureSize(textureWidth, textureHeight);
+		setRotation(anvilRim, -1.570796F, 0F, 0F);
 
-		anvilBottom = new ModelRenderer(this, 13, 7);
-		anvilBottom.addBox(-5F, 1F, -5F, 10, 7, 10);
-		anvilBottom.setRotationPoint(0F, 0F, 0F);
-		anvilBottom.setTextureSize(textureWidth, textureHeight);
+		anvilShaft = new ModelRenderer(this, 0, 23);
+		anvilShaft.addBox(-5F, -5F, 2F, 10, 10, 4);
+		anvilShaft.setTextureSize(textureWidth, textureHeight);
+		setRotation(anvilShaft, -1.570796F, 0F, 0F);
+
+		anvilBase = new ModelRenderer(this, 46, 0);
+		anvilBase.addBox(-5.5F, -5.5F, 6F, 11, 11, 2);
+		anvilBase.setTextureSize(textureWidth, textureHeight);
+		setRotation(anvilBase, -1.570796F, 0F, 0F);
 	}
 
 	public void renderAnvil(float f5) {
 		anvilTop.render(f5);
-		anvilBottom.render(f5);
+		anvilRim.render(f5);
+		anvilShaft.render(f5);
+		anvilBase.render(f5);
+	}
+
+	private void setRotation(ModelRenderer model, float x, float y, float z) {
+		model.rotateAngleX = x;
+		model.rotateAngleY = y;
+		model.rotateAngleZ = z;
 	}
 }
