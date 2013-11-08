@@ -12,6 +12,7 @@ import toldea.romecraft.block.BlockRomanVillageForum;
 import toldea.romecraft.block.RomeCraftBlock;
 import toldea.romecraft.block.RomeCraftBlockHalfSlab;
 import toldea.romecraft.block.RomeCraftBlockStairs;
+import toldea.romecraft.block.RomeCraftBlockWall;
 import toldea.romecraft.block.RomeCraftMultiSidedBlock;
 import toldea.romecraft.item.RomeCraftItemSlab;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -29,7 +30,8 @@ public class BlockManager {
 	public static RomeCraftBlockHalfSlab blockMarbleMosaicHalfSlab = null;
 	public static RomeCraftBlockHalfSlab blockMarbleMosaicDoubleSlab = null;
 	public static Block blockMarbleMosaicStairs = null;
-
+	public static Block blockMarbleMosaicWall = null;
+	
 	public static Block blockRomanVillageForum = null;
 
 	public static Block blockBloomery = null;
@@ -93,6 +95,10 @@ public class BlockManager {
 		blockMarbleMosaicStairs = (new RomeCraftBlockStairs(ConfigManager.blockMarbleMosaicStairsId, blockMarbleMosaic, 0)).setUnlocalizedName("blockMarbleMosaicStairs");
 		GameRegistry.registerBlock(blockMarbleMosaicStairs, "blockMarbleMosaicStairs");
 		LanguageRegistry.addName(blockMarbleMosaicStairs, "Marble Mosaic Stairs");
+		
+		blockMarbleMosaicWall = (new RomeCraftBlockWall(ConfigManager.blockMarbleMosaicWallId, blockMarbleMosaic)).setUnlocalizedName("blockMarbleMosaicWall");
+		GameRegistry.registerBlock(blockMarbleMosaicWall, "blockMarbleMosaicWall");
+		LanguageRegistry.addName(blockMarbleMosaicWall, "Marble Mosaic Wall");
 
 		// RomanVillageForum Block
 		blockRomanVillageForum = new BlockRomanVillageForum(ConfigManager.blockRomanVillageForumId, Material.rock).setHardness(2.0F).setResistance(5.0F).setStepSound(Block.soundWoodFootstep).setUnlocalizedName("romanVillageForum").setTextureName("romecraft:forum");

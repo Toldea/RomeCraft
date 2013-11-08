@@ -15,6 +15,7 @@ public class ConfigManager {
 	public static int blockMarbleMosaicHalfSlabId;
 	public static int blockMarbleMosaicDoubleSlabId;
 	public static int blockMarbleMosaicStairsId;
+	public static int blockMarbleMosaicWallId;
 	public static int blockRomanVillageForumId;
 	public static int blockBloomeryId;
 	public static int blockBellowsId;
@@ -57,10 +58,11 @@ public class ConfigManager {
 		blockMarbleMosaicHalfSlabId = config.getBlock("blockMarbleMosaicHalfSlab", 1557).getInt();
 		blockMarbleMosaicDoubleSlabId = config.getBlock("blockMarbleMosaicDoubleSlab", 1558).getInt();
 		blockMarbleMosaicStairsId = config.getBlock("blockMarbleMosaicStairs", 1559).getInt();
-		blockRomanVillageForumId = config.getBlock("blockRomanVillageForum", 1560).getInt();
-		blockBloomeryId = config.getBlock("blockBloomery", 1561).getInt();
-		blockBellowsId = config.getBlock("blockBellows", 1562).getInt();
-		blockRomanAnvilId = config.getBlock("blockRomanAnvil", 1563).getInt();
+		blockMarbleMosaicWallId = config.getBlock("blockMarbleMosaicWall", 1560).getInt();
+		blockRomanVillageForumId = config.getBlock("blockRomanVillageForum", 1561).getInt();
+		blockBloomeryId = config.getBlock("blockBloomery", 1562).getInt();
+		blockBellowsId = config.getBlock("blockBellows", 1563).getInt();
+		blockRomanAnvilId = config.getBlock("blockRomanAnvil", 1564).getInt();
 
 		itemGladiusId = config.getItem("itemGladius", 1650).getInt();
 		itemScutumId = config.getItem("itemScutum", 1651).getInt();
