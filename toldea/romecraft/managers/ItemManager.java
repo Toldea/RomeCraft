@@ -23,7 +23,6 @@ public class ItemManager {
 	public static Item itemVerutum = null;
 	public static Item itemPugio = null;
 	public static Item itemSarcina = null;
-	public static Item itemSudis = null;
 	public static Item itemLegionaryEquipment = null;
 	public static Item itemBlacksmithEquipment = null;
 	public static Item itemScepter = null;
@@ -66,9 +65,6 @@ public class ItemManager {
 		// Sarcina
 		itemSarcina = new RomeCraftItem(ConfigManager.itemSarcinaId).setUnlocalizedName("sarcina").setTextureName("romecraft:sarcina");
 		LanguageRegistry.addName(itemSarcina, "Sarcina");
-		// Sudis
-		itemSudis = new RomeCraftItem(ConfigManager.itemSudisId).setUnlocalizedName("sudis").setTextureName("romecraft:sudis");
-		LanguageRegistry.addName(itemSudis, "Sudis");
 
 		// Legionary Equipment
 		itemLegionaryEquipment = new RomeCraftItem(ConfigManager.itemLegionaryEquipmentId).setUnlocalizedName("itemLegionaryEquipment").setTextureName(

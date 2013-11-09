@@ -19,7 +19,7 @@ public class RecipeManager {
 			ItemManager.itemScutum,
 			ItemManager.itemPilum,
 			ItemManager.itemSarcina,
-			ItemManager.itemSudis
+			BlockManager.blockSudis
 			});
 		
 		craftingManager.addRecipe(new ItemStack(BlockManager.blockBloomery, 2), "AAA", "A A", "AAA", 'A', Block.hardenedClay);
