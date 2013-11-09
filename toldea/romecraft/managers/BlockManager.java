@@ -9,6 +9,7 @@ import toldea.romecraft.block.BlockMarbleMosaicSlab;
 import toldea.romecraft.block.BlockRomanAnvil;
 import toldea.romecraft.block.BlockRomanBrickSlab;
 import toldea.romecraft.block.BlockRomanVillageForum;
+import toldea.romecraft.block.BlockSudis;
 import toldea.romecraft.block.RomeCraftBlock;
 import toldea.romecraft.block.RomeCraftBlockHalfSlab;
 import toldea.romecraft.block.RomeCraftBlockStairs;
@@ -38,6 +39,8 @@ public class BlockManager {
 	public static Block blockBellows = null;
 	
 	public static Block blockRomanAnvil = null;
+	
+	public static Block blockSudis = null;
 
 	public static void registerBlocks() {
 		// Roman Bricks
@@ -120,5 +123,10 @@ public class BlockManager {
 		blockRomanAnvil = new BlockRomanAnvil(ConfigManager.blockRomanAnvilId, Material.iron).setHardness(5.0F).setStepSound(Block.soundAnvilFootstep).setResistance(2000.0F).setUnlocalizedName("blockRomanAnvil").setTextureName("romecraft:romananvil_base");
 		GameRegistry.registerBlock(blockRomanAnvil, "blockRomanAnvil");
 		LanguageRegistry.addName(blockRomanAnvil, "Roman Anvil");
+		
+		// Sudis
+		blockSudis = new BlockSudis(ConfigManager.blockSudisId, Material.wood).setUnlocalizedName("blockSudis").setTextureName("romecraft:sudis");
+		GameRegistry.registerBlock(blockSudis, "blockSudis");
+		LanguageRegistry.addName(blockSudis, "Sudis");
 	}
 }
