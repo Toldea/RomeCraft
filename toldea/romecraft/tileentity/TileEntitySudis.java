@@ -7,26 +7,30 @@ import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.tileentity.TileEntity;
 
 public class TileEntitySudis extends TileEntity {
-	private boolean isDoubleSudes = false;
-	
-	public final boolean getIsDouble() {
-		return isDoubleSudes;
+	private int numberOfSudes = 1;
+
+	public final boolean getHasMultipleSudes() {
+		return (numberOfSudes > 1);
 	}
-	
-	public void setIsDouble(boolean isDouble) {
-		this.isDoubleSudes = isDouble;
+
+	public final int getNumberOfSudes() {
+		return numberOfSudes;
 	}
-	
+
+	public void setNumberOfSudes(int numberOfSudes) {
+		this.numberOfSudes = numberOfSudes;
+	}
+
 	public void readFromNBT(NBTTagCompound compound) {
 		super.readFromNBT(compound);
-		isDoubleSudes = compound.getBoolean("isDoubleSudes");
+		numberOfSudes = compound.getInteger("numberOfSudes");
 	}
 
 	public void writeToNBT(NBTTagCompound compound) {
 		super.writeToNBT(compound);
-		compound.setBoolean("isDoubleSudes", isDoubleSudes);
+		compound.setInteger("numberOfSudes", numberOfSudes);
 	}
-	
+
 	public Packet getDescriptionPacket() {
 		NBTTagCompound nbtTag = new NBTTagCompound();
 		this.writeToNBT(nbtTag);

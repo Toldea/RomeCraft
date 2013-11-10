@@ -45,13 +45,32 @@ public class BlockSudis extends RomeCraftBlockContainer {
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9) {
 		TileEntitySudis tileEntitySudis = (TileEntitySudis) world.getBlockTileEntity(x, y, z);
 		if (tileEntitySudis != null) {
-			if (!tileEntitySudis.getIsDouble()) {
+			// Calculate the current and maximum number of sudes that can be placed inside this block.
+			int currentNumSudes = tileEntitySudis.getNumberOfSudes();
+			int maxNumSudes = 0;
+			if (this.canConnectSudisTo(world, x, y, z - 1)) {
+				maxNumSudes++;
+			}
+			if (this.canConnectSudisTo(world, x, y, z + 1)) {
+				maxNumSudes++;
+			}
+			if (this.canConnectSudisTo(world, x - 1, y, z)) {
+				maxNumSudes++;
+			}
+			if (this.canConnectSudisTo(world, x + 1, y, z)) {
+				maxNumSudes++;
+			}
+			if (maxNumSudes <= 1) {
+				maxNumSudes = 2;
+			}
+
+			if (currentNumSudes < maxNumSudes) {
 				// If the sudis isn't a double sudes yet, check if the player is trying to 'activate' this sudis with another sudis.
 				ItemStack itemstack = player.getCurrentEquippedItem();
 				if (itemstack != null) {
 					int id = itemstack.itemID;
 					if (id == BlockManager.blockSudis.blockID) {
-						tileEntitySudis.setIsDouble(true);
+						tileEntitySudis.setNumberOfSudes(currentNumSudes + 1);
 						if (!player.capabilities.isCreativeMode) {
 							--itemstack.stackSize;
 						}
@@ -66,20 +85,22 @@ public class BlockSudis extends RomeCraftBlockContainer {
 	@Override
 	public void breakBlock(World world, int x, int y, int z, int par5, int par6) {
 		TileEntitySudis tileEntitySudis = (TileEntitySudis) world.getBlockTileEntity(x, y, z);
-		if (tileEntitySudis != null && tileEntitySudis.getIsDouble()) {
-			float spawnX = x + world.rand.nextFloat();
-			float spawnY = y + world.rand.nextFloat();
-			float spawnZ = z + world.rand.nextFloat();
+		if (tileEntitySudis != null && tileEntitySudis.getHasMultipleSudes()) {
+			for (int i = 0; i < tileEntitySudis.getNumberOfSudes() - 1; i++) {
+				float spawnX = x + world.rand.nextFloat();
+				float spawnY = y + world.rand.nextFloat();
+				float spawnZ = z + world.rand.nextFloat();
 
-			EntityItem droppedItem = new EntityItem(world, spawnX, spawnY, spawnZ, new ItemStack(BlockManager.blockSudis, 1));
+				EntityItem droppedItem = new EntityItem(world, spawnX, spawnY, spawnZ, new ItemStack(BlockManager.blockSudis, 1));
 
-			float mult = 0.05F;
+				float mult = 0.05F;
 
-			droppedItem.motionX = (-0.5F + world.rand.nextFloat()) * mult;
-			droppedItem.motionY = (4 + world.rand.nextFloat()) * mult;
-			droppedItem.motionZ = (-0.5F + world.rand.nextFloat()) * mult;
+				droppedItem.motionX = (-0.5F + world.rand.nextFloat()) * mult;
+				droppedItem.motionY = (4 + world.rand.nextFloat()) * mult;
+				droppedItem.motionZ = (-0.5F + world.rand.nextFloat()) * mult;
 
-			world.spawnEntityInWorld(droppedItem);
+				world.spawnEntityInWorld(droppedItem);
+			}
 		}
 		super.breakBlock(world, x, y, z, par5, par6);
 	}
@@ -91,7 +112,7 @@ public class BlockSudis extends RomeCraftBlockContainer {
 	public void addCollisionBoxesToList(World world, int x, int y, int z, AxisAlignedBB par5AxisAlignedBB, List par6List, Entity par7Entity) {
 		TileEntitySudis tileEntitySudis = (TileEntitySudis) world.getBlockTileEntity(x, y, z);
 		boolean flag = false, flag1 = false, flag2 = false, flag3 = false;
-		if (tileEntitySudis != null && tileEntitySudis.getIsDouble()) {
+		if (tileEntitySudis != null && tileEntitySudis.getHasMultipleSudes()) {
 			flag = this.canConnectSudisTo(world, x, y, z - 1);
 			flag1 = this.canConnectSudisTo(world, x, y, z + 1);
 			flag2 = this.canConnectSudisTo(world, x - 1, y, z);
@@ -142,7 +163,7 @@ public class BlockSudis extends RomeCraftBlockContainer {
 	public void setBlockBoundsBasedOnState(IBlockAccess blockAccess, int x, int y, int z) {
 		TileEntitySudis tileEntitySudis = (TileEntitySudis) blockAccess.getBlockTileEntity(x, y, z);
 		boolean flag = false, flag1 = false, flag2 = false, flag3 = false;
-		if (tileEntitySudis != null && tileEntitySudis.getIsDouble()) {
+		if (tileEntitySudis != null && tileEntitySudis.getHasMultipleSudes()) {
 			flag = this.canConnectSudisTo(blockAccess, x, y, z - 1);
 			flag1 = this.canConnectSudisTo(blockAccess, x, y, z + 1);
 			flag2 = this.canConnectSudisTo(blockAccess, x - 1, y, z);
@@ -169,10 +190,10 @@ public class BlockSudis extends RomeCraftBlockContainer {
 		this.setBlockBounds(f, 0.0F, f2, f1, MODEL_SUDIS_HEIGHT, f3);
 	}
 
-	public boolean canConnectSudisTo(IBlockAccess par1IBlockAccess, int x, int y, int z) {
+	public static boolean canConnectSudisTo(IBlockAccess par1IBlockAccess, int x, int y, int z) {
 		int l = par1IBlockAccess.getBlockId(x, y, z);
 
-		if (l != this.blockID && l != BlockManager.blockSudis.blockID) {
+		if (l != BlockManager.blockSudis.blockID && l != BlockManager.blockSudis.blockID) {
 			Block block = Block.blocksList[l];
 			return block != null && block.blockMaterial.isOpaque() && block.renderAsNormalBlock() ? block.blockMaterial != Material.pumpkin : false;
 		} else {
