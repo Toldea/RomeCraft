@@ -14,6 +14,7 @@ import toldea.romecraft.block.RomeCraftBlock;
 import toldea.romecraft.block.RomeCraftBlockHalfSlab;
 import toldea.romecraft.block.RomeCraftBlockStairs;
 import toldea.romecraft.block.RomeCraftBlockWall;
+import toldea.romecraft.block.RomeCraftGhostBlock;
 import toldea.romecraft.block.RomeCraftMultiSidedBlock;
 import toldea.romecraft.item.RomeCraftItemSlab;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -41,6 +42,7 @@ public class BlockManager {
 	public static Block blockRomanAnvil = null;
 	
 	public static Block blockSudis = null;
+	public static Block blockGhostBlock = null;
 
 	public static void registerBlocks() {
 		// Roman Bricks
@@ -128,5 +130,8 @@ public class BlockManager {
 		blockSudis = new BlockSudis(ConfigManager.blockSudisId, Material.wood).setUnlocalizedName("blockSudis").setTextureName("romecraft:sudis");
 		GameRegistry.registerBlock(blockSudis, "blockSudis");
 		LanguageRegistry.addName(blockSudis, "Sudis");
+		
+		// Ghost block
+		blockGhostBlock = new RomeCraftGhostBlock(ConfigManager.blockGhostBlockId, Material.wood);
 	}
 }

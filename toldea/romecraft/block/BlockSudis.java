@@ -10,6 +10,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.DamageSource;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import toldea.romecraft.client.renderer.RenderBlockSudis;
@@ -21,6 +22,7 @@ public class BlockSudis extends RomeCraftBlockContainer {
 
 	public BlockSudis(int blockId, Material material) {
 		super(blockId, material);
+		this.setBlockBounds(0f, 0f, 0f, 1f, 2f, 1f);
 	}
 
 	@Override
@@ -47,6 +49,10 @@ public class BlockSudis extends RomeCraftBlockContainer {
 	public int getRenderType() {
 		return RenderBlockSudis.renderID;
 	}
+	
+	public void onEntityCollidedWithBlock(World par1World, int par2, int par3, int par4, Entity par5Entity) {
+        par5Entity.attackEntityFrom(DamageSource.cactus, 1.0F);
+    }
 
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9) {
 		TileEntitySudis tileEntitySudis = (TileEntitySudis) world.getBlockTileEntity(x, y, z);
@@ -87,9 +93,18 @@ public class BlockSudis extends RomeCraftBlockContainer {
 		}
 		return false;
 	}
+	
+	@Override
+	public void onBlockAdded(World world, int x, int y, int z) {
+		world.setBlock(x, y + 1, z, BlockManager.blockGhostBlock.blockID);
+	}
 
 	@Override
 	public void breakBlock(World world, int x, int y, int z, int par5, int par6) {
+		// Remove the ghost block.
+		world.setBlockToAir(x, y + 1, z);
+		
+		// Spawn the required number of extra sudes.
 		TileEntitySudis tileEntitySudis = (TileEntitySudis) world.getBlockTileEntity(x, y, z);
 		if (tileEntitySudis != null && tileEntitySudis.getHasMultipleSudes()) {
 			for (int i = 0; i < tileEntitySudis.getNumberOfSudes() - 1; i++) {
@@ -108,6 +123,7 @@ public class BlockSudis extends RomeCraftBlockContainer {
 				world.spawnEntityInWorld(droppedItem);
 			}
 		}
+		
 		super.breakBlock(world, x, y, z, par5, par6);
 	}
 
