@@ -139,15 +139,30 @@ public class BlockSudis extends RomeCraftBlockContainer {
 			flag2 = canConnectSudisTo(world, x - 1, y, z);
 			flag3 = canConnectSudisTo(world, x + 1, y, z);
 		}
+
+		int connectCount = 0;
+		if (flag) {
+			connectCount++;
+		}
+		if (flag1) {
+			connectCount++;
+		}
+		if (flag2) {
+			connectCount++;
+		}
+		if (flag3) {
+			connectCount++;
+		}
+
 		float f = 0.375F;
 		float f1 = 0.625F;
 		float f2 = 0.375F;
 		float f3 = 0.625F;
 
-		if (flag) {
+		if (flag || (flag1 && connectCount <= 1)) {
 			f2 = 0.0F;
 		}
-		if (flag1) {
+		if (flag1 || (flag && connectCount <= 1)) {
 			f3 = 1.0F;
 		}
 		if (flag || flag1) {
@@ -158,20 +173,20 @@ public class BlockSudis extends RomeCraftBlockContainer {
 		f2 = 0.375F;
 		f3 = 0.625F;
 
-		if (flag2) {
+		if (flag2 || (flag3 && connectCount <= 1)) {
 			f = 0.0F;
 		}
-		if (flag3) {
+		if (flag3 || (flag2 && connectCount <= 1)) {
 			f1 = 1.0F;
 		}
 		if (flag2 || flag3 || !flag && !flag1) {
 			setBlockBounds(f, 0, f2, f1, MODEL_SUDIS_HEIGHT, f3);
 			super.addCollisionBoxesToList(world, x, y, z, par5AxisAlignedBB, par6List, par7Entity);
 		}
-		if (flag) {
+		if (flag || (flag1 && connectCount <= 1)) {
 			f2 = 0.0F;
 		}
-		if (flag1) {
+		if (flag1 || (flag && connectCount <= 1)) {
 			f3 = 1.0F;
 		}
 
@@ -187,29 +202,47 @@ public class BlockSudis extends RomeCraftBlockContainer {
 
 	public static void setSudisBlockBoundsBasedOnState(Block block, IBlockAccess blockAccess, int x, int y, int z, int yOffset) {
 		TileEntitySudis tileEntitySudis = (TileEntitySudis) blockAccess.getBlockTileEntity(x, y, z);
-		boolean flag = false, flag1 = false, flag2 = false, flag3 = false;
-		if (tileEntitySudis != null && tileEntitySudis.getHasMultipleSudes()) {
-			flag = canConnectSudisTo(blockAccess, x, y, z - 1);
-			flag1 = canConnectSudisTo(blockAccess, x, y, z + 1);
-			flag2 = canConnectSudisTo(blockAccess, x - 1, y, z);
-			flag3 = canConnectSudisTo(blockAccess, x + 1, y, z);
-		}
+
+		int connectCount = 0;
 		float f = 0.375F;
 		float f1 = 0.625F;
 		float f2 = 0.375F;
 		float f3 = 0.625F;
 
-		if (flag) {
-			f2 = 0.0F;
-		}
-		if (flag1) {
-			f3 = 1.0F;
-		}
-		if (flag2) {
-			f = 0.0F;
-		}
-		if (flag3) {
-			f1 = 1.0F;
+		if (tileEntitySudis != null && tileEntitySudis.getHasMultipleSudes()) {
+			boolean flag = canConnectSudisTo(blockAccess, x, y, z - 1);
+			boolean flag1 = canConnectSudisTo(blockAccess, x, y, z + 1);
+			boolean flag2 = canConnectSudisTo(blockAccess, x - 1, y, z);
+			boolean flag3 = canConnectSudisTo(blockAccess, x + 1, y, z);
+			if (flag) {
+				connectCount++;
+			}
+			if (flag1) {
+				connectCount++;
+			}
+			if (flag2) {
+				connectCount++;
+			}
+			if (flag3) {
+				connectCount++;
+			}
+			if (connectCount == 0) {
+				f2 = .0f;
+				f3 = 1.0f;
+			} else {
+				if (flag || (flag1 && connectCount <= 1)) {
+					f2 = 0.0F;
+				}
+				if (flag1 || (flag && connectCount <= 1)) {
+					f3 = 1.0F;
+				}
+				if (flag2 || (flag3 && connectCount <= 1)) {
+					f = 0.0F;
+				}
+				if (flag3 || (flag2 && connectCount <= 1)) {
+					f1 = 1.0F;
+				}
+			}
 		}
 
 		block.setBlockBounds(f, yOffset, f2, f1, MODEL_SUDIS_HEIGHT + yOffset, f3);
