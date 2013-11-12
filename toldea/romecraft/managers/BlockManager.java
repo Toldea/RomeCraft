@@ -14,7 +14,7 @@ import toldea.romecraft.block.RomeCraftBlock;
 import toldea.romecraft.block.RomeCraftBlockHalfSlab;
 import toldea.romecraft.block.RomeCraftBlockStairs;
 import toldea.romecraft.block.RomeCraftBlockWall;
-import toldea.romecraft.block.RomeCraftGhostBlock;
+import toldea.romecraft.block.BlockSudisGhostBlock;
 import toldea.romecraft.block.RomeCraftMultiSidedBlock;
 import toldea.romecraft.item.RomeCraftItemSlab;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -132,6 +132,6 @@ public class BlockManager {
 		LanguageRegistry.addName(blockSudis, "Sudis");
 		
 		// Ghost block
-		blockGhostBlock = new RomeCraftGhostBlock(ConfigManager.blockGhostBlockId, Material.wood);
+		blockGhostBlock = new BlockSudisGhostBlock(ConfigManager.blockGhostBlockId, Material.wood);
 	}
 }
