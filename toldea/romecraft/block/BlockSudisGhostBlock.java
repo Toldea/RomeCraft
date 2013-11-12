@@ -17,11 +17,6 @@ public class BlockSudisGhostBlock extends Block {
 		super(par1, par2Material);
 	}
 
-	/*
-	 * public void addCollisionBoxesToList(World world, int x, int y, int z, AxisAlignedBB par5AxisAlignedBB, List par6List, Entity par7Entity) {
-	 * BlockSudis.addSudisCollisionBoxesToList(this, world, x, y - 1, z, par5AxisAlignedBB, par6List, par7Entity, -1); }
-	 */
-
 	public void setBlockBoundsBasedOnState(IBlockAccess blockAccess, int x, int y, int z) {
 		BlockSudis.setSudisBlockBoundsBasedOnState(this, blockAccess, x, y - 1, z, -1);
 	}

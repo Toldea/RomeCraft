@@ -7,6 +7,7 @@ import net.minecraft.world.World;
 
 import org.lwjgl.opengl.GL11;
 
+import toldea.romecraft.block.BlockHelper;
 import toldea.romecraft.block.BlockSudis;
 import toldea.romecraft.client.model.ModelSudis;
 import toldea.romecraft.tileentity.TileEntitySudis;
@@ -91,9 +92,15 @@ public class RenderTileEntitySudis extends TileEntitySpecialRenderer {
 
 		if (connectCount == 0) {
 			// If none of the sides connect, draw in a direction depending on how the block was initially placed.
-			// TODO: Temp
-			renderSudis(RenderLocation.NORTH);
-			renderSudis(RenderLocation.SOUTH);
+			int metadata = world.getBlockMetadata(x, y, z);
+			int facing = metadata & BlockHelper.MASK_DIR;
+			if (facing == BlockHelper.META_DIR_NORTH || facing == BlockHelper.META_DIR_SOUTH) {
+				renderSudis(RenderLocation.WEST);
+				renderSudis(RenderLocation.EAST);
+			} else {
+				renderSudis(RenderLocation.NORTH);
+				renderSudis(RenderLocation.SOUTH);
+			}
 		} else {
 			int sudesRemaining = numberOfSudes;
 			if (flag) {

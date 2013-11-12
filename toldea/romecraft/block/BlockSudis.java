@@ -5,11 +5,13 @@ import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import toldea.romecraft.client.renderer.RenderBlockSudis;
@@ -52,6 +54,29 @@ public class BlockSudis extends RomeCraftBlockContainer {
 	 * public void onEntityCollidedWithBlock(World par1World, int par2, int par3, int par4, Entity par5Entity) {
 	 * par5Entity.attackEntityFrom(DamageSource.cactus, 1.0F); }
 	 */
+	
+	@Override
+	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack itemStack) {
+		int metadata = 0;
+		int facing = BlockHelper.META_DIR_WEST;
+
+		int dir = MathHelper.floor_double((double) (entity.rotationYaw * 4f / 360f) + 0.5) & 3;
+		if (dir == 0) {
+			facing = BlockHelper.META_DIR_NORTH;
+		}
+		if (dir == 1) {
+			facing = BlockHelper.META_DIR_EAST;
+		}
+		if (dir == 2) {
+			facing = BlockHelper.META_DIR_SOUTH;
+		}
+		if (dir == 3) {
+			facing = BlockHelper.META_DIR_WEST;
+		}
+
+		metadata |= facing;
+		world.setBlockMetadataWithNotify(x, y, z, metadata, 2);
+	}
 
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9) {
 		TileEntitySudis tileEntitySudis = (TileEntitySudis) world.getBlockTileEntity(x, y, z);
@@ -227,8 +252,15 @@ public class BlockSudis extends RomeCraftBlockContainer {
 				connectCount++;
 			}
 			if (connectCount == 0) {
-				f2 = .0f;
-				f3 = 1.0f;
+				int metadata = blockAccess.getBlockMetadata(x, y, z);
+				int facing = metadata & BlockHelper.MASK_DIR;
+				if (facing == BlockHelper.META_DIR_NORTH || facing == BlockHelper.META_DIR_SOUTH) {
+					f = .0f;
+					f1 = 1.0f;
+				} else {
+					f2 = .0f;
+					f3 = 1.0f;
+				}
 			} else {
 				if (flag || (flag1 && connectCount <= 1)) {
 					f2 = 0.0F;
