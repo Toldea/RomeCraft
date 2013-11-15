@@ -11,6 +11,7 @@ import toldea.romecraft.managers.PacketManager;
 import toldea.romecraft.managers.RecipeManager;
 import toldea.romecraft.managers.TickManager;
 import toldea.romecraft.managers.TileEntityManager;
+import toldea.romecraft.managers.WorldGenManager;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -39,6 +40,8 @@ public class RomeCraft {
 	@EventHandler
 	public void load(FMLInitializationEvent event) {
 		CreativeTabsManager.registerCreativeTabs();
+		
+		WorldGenManager.registerWorldGeneration();
 
 		ItemManager.registerItems();
 		BlockManager.registerBlocks();

@@ -2,10 +2,6 @@ package toldea.romecraft.entity;
 
 import java.util.List;
 
-import toldea.romecraft.managers.ItemManager;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.EnchantmentThorns;
 import net.minecraft.entity.Entity;
@@ -14,8 +10,6 @@ import net.minecraft.entity.IProjectile;
 import net.minecraft.entity.monster.EntityEnderman;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.entity.projectile.EntityArrow;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet70GameEvent;
@@ -25,6 +19,9 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import toldea.romecraft.managers.ItemManager;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class EntityPilum extends Entity implements IProjectile {
 	private static final float pilumFriendlyFireInvulnerabilityTimer = 15f;
@@ -317,10 +314,12 @@ public class EntityPilum extends Entity implements IProjectile {
 						if (movingobjectposition.entityHit.attackEntityFrom(damagesource, (float) i1)) {
 							if (movingobjectposition.entityHit instanceof EntityLivingBase) {
 								EntityLivingBase entitylivingbase = (EntityLivingBase) movingobjectposition.entityHit;
-
+								
+								/*
 								if (!this.worldObj.isRemote) {
 									entitylivingbase.setArrowCountInEntity(entitylivingbase.getArrowCountInEntity() + 1);
 								}
+								*/
 
 								if (this.knockbackStrength > 0) {
 									f3 = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionZ * this.motionZ);

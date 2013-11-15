@@ -68,12 +68,12 @@ public class ItemManager {
 
 		// Legionary Equipment
 		itemLegionaryEquipment = new RomeCraftItem(ConfigManager.itemLegionaryEquipmentId).setUnlocalizedName("itemLegionaryEquipment").setTextureName(
-				"romecraft:legionaryequipment");
+				"romecraft:legionaryequipment").setMaxStackSize(1);
 		LanguageRegistry.addName(itemLegionaryEquipment, "Legionary Equipment");
 
 		// Blacksmith Equipment
 		itemBlacksmithEquipment = new RomeCraftItem(ConfigManager.itemBlacksmithEquipmentId).setUnlocalizedName("itemBlacksmithEquipment").setTextureName(
-				"romecraft:blacksmithequipment");
+				"romecraft:blacksmithequipment").setMaxStackSize(1);
 		LanguageRegistry.addName(itemBlacksmithEquipment, "Blacksmith Equipment");
 
 		// Scepter
