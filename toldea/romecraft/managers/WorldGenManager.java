@@ -31,7 +31,7 @@ public class WorldGenManager implements IWorldGenerator {
 	}
 
 	private void generateSurface(World world, Random random, int x, int z) {
-		this.addOreSpawn(BlockManager.blockMarble, world, random, x, z, 16, 16, 30 + random.nextInt(20), 5, 50, 70);
+		this.addOreSpawn(BlockManager.blockMarble, world, random, x, z, 16, 16, 40 + random.nextInt(40), 5, 50, 75);
 	}
 
 	private void generateEnd(World world, Random random, int x, int z) {

@@ -15,7 +15,6 @@ import toldea.romecraft.block.RomeCraftBlock;
 import toldea.romecraft.block.RomeCraftBlockHalfSlab;
 import toldea.romecraft.block.RomeCraftBlockStairs;
 import toldea.romecraft.block.RomeCraftBlockWall;
-import toldea.romecraft.block.RomeCraftMultiSidedBlock;
 import toldea.romecraft.item.RomeCraftItemSlab;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
@@ -75,7 +74,9 @@ public class BlockManager {
 		 * "Chiseled Roman Bricks");
 		 */
 		// Marble Block
-		blockMarble = new RomeCraftMultiSidedBlock(ConfigManager.blockMarbleId, Material.rock).setHardness(2.0F).setResistance(10.0F)
+		//blockMarble = new RomeCraftMultiSidedBlock(ConfigManager.blockMarbleId, Material.rock).setHardness(2.0F).setResistance(10.0F)
+		//		.setStepSound(Block.soundStoneFootstep).setUnlocalizedName("blockMarble").setTextureName("romecraft:marble_block");
+		blockMarble = new RomeCraftBlock(ConfigManager.blockMarbleId, Material.rock).setHardness(2.0F).setResistance(10.0F)
 				.setStepSound(Block.soundStoneFootstep).setUnlocalizedName("blockMarble").setTextureName("romecraft:marble_block");
 		GameRegistry.registerBlock(blockMarble, "blockMarble");
 		LanguageRegistry.addName(blockMarble, "Marble");
