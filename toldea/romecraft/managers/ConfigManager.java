@@ -22,6 +22,7 @@ public class ConfigManager {
 	public static int blockRomanAnvilId;
 	public static int blockSudisId;
 	public static int blockGhostBlockId;
+	public static int blockMarblePillarId;
 
 	public static int itemGladiusId;
 	public static int itemScutumId;
@@ -67,6 +68,7 @@ public class ConfigManager {
 		blockRomanAnvilId = config.getBlock("blockRomanAnvil", 1564).getInt();
 		blockSudisId = config.getBlock("blockSudis", 1565).getInt();
 		blockGhostBlockId = config.getBlock("blockGhostBlock", 1566).getInt();
+		blockMarblePillarId = config.getBlock("blockMarblePillar", 1567).getInt();
 
 		itemGladiusId = config.getItem("itemGladius", 1650).getInt();
 		itemScutumId = config.getItem("itemScutum", 1651).getInt();

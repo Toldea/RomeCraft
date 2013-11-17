@@ -6,6 +6,7 @@ import net.minecraft.item.Item;
 import toldea.romecraft.block.BlockBellows;
 import toldea.romecraft.block.BlockBloomery;
 import toldea.romecraft.block.BlockMarbleMosaicSlab;
+import toldea.romecraft.block.BlockMarblePillar;
 import toldea.romecraft.block.BlockRomanAnvil;
 import toldea.romecraft.block.BlockRomanBrickSlab;
 import toldea.romecraft.block.BlockRomanVillageForum;
@@ -27,6 +28,7 @@ public class BlockManager {
 	public static Block blockRomanBricksChiseled = null;
 
 	public static Block blockMarble = null;
+	public static Block blockMarblePillar = null;
 	public static Block blockMarbleMosaic = null;
 	public static RomeCraftBlockHalfSlab blockMarbleMosaicHalfSlab = null;
 	public static RomeCraftBlockHalfSlab blockMarbleMosaicDoubleSlab = null;
@@ -73,13 +75,16 @@ public class BlockManager {
 		 * GameRegistry.registerBlock(blockRomanBricksChiseled, "blockRomanBricksChiseled"); LanguageRegistry.addName(blockRomanBricksChiseled,
 		 * "Chiseled Roman Bricks");
 		 */
-		// Marble Block
-		//blockMarble = new RomeCraftMultiSidedBlock(ConfigManager.blockMarbleId, Material.rock).setHardness(2.0F).setResistance(10.0F)
-		//		.setStepSound(Block.soundStoneFootstep).setUnlocalizedName("blockMarble").setTextureName("romecraft:marble_block");
+		// Marble Blocks
 		blockMarble = new RomeCraftBlock(ConfigManager.blockMarbleId, Material.rock).setHardness(2.0F).setResistance(10.0F)
 				.setStepSound(Block.soundStoneFootstep).setUnlocalizedName("blockMarble").setTextureName("romecraft:marble_block");
 		GameRegistry.registerBlock(blockMarble, "blockMarble");
 		LanguageRegistry.addName(blockMarble, "Marble");
+
+		blockMarblePillar = new BlockMarblePillar(ConfigManager.blockMarblePillarId, Material.rock).setHardness(2.0F).setResistance(10.0F)
+				.setStepSound(Block.soundStoneFootstep).setUnlocalizedName("blockMarblePillar").setTextureName("romecraft:marble_block_pillar");
+		GameRegistry.registerBlock(blockMarblePillar, "blockMarblePillar");
+		LanguageRegistry.addName(blockMarblePillar, "Marble Pillar");
 
 		blockMarbleMosaic = new RomeCraftBlock(ConfigManager.blockMarbleMosaicId, Material.rock).setHardness(2.0F).setResistance(10.0F)
 				.setStepSound(Block.soundStoneFootstep).setUnlocalizedName("blockMarbleMosaic").setTextureName("romecraft:marble_mosaic");

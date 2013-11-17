@@ -6,6 +6,7 @@ import net.minecraftforge.client.MinecraftForgeClient;
 import toldea.romecraft.CommonProxy;
 import toldea.romecraft.client.model.ModelLegionaryBiped;
 import toldea.romecraft.client.renderer.RenderBlockBellows;
+import toldea.romecraft.client.renderer.RenderBlockMarblePillar;
 import toldea.romecraft.client.renderer.RenderBlockRomanAnvil;
 import toldea.romecraft.client.renderer.RenderBlockSudis;
 import toldea.romecraft.client.renderer.RenderEntityLegionary;
@@ -46,6 +47,7 @@ public class ClientProxy extends CommonProxy {
 		RenderingRegistry.registerBlockHandler(new RenderBlockBellows());
 		RenderingRegistry.registerBlockHandler(new RenderBlockRomanAnvil());
 		RenderingRegistry.registerBlockHandler(new RenderBlockSudis());
+		RenderingRegistry.registerBlockHandler(new RenderBlockMarblePillar());
 		
 		RenderingRegistry.registerEntityRenderingHandler(EntityLegionary.class, new RenderEntityLegionary(new ModelLegionaryBiped(), .03f));
 		RenderingRegistry.registerEntityRenderingHandler(EntityPilum.class, new RenderEntityPilum());
