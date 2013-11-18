@@ -1,10 +1,13 @@
 package toldea.romecraft.block;
 
 import net.minecraft.block.material.Material;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
-import toldea.romecraft.client.renderer.RenderBlockMarblePillar;
+import net.minecraft.world.World;
+import toldea.romecraft.client.renderer.RenderMarblePillar;
+import toldea.romecraft.tileentity.TileEntityMarblePillar;
 
-public class BlockMarblePillar extends RomeCraftBlock {
+public class BlockMarblePillar extends RomeCraftBlockContainer {
 
 	public BlockMarblePillar(int id, Material material) {
 		super(id, material);
@@ -13,7 +16,7 @@ public class BlockMarblePillar extends RomeCraftBlock {
 	// This will tell minecraft not to render any side of our cube.
 	@Override
 	public boolean shouldSideBeRendered(IBlockAccess iblockaccess, int i, int j, int k, int l) {
-		return false;
+		return true;
 	}
 
 	// And this tell it that you can see through this block, and neighbor blocks should be rendered.
@@ -29,6 +32,11 @@ public class BlockMarblePillar extends RomeCraftBlock {
 
 	@Override
 	public int getRenderType() {
-		return RenderBlockMarblePillar.renderID;
+		return RenderMarblePillar.renderID;
+	}
+
+	@Override
+	public TileEntity createNewTileEntity(World world) {
+		return new TileEntityMarblePillar();
 	}
 }
