@@ -28,8 +28,8 @@ public class RenderMarblePillar extends TileEntitySpecialRenderer implements ISi
 		RenderMarblePillar.renderID = RenderingRegistry.getNextAvailableRenderId();
 		modelPillar = new ModelMarblePillar();
 		modelPillarBase = new ModelMarblePillarBase();
-		texturePillar = new ResourceLocation("romecraft", "textures/blocks/marble_pillar.png");
-		texturePillarBase = new ResourceLocation("romecraft", "textures/blocks/marble_pillar_base.png");
+		texturePillar = new ResourceLocation("romecraft", "textures/entity/marble_pillar.png");
+		texturePillarBase = new ResourceLocation("romecraft", "textures/entity/marble_pillar_base.png");
 	}
 
 	@Override

@@ -29,7 +29,7 @@ public class ModelMarblePillarBase extends ModelBase {
 		pillarBase2.addBox(-6F, -6F, -4F, 12, 4, 8);
 		pillarBase2.setTextureSize(textureWidth, textureHeight);
 
-		pillarBase3 = new ModelRenderer(this, 0, 12);
+		pillarBase3 = new ModelRenderer(this, 38, 14);
 		pillarBase3.addBox(-7F, -8F, -5F, 14, 2, 10);
 		pillarBase3.setTextureSize(textureWidth, textureHeight);
 		setRotation(pillarBase3, 0F, 1.570796F, 0F);

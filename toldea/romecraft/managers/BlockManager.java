@@ -82,7 +82,7 @@ public class BlockManager {
 		LanguageRegistry.addName(blockMarble, "Marble");
 
 		blockMarblePillar = new BlockMarblePillar(ConfigManager.blockMarblePillarId, Material.rock).setHardness(2.0F).setResistance(10.0F)
-				.setStepSound(Block.soundStoneFootstep).setUnlocalizedName("blockMarblePillar").setTextureName("romecraft:marble_block_pillar");
+				.setStepSound(Block.soundStoneFootstep).setUnlocalizedName("blockMarblePillar").setTextureName("romecraft:marble_block");
 		GameRegistry.registerBlock(blockMarblePillar, "blockMarblePillar");
 		LanguageRegistry.addName(blockMarblePillar, "Marble Pillar");
 
