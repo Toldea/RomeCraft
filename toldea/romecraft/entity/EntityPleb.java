@@ -277,7 +277,7 @@ public class EntityPleb extends EntityAgeable implements INpc {
 			this.worldObj.playAuxSFXAtEntity((EntityPlayer) null, 1017, (int) this.posX, (int) this.posY, (int) this.posZ, 0);
 			switch (profession) {
 			case BLACKSMITH:
-				this.equipItem(PLEB_EQUIPMENT.HAMMER);
+				//this.equipItem(PLEB_EQUIPMENT.HAMMER); // TODO: Fix blacksmithing logic so this doesn't screw things up.
 				break;
 			default:
 				break;
