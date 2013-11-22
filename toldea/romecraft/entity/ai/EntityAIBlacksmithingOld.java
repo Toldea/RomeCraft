@@ -12,7 +12,6 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import toldea.romecraft.entity.EntityPleb;
 import toldea.romecraft.entity.EntityPleb.PLEB_PROFESSION;
-import toldea.romecraft.entity.ai.fsm.BlacksmithStateMachine;
 import toldea.romecraft.managers.ItemManager;
 import toldea.romecraft.managers.TickManager;
 import toldea.romecraft.romanvillage.RomanVillage;
@@ -20,7 +19,7 @@ import toldea.romecraft.romanvillage.RomanVillageBloomeryInfo;
 import toldea.romecraft.tileentity.TileEntityBellows;
 import toldea.romecraft.tileentity.TileEntityBloomery;
 
-public class EntityAIBlacksmithing extends EntityAIBase {
+public class EntityAIBlacksmithingOld extends EntityAIBase {
 	private enum BlacksmithTask {
 		NONE, GET_FUEL, GET_IRON_ORE, STORE_IRON_BLOOM, PUSH_BELLOWS
 	}
@@ -40,19 +39,16 @@ public class EntityAIBlacksmithing extends EntityAIBase {
 	private BlacksmithTargetLocation currentTargetLocation = BlacksmithTargetLocation.NONE;
 	private BlacksmithTargetLocation currentNavigationTarget = BlacksmithTargetLocation.NONE;
 
+	private TileEntityBloomery bloomery = null;
+	private TileEntityBellows bellows = null;
 	private TileEntityChest chest = null;
 
 	private int idleTimer = 0;
 	private int chestOpenTimer = 0;
-	
-	//
-	private final BlacksmithStateMachine blacksmithStateMachine;
-	//
 
-	public EntityAIBlacksmithing(EntityPleb entityPleb) {
+	public EntityAIBlacksmithingOld(EntityPleb entityPleb) {
 		this.entityPleb = entityPleb;
 		this.setMutexBits(1);
-		blacksmithStateMachine = new BlacksmithStateMachine();
 	}
 
 	@Override
@@ -96,23 +92,19 @@ public class EntityAIBlacksmithing extends EntityAIBase {
 
 					// Check if it has a valid bellows adjacent to it.
 					boolean hasValidBellows = false;
-					TileEntityBellows bellows = null;
 					for (int d = 0; d < 4; d++) {
-						bellows = bloomery.getAdjacentBellowsForDirection(d);
+						TileEntityBellows bellows = bloomery.getAdjacentBellowsForDirection(d);
 						if (bellows != null) {
 							hasValidBellows = true;
+							this.bellows = bellows;
 							break;
 						}
 					}
 					if (!hasValidBellows) {
 						continue;
 					}
-					
-					blacksmithStateMachine.initialize();
-					
-					blacksmithStateMachine.setVariable("bloomery", bloomery);
-					blacksmithStateMachine.setVariable("bellows", bellows);
-					
+
+					this.bloomery = bloomery;
 					return true;
 				}
 			}
@@ -123,8 +115,6 @@ public class EntityAIBlacksmithing extends EntityAIBase {
 	// public void startExecuting() {}
 
 	public boolean continueExecuting() {
-		return blacksmithStateMachine.update();
-		/*
 		if (chestOpenTimer > 0) {
 			chestOpenTimer--;
 			if (chestOpenTimer == 0) {
@@ -159,7 +149,6 @@ public class EntityAIBlacksmithing extends EntityAIBase {
 		updateBlacksmithingTask();
 
 		return true;
-		*/
 	}
 
 	public void resetTask() {
