@@ -1,7 +1,5 @@
 package toldea.romecraft.entity.ai.fsm;
 
-import net.minecraft.item.ItemStack;
-import toldea.romecraft.managers.ItemManager;
 import toldea.romecraft.tileentity.TileEntityBloomery;
 
 public class BlacksmithStateMachine extends StateMachine {
@@ -88,12 +86,13 @@ public class BlacksmithStateMachine extends StateMachine {
 	public State selectNextState() {
 		// If we are currently holding an iron bloom, store that away first before we begin the correct smelting logic.
 		// This can occur when the server shuts down just as we picked up an iron bloom.
+		/*
 		ItemStack equippedItem = entityPleb.getCurrentItemOrArmor(0);
 		if (equippedItem != null && equippedItem.itemID == ItemManager.itemIronBloom.itemID) {
 			currentTask = BlacksmithTask.STORE_IRON_BLOOM;
 			System.out.println("Selecting next task: " + currentTask);
 			return;
-		}
+		}*/
 		
 		TileEntityBloomery bloomery = (TileEntityBloomery) this.getVariable("bloomery");
 		if (bloomery == null || !(bloomery instanceof TileEntityBloomery)) {

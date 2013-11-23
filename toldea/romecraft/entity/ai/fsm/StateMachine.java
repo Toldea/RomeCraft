@@ -21,6 +21,9 @@ public abstract class StateMachine {
 	}
 	
 	public boolean update() {
+		if (activeState == null) {
+			return false;
+		}
 		if (activeState.update()) {
 			activeState.finish();
 			activeState = selectNextState();
