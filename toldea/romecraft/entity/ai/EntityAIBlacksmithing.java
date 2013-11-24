@@ -9,6 +9,7 @@ import net.minecraft.util.MathHelper;
 import toldea.romecraft.entity.EntityPleb;
 import toldea.romecraft.entity.EntityPleb.PLEB_PROFESSION;
 import toldea.romecraft.entity.ai.fsm.BlacksmithStateMachine;
+import toldea.romecraft.entity.ai.fsm.StateMachineVariables;
 import toldea.romecraft.managers.TickManager;
 import toldea.romecraft.romanvillage.RomanVillage;
 import toldea.romecraft.romanvillage.RomanVillageBloomeryInfo;
@@ -105,8 +106,9 @@ public class EntityAIBlacksmithing extends EntityAIBase {
 					
 					blacksmithStateMachine.initialize();
 					
-					blacksmithStateMachine.setVariable("bloomery", bloomery);
-					blacksmithStateMachine.setVariable("bellows", bellows);
+					blacksmithStateMachine.setVariable(StateMachineVariables.OWNER_ENTITY, entityPleb);
+					blacksmithStateMachine.setVariable(StateMachineVariables.BLOOMERY, bloomery);
+					blacksmithStateMachine.setVariable(StateMachineVariables.BELLOWS, bellows);
 					
 					return true;
 				}

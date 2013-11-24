@@ -1,5 +1,7 @@
 package toldea.romecraft.entity.ai.fsm;
 
+import net.minecraft.tileentity.TileEntityChest;
+import net.minecraft.util.ChunkCoordinates;
 import toldea.romecraft.tileentity.TileEntityBloomery;
 
 public class BlacksmithStateMachine extends StateMachine {
@@ -7,7 +9,8 @@ public class BlacksmithStateMachine extends StateMachine {
 		public static final GetFuel instance = new GetFuel();
 
 		@Override
-		public void start() {
+		public boolean start() {
+			return false;
 
 		}
 
@@ -25,7 +28,19 @@ public class BlacksmithStateMachine extends StateMachine {
 		public static final GetIronOre instance = new GetIronOre();
 
 		@Override
-		public void start() {
+		public boolean start() {
+			TileEntityBloomery bloomery = (TileEntityBloomery) this.stateMachine.getVariable(StateMachineVariables.BLOOMERY);
+			if (bloomery == null || !(bloomery instanceof TileEntityBloomery)) {
+				return false;
+			}
+			TileEntityChest chest = bloomery.getAdjacentChestWithValidContentsForBloomerySlot(0);
+			if (chest != null) {
+				stateMachine.setVariable(StateMachineVariables.CHEST, chest);
+				stateMachine.setVariable(StateMachineVariables.TARGET_LOCATION, new ChunkCoordinates(chest.xCoord, chest.yCoord, chest.zCoord));
+				return true;
+			} else {
+				return false;
+			}
 		}
 
 		@Override
@@ -42,7 +57,8 @@ public class BlacksmithStateMachine extends StateMachine {
 		public static final PushBellows instance = new PushBellows();
 
 		@Override
-		public void start() {
+		public boolean start() {
+			return false;
 		}
 
 		@Override
@@ -60,7 +76,8 @@ public class BlacksmithStateMachine extends StateMachine {
 		public static final StoreIronBloom instance = new StoreIronBloom();
 
 		@Override
-		public void start() {
+		public boolean start() {
+			return false;
 		}
 
 		@Override
@@ -76,6 +93,8 @@ public class BlacksmithStateMachine extends StateMachine {
 
 	@Override
 	public void initialize() {
+		this.setVariable(StateMachineVariables.IN_RANGE_DIST, new Double(4.0d));
+		
 		GetFuel.instance.linkStateMachine(this);
 		GetIronOre.instance.linkStateMachine(this);
 		PushBellows.instance.linkStateMachine(this);

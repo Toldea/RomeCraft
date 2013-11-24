@@ -7,7 +7,7 @@ public abstract class State {
 		this.stateMachine = stateMachine;
 	}
 
-	public abstract void start();
+	public abstract boolean start();
 
 	public abstract boolean update();
 

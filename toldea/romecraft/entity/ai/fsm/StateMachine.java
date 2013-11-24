@@ -22,17 +22,23 @@ public abstract class StateMachine {
 	
 	public boolean update() {
 		if (activeState == null) {
-			return false;
-		}
-		if (activeState.update()) {
-			activeState.finish();
 			activeState = selectNextState();
 			if (activeState == null) {
 				return false;
 			}
 			System.out.println("Selecting next task: " + activeState);
-			activeState.start();
+			if (!activeState.start()) {
+				System.out.println(activeState + " couldn't start properly, setting task to null!");
+				activeState = null;
+				return false;
+			}
 		}
+		
+		if (activeState.update()) {
+			activeState.finish();
+			activeState = null;
+		}
+		
 		return true;
 	}
 	

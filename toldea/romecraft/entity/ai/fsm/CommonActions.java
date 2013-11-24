@@ -1,11 +1,18 @@
 package toldea.romecraft.entity.ai.fsm;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChunkCoordinates;
 
 
 public class CommonActions {
-	private void moveTowardsBlacksmithTargetLocation() {
+	public final StateMachine stateMachine;
+	
+	public CommonActions(StateMachine stateMachine) {
+		this.stateMachine = stateMachine;
+	}
+	
+	private void moveTowardsTargetLocation() {
 		/*
 		if (currentNavigationTarget == currentTargetLocation && !entityPleb.getNavigator().noPath()) {
 			return;
@@ -36,35 +43,20 @@ public class CommonActions {
 	}
 
 	private boolean inRangeOfTargetLocation() {
-		/*
-		TileEntity targetEntity = getTileEntityForTargetLocation();
-		if (targetEntity == null) {
+		ChunkCoordinates targetLocation = (ChunkCoordinates) stateMachine.getVariable(StateMachineVariables.TARGET_LOCATION);
+		if (targetLocation == null || !(targetLocation instanceof ChunkCoordinates)) {
 			return false;
 		}
-		double dist = entityPleb.getDistanceSq(targetEntity.xCoord, targetEntity.yCoord, targetEntity.zCoord);
-		return (dist <= IN_RANGE);
-		*/
-		return false;
-	}
-
-	private TileEntity getTileEntityForTargetLocation() {
-		/*
-		TileEntity targetEntity = null;
-		switch (currentTargetLocation) {
-		case BLOOMERY:
-			targetEntity = bloomery;
-			break;
-		case CHEST:
-			targetEntity = chest;
-			break;
-		case BELLOWS:
-			targetEntity = bellows;
-		default:
-			break;
+		Entity ownerEntity = (Entity) stateMachine.getVariable(StateMachineVariables.OWNER_ENTITY);
+		if (ownerEntity == null || !(ownerEntity instanceof Entity)) {
+			return false;
 		}
-		return targetEntity;
-		*/
-		return null;
+		Double inRangeDist = (Double) stateMachine.getVariable(StateMachineVariables.IN_RANGE_DIST);
+		if (inRangeDist == null) {
+			return false;
+		}
+		double dist = ownerEntity.getDistanceSq(targetLocation.posX, targetLocation.posY, targetLocation.posZ);
+		return (dist <= inRangeDist.doubleValue());
 	}
 
 	private boolean interactWithBloomerySlot(int slot) {
