@@ -9,6 +9,10 @@ public abstract class State {
 
 	public abstract boolean start();
 
+	/**
+	 * Update the state. Should return true when the state is finished or false when it should continue executing.
+	 * @return
+	 */
 	public abstract boolean update();
 
 	public abstract void finish();

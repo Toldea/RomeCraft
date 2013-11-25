@@ -6,6 +6,8 @@ public abstract class StateMachine {
 	private HashMap<String, Object> variableMap = null;
 	
 	protected State activeState = null;
+	
+	public final CommonActions commonActions = new CommonActions(this);
 
 	public abstract void initialize();
 
