@@ -25,6 +25,10 @@ public class BlacksmithStateMachine extends StateMachine {
 
 	@Override
 	public State selectNextState() {
+		if (lastState != null && lastState != Idle.instance) {
+			return Idle.instance;
+		}
+		
 		TileEntityBloomery bloomery = (TileEntityBloomery) this.getVariable("bloomery");
 		if (bloomery == null || !(bloomery instanceof TileEntityBloomery)) {
 			return null;
@@ -81,6 +85,33 @@ public class BlacksmithStateMachine extends StateMachine {
 	 * STATES *
 	 **********/
 
+	public static class Idle extends State {
+		public static final Idle instance = new Idle();
+		
+		private static final int IDLE_TIME = 10;
+		private static int timer;
+		
+		
+		@Override
+		public boolean start() {
+			timer = IDLE_TIME;
+			return true;
+		}
+
+		@Override
+		public boolean update() {
+			timer -= 1;
+			return (timer <= 0);
+		}
+
+		@Override
+		public void finish() {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	}
+	
 	public static class WithdrawFromChest extends State {
 		public static final WithdrawFromChest instance = new WithdrawFromChest();
 
@@ -228,6 +259,9 @@ public class BlacksmithStateMachine extends StateMachine {
 
 	public static class PushBellows extends State {
 		public static final PushBellows instance = new PushBellows();
+		
+		private static final int TASK_DURATION = TileEntityBellows.ROTATION_TIME + 10;
+		private static int taskTimer;
 
 		@Override
 		public boolean start() {
@@ -236,6 +270,7 @@ public class BlacksmithStateMachine extends StateMachine {
 				return false;
 			}
 			stateMachine.setVariable(StateMachineVariables.TARGET_LOCATION, new ChunkCoordinates(bellows.xCoord, bellows.yCoord, bellows.zCoord));
+			taskTimer = 0;
 			return true;
 		}
 
@@ -245,12 +280,18 @@ public class BlacksmithStateMachine extends StateMachine {
 				stateMachine.commonActions.moveTowardsTargetLocation();
 				return false;
 			} else {
-				TileEntityBellows bellows = (TileEntityBellows) stateMachine.getVariable(StateMachineVariables.BELLOWS);
-				if (bellows == null || !(bellows instanceof TileEntityBellows)) {
+				if (taskTimer == 0) {
+					TileEntityBellows bellows = (TileEntityBellows) stateMachine.getVariable(StateMachineVariables.BELLOWS);
+					if (bellows == null || !(bellows instanceof TileEntityBellows)) {
+						return false;
+					}
+					bellows.pushBellows();
+					taskTimer = 1;
 					return false;
+				} else {
+					taskTimer++;
+					return taskTimer >= TASK_DURATION;
 				}
-				bellows.pushBellows();
-				return true;
 			}
 		}
 

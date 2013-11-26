@@ -5,6 +5,7 @@ import java.util.HashMap;
 public abstract class StateMachine {
 	private HashMap<String, Object> variableMap = null;
 	
+	protected State lastState = null;
 	protected State activeState = null;
 	
 	public final CommonActions commonActions = new CommonActions(this);
@@ -38,6 +39,7 @@ public abstract class StateMachine {
 		
 		if (activeState.update()) {
 			activeState.finish();
+			lastState = activeState;
 			activeState = null;
 		}
 		
