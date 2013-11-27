@@ -16,6 +16,7 @@ public class BlacksmithStateMachine extends StateMachine {
 	public void initialize() {
 		this.setVariable(StateMachineVariables.IN_RANGE_DIST, new Double(4.0d));
 
+		Idle.instance.linkStateMachine(this);
 		WithdrawFromChest.instance.linkStateMachine(this);
 		PlaceInChest.instance.linkStateMachine(this);
 		WithdrawFromBloomery.instance.linkStateMachine(this);
@@ -100,6 +101,9 @@ public class BlacksmithStateMachine extends StateMachine {
 
 		@Override
 		public boolean update() {
+			// If we had any previous target location, keep looking at it while idling.
+			// This prevents continiously looking up and down when switching between states.
+			stateMachine.commonActions.lookAtTargetLocation();
 			timer -= 1;
 			return (timer <= 0);
 		}
@@ -133,6 +137,7 @@ public class BlacksmithStateMachine extends StateMachine {
 
 		@Override
 		public boolean update() {
+			stateMachine.commonActions.lookAtTargetLocation();
 			if (!stateMachine.commonActions.inRangeOfTargetLocation()) {
 				stateMachine.commonActions.moveTowardsTargetLocation();
 				return false;
@@ -173,6 +178,7 @@ public class BlacksmithStateMachine extends StateMachine {
 
 		@Override
 		public boolean update() {
+			stateMachine.commonActions.lookAtTargetLocation();
 			if (!stateMachine.commonActions.inRangeOfTargetLocation()) {
 				stateMachine.commonActions.moveTowardsTargetLocation();
 				return false;
@@ -203,6 +209,7 @@ public class BlacksmithStateMachine extends StateMachine {
 
 		@Override
 		public boolean update() {
+			stateMachine.commonActions.lookAtTargetLocation();
 			if (!stateMachine.commonActions.inRangeOfTargetLocation()) {
 				stateMachine.commonActions.moveTowardsTargetLocation();
 				return false;
@@ -238,6 +245,7 @@ public class BlacksmithStateMachine extends StateMachine {
 
 		@Override
 		public boolean update() {
+			stateMachine.commonActions.lookAtTargetLocation();
 			if (!stateMachine.commonActions.inRangeOfTargetLocation()) {
 				stateMachine.commonActions.moveTowardsTargetLocation();
 				return false;
@@ -276,6 +284,7 @@ public class BlacksmithStateMachine extends StateMachine {
 
 		@Override
 		public boolean update() {
+			stateMachine.commonActions.lookAtTargetLocation();
 			if (!stateMachine.commonActions.inRangeOfTargetLocation()) {
 				stateMachine.commonActions.moveTowardsTargetLocation();
 				return false;

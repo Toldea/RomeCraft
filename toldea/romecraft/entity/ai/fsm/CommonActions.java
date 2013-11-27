@@ -9,14 +9,13 @@ import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.Vec3;
 
-
 public class CommonActions {
 	private final StateMachine stateMachine;
-	
+
 	public CommonActions(StateMachine stateMachine) {
 		this.stateMachine = stateMachine;
 	}
-	
+
 	public void moveTowardsTargetLocation() {
 		ChunkCoordinates targetLocation = (ChunkCoordinates) stateMachine.getVariable(StateMachineVariables.TARGET_LOCATION);
 		if (targetLocation == null || !(targetLocation instanceof ChunkCoordinates)) {
@@ -31,11 +30,15 @@ public class CommonActions {
 			return;
 		}
 		double dist = ownerEntity.getDistanceSq(targetLocation.posX, targetLocation.posY, targetLocation.posZ);
-		
+
 		if (dist > inRangeDist) {
 			if (dist > 256.0d) {
-				Vec3 vec3 = RandomPositionGenerator.findRandomTargetBlockTowards(ownerEntity, 14, 3, ownerEntity.worldObj.getWorldVec3Pool()
-						.getVecFromPool((double) targetLocation.posX + .5d, (double) targetLocation.posY + .5d, (double) targetLocation.posZ + .5d));
+				Vec3 vec3 = RandomPositionGenerator.findRandomTargetBlockTowards(
+						ownerEntity,
+						14,
+						3,
+						ownerEntity.worldObj.getWorldVec3Pool().getVecFromPool((double) targetLocation.posX + .5d, (double) targetLocation.posY + .5d,
+								(double) targetLocation.posZ + .5d));
 				if (vec3 != null) {
 					ownerEntity.getNavigator().tryMoveToXYZ(vec3.xCoord, vec3.yCoord, vec3.zCoord, .6D);
 					return;
@@ -65,15 +68,28 @@ public class CommonActions {
 		double dist = ownerEntity.getDistanceSq(targetLocation.posX, targetLocation.posY, targetLocation.posZ);
 		return (dist <= inRangeDist.doubleValue());
 	}
-	
+
+	public void lookAtTargetLocation() {
+		ChunkCoordinates targetLocation = (ChunkCoordinates) stateMachine.getVariable(StateMachineVariables.TARGET_LOCATION);
+		if (targetLocation == null || !(targetLocation instanceof ChunkCoordinates)) {
+			return;
+		}
+		EntityCreature ownerEntity = (EntityCreature) stateMachine.getVariable(StateMachineVariables.OWNER_ENTITY);
+		if (ownerEntity == null || !(ownerEntity instanceof Entity)) {
+			return;
+		}
+		ownerEntity.getLookHelper().setLookPosition(targetLocation.posX, targetLocation.posY + .5d, targetLocation.posZ, 10.0F,
+				(float) ownerEntity.getVerticalFaceSpeed());
+	}
+
 	public boolean insertItemInISidedInventorySlot(ISidedInventory inventory, int inventorySlot) {
 		EntityCreature entityCreature = (EntityCreature) stateMachine.getVariable(StateMachineVariables.OWNER_ENTITY);
 		if (entityCreature == null || !(entityCreature instanceof EntityCreature)) {
 			return false;
 		}
-		
+
 		ItemStack equippedItem = entityCreature.getCurrentItemOrArmor(0);
-		
+
 		if (inventory.isItemValidForSlot(inventorySlot, equippedItem)) {
 			ItemStack bloomerySlotStack = inventory.getStackInSlot(inventorySlot);
 			if (bloomerySlotStack == null) {
@@ -103,7 +119,7 @@ public class CommonActions {
 		if (entityCreature == null || !(entityCreature instanceof EntityCreature)) {
 			return false;
 		}
-		
+
 		ItemStack equippedItem = entityCreature.getCurrentItemOrArmor(0);
 
 		if (equippedItem == null) {
@@ -114,41 +130,10 @@ public class CommonActions {
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
 
-	/*
-	private void interactWithChestForCurrentTask() {
-		switch (currentTask) {
-		case STORE_IRON_BLOOM:
-			insertEquippedItemInChest();
-			currentTargetLocation = BlacksmithTargetLocation.NONE;
-			currentTask = BlacksmithTask.NONE;
-			break;
-		case GET_IRON_ORE:
-		case GET_FUEL:
-			int slot = currentTask == BlacksmithTask.GET_IRON_ORE ? 0 : 1;
-			if (withdrawItemFromChestValidForBloomerySlot(slot)) {
-				currentTargetLocation = BlacksmithTargetLocation.BLOOMERY;
-				idleTimer = IDLE_DELAY;
-			} else {
-				// Check if we somehow were already holding the correct item (i.e. when the server was shut down mid task).
-				ItemStack equippedItem = entityPleb.getCurrentItemOrArmor(0);
-				if (equippedItem != null && bloomery.isItemValidForSlot(slot, equippedItem)) {
-					currentTargetLocation = BlacksmithTargetLocation.BLOOMERY;
-					idleTimer = IDLE_DELAY;
-				} else {
-					currentTargetLocation = BlacksmithTargetLocation.NONE;
-					currentTask = BlacksmithTask.NONE;
-				}
-			}
-			break;
-		default:
-			break;
-		}
-	}*/
-	
 	public void insertEquippedItemInChest() {
 		TileEntityChest chest = (TileEntityChest) stateMachine.getVariable(StateMachineVariables.CHEST);
 		if (chest == null || !(chest instanceof TileEntityChest)) {
@@ -158,7 +143,7 @@ public class CommonActions {
 		if (entityCreature == null || !(entityCreature instanceof EntityCreature)) {
 			return;
 		}
-		
+
 		ItemStack equippedItem = entityCreature.getCurrentItemOrArmor(0);
 		ItemStack chestItemStack;
 
@@ -185,7 +170,8 @@ public class CommonActions {
 		}
 	}
 
-	private void insertOrMergeEquippedItemWithChestStackInSlot(EntityCreature creature, TileEntityChest chest, ItemStack equippedItem, ItemStack chestItemStack, int slot) {
+	private void insertOrMergeEquippedItemWithChestStackInSlot(EntityCreature creature, TileEntityChest chest, ItemStack equippedItem,
+			ItemStack chestItemStack, int slot) {
 		chest.setInventorySlotContents(slot, chestItemStack);
 		--equippedItem.stackSize;
 		if (equippedItem.stackSize <= 0) {
@@ -204,7 +190,7 @@ public class CommonActions {
 		if (entityCreature == null || !(entityCreature instanceof EntityCreature)) {
 			return false;
 		}
-		
+
 		ItemStack equippedItem = entityCreature.getCurrentItemOrArmor(0);
 		if (equippedItem != null) {
 			return false;
