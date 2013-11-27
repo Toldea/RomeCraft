@@ -1,4 +1,4 @@
-package toldea.romecraft.tileentity;
+package toldea.romecraft.utility;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;

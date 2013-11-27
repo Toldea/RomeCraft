@@ -29,7 +29,7 @@ public abstract class StateMachine {
 			if (activeState == null) {
 				return false;
 			}
-			System.out.println("Selecting next task: " + activeState);
+			//System.out.println("Selecting next task: " + activeState);
 			if (!activeState.start()) {
 				System.out.println(activeState + " couldn't start properly, setting task to null!");
 				activeState = null;

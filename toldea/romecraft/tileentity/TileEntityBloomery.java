@@ -13,13 +13,13 @@ import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.tileentity.TileEntityFurnace;
-import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.World;
 import toldea.romecraft.block.BlockHelper;
 import toldea.romecraft.item.crafting.BloomeryRecipes;
 import toldea.romecraft.managers.BlockManager;
 import toldea.romecraft.managers.ItemManager;
 import toldea.romecraft.managers.PacketManager;
+import toldea.romecraft.utility.AdjacentTileEntityCache;
 
 public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 	private static final int SMELTING_TIME = 180;
@@ -35,8 +35,8 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 	private boolean isMaster = false;
 	private boolean isActive = false;
 
-	private final ChunkCoordinates[] adjacentBellowsLocations = new ChunkCoordinates[4];
-	private final ChunkCoordinates[] adjacentChestLocations = new ChunkCoordinates[4];
+	private final AdjacentTileEntityCache<TileEntityBellows> adjacentBellows = new AdjacentTileEntityCache<TileEntityBellows>();
+	private final AdjacentTileEntityCache<TileEntityChest> adjacentChests = new AdjacentTileEntityCache<TileEntityChest>();
 
 	public int furnaceBurnTime = 0;
 	public int currentItemBurnTime = 0;
@@ -161,61 +161,13 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 	}
 
 	public TileEntityBellows getAdjacentBellowsForDirection(int direction) {
-		if (adjacentBellowsLocations[direction] == null) {
-			findAdjacentBellowsForDirection(direction);
-		}
-		if (adjacentBellowsLocations[direction] != null) {
-			ChunkCoordinates pos = adjacentBellowsLocations[direction];
-			TileEntity tileEntity = this.worldObj.getBlockTileEntity(pos.posX, pos.posY, pos.posZ);
-			if (tileEntity != null && tileEntity instanceof TileEntityBellows) {
-				TileEntityBellows bellows = (TileEntityBellows) tileEntity;
-				if (bellows.getBlockMetadata() == BlockHelper.getDirectionByteForInt(direction)) {
-					return bellows;
-				}
-			}
-		}
-		adjacentBellowsLocations[direction] = null;
-		return null;
-	}
-
-	private ChunkCoordinates findAdjacentBellowsForDirection(int direction) {
-		TileEntity te = TileEntityHelper.getNeighbouringTileEntityForDirection(direction, this.worldObj, xCoord, yCoord, zCoord);
-		if (te != null && te instanceof TileEntityBellows) {
-			TileEntityBellows bellows = (TileEntityBellows) te;
-			if (bellows.getBlockMetadata() == BlockHelper.getDirectionByteForInt(direction)) {
-				adjacentBellowsLocations[direction] = new ChunkCoordinates(te.xCoord, te.yCoord, te.zCoord);
-				return adjacentBellowsLocations[direction];
-			}
-		}
-		return null;
+		return this.adjacentBellows.getAdjacentTileEntityOfTypeForDirection(TileEntityBellows.class, direction, worldObj, xCoord, yCoord, zCoord);
 	}
 
 	public TileEntityChest getAdjacentChestForDirection(int direction) {
-		if (adjacentChestLocations[direction] == null) {
-			findAdjacentChestForDirection(direction);
-		}
-		if (adjacentChestLocations[direction] != null) {
-			ChunkCoordinates pos = adjacentChestLocations[direction];
-			TileEntity tileEntity = this.worldObj.getBlockTileEntity(pos.posX, pos.posY, pos.posZ);
-			if (tileEntity != null && tileEntity instanceof TileEntityChest) {
-				TileEntityChest chest = (TileEntityChest) tileEntity;
-				return chest;
-			}
-		}
-		adjacentChestLocations[direction] = null;
-		return null;
+		return this.adjacentChests.getAdjacentTileEntityOfTypeForDirection(TileEntityChest.class, direction, worldObj, xCoord, yCoord, zCoord);
 	}
-
-	private ChunkCoordinates findAdjacentChestForDirection(int direction) {
-		TileEntity te = TileEntityHelper.getNeighbouringTileEntityForDirection(direction, this.worldObj, xCoord, yCoord, zCoord);
-		if (te != null && te instanceof TileEntityChest) {
-			TileEntityChest chest = (TileEntityChest) te;
-			adjacentChestLocations[direction] = new ChunkCoordinates(te.xCoord, te.yCoord, te.zCoord);
-			return adjacentChestLocations[direction];
-		}
-		return null;
-	}
-
+	
 	/**
 	 * Checks if there is either a smelted iron bloom in the bloomery waiting for retrieval or if there is both iron ore and fuel in either the bloomery or any
 	 * adjacent chests.
@@ -289,6 +241,20 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 						return chest;
 					}
 				}
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * Returns the first found adjacent chest, or null if none are to be found.
+	 */
+	public TileEntityChest getAdjacentChest() {
+		ItemStack itemstack;
+		for (int i = 0; i < 4; i++) {
+			TileEntityChest chest = getAdjacentChestForDirection(i);
+			if (chest != null && chest instanceof TileEntityChest) {
+				return chest;
 			}
 		}
 		return null;

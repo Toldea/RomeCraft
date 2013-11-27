@@ -3,6 +3,7 @@ package toldea.romecraft.tileentity;
 import net.minecraft.tileentity.TileEntity;
 import toldea.romecraft.block.BlockHelper;
 import toldea.romecraft.managers.PacketManager;
+import toldea.romecraft.utility.TileEntityHelper;
 
 public class TileEntityBellows extends TileEntity {
 	public static final float MAX_ROTATION = (float) (30f * Math.PI / 180f);

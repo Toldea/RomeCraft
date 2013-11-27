@@ -125,7 +125,10 @@ public class BlacksmithStateMachine extends StateMachine {
 			if (bloomery == null || !(bloomery instanceof TileEntityBloomery)) {
 				return false;
 			}
-			int slot = ((Integer) stateMachine.getVariable(StateMachineVariables.SLOT)).intValue();
+			Integer slot = (Integer) stateMachine.getVariable(StateMachineVariables.SLOT);
+			if (slot == null || !(slot instanceof Integer)) {
+				return false;
+			}
 			TileEntityChest chest = bloomery.getAdjacentChestWithValidContentsForBloomerySlot(slot);
 			if (chest != null) {
 				stateMachine.setVariable(StateMachineVariables.CHEST, chest);
@@ -146,7 +149,10 @@ public class BlacksmithStateMachine extends StateMachine {
 				if (bloomery == null || !(bloomery instanceof TileEntityBloomery)) {
 					return false;
 				}
-				int slot = ((Integer) stateMachine.getVariable(StateMachineVariables.SLOT)).intValue();
+				Integer slot = (Integer) stateMachine.getVariable(StateMachineVariables.SLOT);
+				if (slot == null || !(slot instanceof Integer)) {
+					return false;
+				}
 				stateMachine.commonActions.withdrawItemFromChestValidForISidedInventorySlot(bloomery, slot);
 				return true;
 			}
@@ -166,8 +172,7 @@ public class BlacksmithStateMachine extends StateMachine {
 			if (bloomery == null || !(bloomery instanceof TileEntityBloomery)) {
 				return false;
 			}
-			int slot = ((Integer) stateMachine.getVariable(StateMachineVariables.SLOT)).intValue();
-			TileEntityChest chest = bloomery.getAdjacentChestWithValidContentsForBloomerySlot(slot);
+			TileEntityChest chest = bloomery.getAdjacentChest();
 			if (chest != null) {
 				stateMachine.setVariable(StateMachineVariables.CHEST, chest);
 				stateMachine.setVariable(StateMachineVariables.TARGET_LOCATION, new ChunkCoordinates(chest.xCoord, chest.yCoord, chest.zCoord));
@@ -183,7 +188,6 @@ public class BlacksmithStateMachine extends StateMachine {
 				stateMachine.commonActions.moveTowardsTargetLocation();
 				return false;
 			} else {
-				int slot = ((Integer) stateMachine.getVariable(StateMachineVariables.SLOT)).intValue();
 				stateMachine.commonActions.insertEquippedItemInChest();
 				return true;
 			}
@@ -218,7 +222,10 @@ public class BlacksmithStateMachine extends StateMachine {
 				if (bloomery == null || !(bloomery instanceof TileEntityBloomery)) {
 					return false;
 				}
-				int slot = ((Integer) stateMachine.getVariable(StateMachineVariables.SLOT)).intValue();
+				Integer slot = (Integer) stateMachine.getVariable(StateMachineVariables.SLOT);
+				if (slot == null || !(slot instanceof Integer)) {
+					return false;
+				}
 				stateMachine.commonActions.withdrawItemFromISidedInventorySlo(bloomery, slot);
 				return true;
 			}
@@ -254,7 +261,10 @@ public class BlacksmithStateMachine extends StateMachine {
 				if (bloomery == null || !(bloomery instanceof TileEntityBloomery)) {
 					return false;
 				}
-				int slot = ((Integer) stateMachine.getVariable(StateMachineVariables.SLOT)).intValue();
+				Integer slot = (Integer) stateMachine.getVariable(StateMachineVariables.SLOT);
+				if (slot == null || !(slot instanceof Integer)) {
+					return false;
+				}
 				stateMachine.commonActions.insertItemInISidedInventorySlot(bloomery, slot);
 				return true;
 			}

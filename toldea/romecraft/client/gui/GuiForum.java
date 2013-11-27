@@ -1,7 +1,5 @@
 package toldea.romecraft.client.gui;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
@@ -11,15 +9,9 @@ import toldea.romecraft.romanvillage.RomanVillage;
 import toldea.romecraft.romanvillage.RomanVillageMap;
 import toldea.romecraft.tileentity.TileEntityRomanVillageForum;
 
-public class GuiForum extends GuiScreen {
+public class GuiForum extends RomeCraftGuiScreen {
 	private static final ResourceLocation texture = new ResourceLocation("romecraft", "textures/gui/gui_forum.png");
-	private static final Minecraft minecraft = Minecraft.getMinecraft();
 	private static final RenderRomanVillageMap mapRenderer = new RenderRomanVillageMap(minecraft.getTextureManager(), RomanVillageMap.DEFAULT_ROMAN_MAP_SIZE);
-
-	protected int xSize = 248;
-	protected int ySize = 166;
-	protected int guiLeft;
-	protected int guiTop;
 
 	private final TileEntityRomanVillageForum forum;
 	private final RomanVillage village;
@@ -38,16 +30,9 @@ public class GuiForum extends GuiScreen {
 	}
 
 	public void initGui() {
+		this.xSize = 248;
+		this.ySize = 166;
 		super.initGui();
-		this.guiLeft = (this.width - this.xSize) / 2;
-		this.guiTop = (this.height - this.ySize) / 2;
-	}
-
-	@Override
-	public void drawScreen(int par1, int par2, float par3) {
-		drawBackground(0);
-		drawForeground();
-		super.drawScreen(par1, par2, par3);
 	}
 
 	@Override
@@ -60,7 +45,8 @@ public class GuiForum extends GuiScreen {
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 	}
 
-	private void drawForeground() {
+	@Override
+	public void drawForeground() {
 		if (village == null) {
 			return;
 		}

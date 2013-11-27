@@ -36,8 +36,10 @@ import net.minecraft.util.Tuple;
 import net.minecraft.village.MerchantRecipe;
 import net.minecraft.village.MerchantRecipeList;
 import net.minecraft.world.World;
+import toldea.romecraft.RomeCraft;
 import toldea.romecraft.entity.ai.EntityAIBlacksmithing;
 import toldea.romecraft.entity.ai.EntityAIPlebMate;
+import toldea.romecraft.managers.GuiManager;
 import toldea.romecraft.managers.ItemManager;
 import toldea.romecraft.managers.TickManager;
 import toldea.romecraft.romanvillage.RomanVillage;
@@ -232,11 +234,17 @@ public class EntityPleb extends EntityAgeable implements INpc {
 	/**
 	 * Called when a player interacts with a mob. e.g. gets milk from a cow, gets into the saddle on a pig.
 	 */
-	public boolean interact(EntityPlayer par1EntityPlayer) {
-		ItemStack itemstack = par1EntityPlayer.inventory.getCurrentItem();
+	public boolean interact(EntityPlayer player) {
+		ItemStack itemstack = player.inventory.getCurrentItem();
 
 		if (itemstack == null) {
-			return false;
+			switch (this.getProfession()) {
+			case BLACKSMITH:
+				player.openGui(RomeCraft.instance, GuiManager.blacksmithGuiId, worldObj, (int) player.posX, (int) player.posY, (int) player.posZ);
+				return true;
+			default:
+				break;
+			}
 		} else if (this.isEntityAlive() && !this.isChild()) {
 			int id = itemstack.itemID;
 			boolean usedItem = false;
@@ -250,16 +258,16 @@ public class EntityPleb extends EntityAgeable implements INpc {
 			}
 
 			if (usedItem) {
-				if (!par1EntityPlayer.capabilities.isCreativeMode) {
+				if (!player.capabilities.isCreativeMode) {
 					--itemstack.stackSize;
 				}
 				if (itemstack.stackSize <= 0) {
-					par1EntityPlayer.inventory.setInventorySlotContents(par1EntityPlayer.inventory.currentItem, (ItemStack) null);
+					player.inventory.setInventorySlotContents(player.inventory.currentItem, (ItemStack) null);
 				}
 				return true;
 			}
 		}
-		return super.interact(par1EntityPlayer);
+		return super.interact(player);
 	}
 
 	private void convertToLegionary() {
@@ -277,7 +285,7 @@ public class EntityPleb extends EntityAgeable implements INpc {
 			this.worldObj.playAuxSFXAtEntity((EntityPlayer) null, 1017, (int) this.posX, (int) this.posY, (int) this.posZ, 0);
 			switch (profession) {
 			case BLACKSMITH:
-				//this.equipItem(PLEB_EQUIPMENT.HAMMER); // TODO: Fix blacksmithing logic so this doesn't screw things up.
+				// this.equipItem(PLEB_EQUIPMENT.HAMMER); // TODO: Fix blacksmithing logic so this doesn't screw things up.
 				break;
 			default:
 				break;
