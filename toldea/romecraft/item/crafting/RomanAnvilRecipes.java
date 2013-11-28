@@ -1,6 +1,8 @@
 package toldea.romecraft.item.crafting;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import net.minecraft.item.ItemStack;
@@ -8,8 +10,9 @@ import toldea.romecraft.managers.ItemManager;
 
 public class RomanAnvilRecipes {
 	private static final RomanAnvilRecipes anvilRecipes = new RomanAnvilRecipes();
+	private int numberOfRecipes = 0;
 	
-	private class AnvilRecipe {
+	public class AnvilRecipe {
 		public final int rawIngredientId;
 		public final int rawIngredientQuantity;
 		public final ItemStack craftedItem;
@@ -22,7 +25,8 @@ public class RomanAnvilRecipes {
 		}
 	}
 
-	private HashMap<Integer, HashMap<Integer, AnvilRecipe>> anvilRecipesList = new HashMap<Integer, HashMap<Integer, AnvilRecipe>>();
+	private HashMap<Integer, HashMap<Integer, AnvilRecipe>> anvilRecipesMap = new HashMap<Integer, HashMap<Integer, AnvilRecipe>>();
+	private final List<AnvilRecipe> anvilRecipeList = new ArrayList<AnvilRecipe>();
 	
 	public static final RomanAnvilRecipes instance() {
 		return anvilRecipes;
@@ -39,23 +43,33 @@ public class RomanAnvilRecipes {
 	}
 
 	public void addRecipe(int rawMaterialId, int rawMaterialQuantity, ItemStack finishedItem, float experience) {
-		HashMap<Integer, AnvilRecipe> map = anvilRecipesList.get(Integer.valueOf(rawMaterialId));
+		HashMap<Integer, AnvilRecipe> map = anvilRecipesMap.get(Integer.valueOf(rawMaterialId));
 		if (map == null) {
 			map = new HashMap<Integer, AnvilRecipe>();
 		}
-		map.put(Integer.valueOf(rawMaterialQuantity), new AnvilRecipe(rawMaterialId, rawMaterialQuantity, finishedItem, experience));
-		anvilRecipesList.put(Integer.valueOf(rawMaterialId), map);
+		AnvilRecipe recipe = new AnvilRecipe(rawMaterialId, rawMaterialQuantity, finishedItem, experience);
+		map.put(Integer.valueOf(rawMaterialQuantity), recipe);
+		anvilRecipesMap.put(Integer.valueOf(rawMaterialId), map);
+		anvilRecipeList.add(recipe);
+		numberOfRecipes++;
 	}
 
-	public Map getRecipeList() {
-		return this.anvilRecipesList;
+	public Map getRecipeMap() {
+		return this.anvilRecipesMap;
+	}
+	public List<AnvilRecipe> getRecipeList() {
+		return this.anvilRecipeList;
+	}
+	
+	public int getNumberOfRecipes() {
+		return numberOfRecipes;
 	}
 
 	public ItemStack getRecipeResult(ItemStack rawItem) {
 		if (rawItem == null) {
 			return null;
 		}
-		HashMap<Integer, AnvilRecipe> recipesForRawItemMap = anvilRecipesList.get(Integer.valueOf(rawItem.itemID));
+		HashMap<Integer, AnvilRecipe> recipesForRawItemMap = anvilRecipesMap.get(Integer.valueOf(rawItem.itemID));
 		if (recipesForRawItemMap == null || recipesForRawItemMap.size() <= 0) {
 			return null;
 		}

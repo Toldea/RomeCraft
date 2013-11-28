@@ -12,12 +12,13 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 
 public class GuiManager implements IGuiHandler {
 	public static GuiManager instance = new GuiManager();
-	
+
 	public static final int romanVillageForumGuiId = 0;
 	public static final int blacksmithGuiId = 1;
 
-	private GuiManager() {}
-	
+	private GuiManager() {
+	}
+
 	public static void registerGuiManager() {
 		NetworkRegistry.instance().registerGuiHandler(RomeCraft.instance, GuiManager.instance);
 	}

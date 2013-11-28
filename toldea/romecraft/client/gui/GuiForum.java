@@ -34,6 +34,10 @@ public class GuiForum extends RomeCraftGuiScreen {
 		this.ySize = 166;
 		super.initGui();
 	}
+	
+	@Override
+	public void initGuiComponents() {
+	}
 
 	@Override
 	public void drawBackground(int par1) {
@@ -50,7 +54,7 @@ public class GuiForum extends RomeCraftGuiScreen {
 		if (village == null) {
 			return;
 		}
-		
+
 		fontRenderer.drawStringWithShadow("Forum", guiLeft + 8, guiTop + 6, 0xFFFFFF);
 
 		int x = guiLeft + 14;
