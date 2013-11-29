@@ -17,4 +17,8 @@ public class GuiItemButton extends GuiButton {
 	public void drawButtonImage(Minecraft minecraft) {
 		renderItem.renderItemIntoGUI(minecraft.fontRenderer, minecraft.getTextureManager(), itemStack, xPosition + 2, yPosition + 2);
 	}
+	
+	public ItemStack getItemStack() {
+		return itemStack;
+	}
 }

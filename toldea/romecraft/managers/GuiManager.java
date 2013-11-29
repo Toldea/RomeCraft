@@ -44,7 +44,7 @@ public class GuiManager implements IGuiHandler {
 				return new GuiForum((TileEntityRomanVillageForum) tileEntity);
 			}
 		case blacksmithGuiId:
-			return new GuiBlacksmith();
+			return new GuiBlacksmith(null);
 		default:
 			return null;
 		}
