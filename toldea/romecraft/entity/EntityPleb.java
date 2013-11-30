@@ -1,9 +1,5 @@
 package toldea.romecraft.entity;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityLiving;
@@ -26,13 +22,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
-import net.minecraft.village.MerchantRecipe;
-import net.minecraft.village.MerchantRecipeList;
 import net.minecraft.world.World;
 import toldea.romecraft.RomeCraft;
 import toldea.romecraft.entity.ai.EntityAIBlacksmithing;
@@ -79,31 +71,8 @@ public class EntityPleb extends EntityAgeable implements INpc {
 	private boolean isPlaying;
 	RomanVillage villageObj;
 
-	/** This villager's current customer. */
-	private EntityPlayer buyingPlayer;
-
-	/** Initialises the MerchantRecipeList.java */
-	private MerchantRecipeList buyingList;
-	private int timeUntilReset;
-
-	/** addDefaultEquipmentAndRecipies is called if this is true */
-	private boolean needsInitilization;
-	private int wealth;
-
-	/** Last player to trade with this villager, used for aggressivity. */
-	private String lastBuyingPlayer;
 	private boolean field_82190_bM;
 	private float field_82191_bN;
-
-	/**
-	 * a villagers recipe list is intialized off this list ; the 2 params are min/max amount they will trade for 1 emerald
-	 */
-	public static final Map villagerStockList = new HashMap();
-
-	/**
-	 * Selling list of Blacksmith items. negative numbers mean 1 emerald for n items, positive numbers are n emeralds for 1 item
-	 */
-	//public static final Map blacksmithSellingList = new HashMap();
 	
 	private BlacksmithOrders blacksmithOrders = null;
 
@@ -199,36 +168,6 @@ public class EntityPleb extends EntityAgeable implements INpc {
 			}
 		}
 
-		if (!this.isTrading() && this.timeUntilReset > 0) {
-			--this.timeUntilReset;
-
-			if (this.timeUntilReset <= 0) {
-				if (this.needsInitilization) {
-					if (this.buyingList.size() > 1) {
-						Iterator iterator = this.buyingList.iterator();
-
-						while (iterator.hasNext()) {
-							MerchantRecipe merchantrecipe = (MerchantRecipe) iterator.next();
-
-							if (merchantrecipe.func_82784_g()) {
-								merchantrecipe.func_82783_a(this.rand.nextInt(6) + this.rand.nextInt(6) + 2);
-							}
-						}
-					}
-
-					//this.addDefaultEquipmentAndRecipies(1);
-					this.needsInitilization = false;
-
-					if (this.villageObj != null && this.lastBuyingPlayer != null) {
-						this.worldObj.setEntityState(this, (byte) 14);
-						this.villageObj.setReputationForPlayer(this.lastBuyingPlayer, 1);
-					}
-				}
-
-				this.addPotionEffect(new PotionEffect(Potion.regeneration.id, 200, 0));
-			}
-		}
-
 		super.updateAITick();
 	}
 
@@ -241,7 +180,7 @@ public class EntityPleb extends EntityAgeable implements INpc {
 		if (itemstack == null) {
 			switch (this.getProfession()) {
 			case BLACKSMITH:
-				player.openGui(RomeCraft.instance, GuiManager.blacksmithGuiId, worldObj, (int) player.posX, (int) player.posY, (int) player.posZ);
+				player.openGui(RomeCraft.instance, GuiManager.blacksmithGuiId, worldObj, this.entityId, -1, -1);
 				return true;
 			default:
 				break;
@@ -255,6 +194,7 @@ public class EntityPleb extends EntityAgeable implements INpc {
 					convertToLegionary();
 				}
 			} else if (id == ItemManager.itemBlacksmithEquipment.itemID) {
+				System.out.println("Convertin pleb on side: " + worldObj.isRemote);
 				this.convertToProfession(PLEB_PROFESSION.BLACKSMITH);
 			}
 
@@ -286,9 +226,7 @@ public class EntityPleb extends EntityAgeable implements INpc {
 			this.worldObj.playAuxSFXAtEntity((EntityPlayer) null, 1017, (int) this.posX, (int) this.posY, (int) this.posZ, 0);
 			switch (profession) {
 			case BLACKSMITH:
-				if (blacksmithOrders == null) {
-					blacksmithOrders = new BlacksmithOrders();
-				}
+				blacksmithOrders = new BlacksmithOrders();
 				// this.equipItem(PLEB_EQUIPMENT.HAMMER); // TODO: Fix blacksmithing logic so this doesn't screw things up.
 				break;
 			default:
@@ -303,33 +241,6 @@ public class EntityPleb extends EntityAgeable implements INpc {
 	}
 
 	/**
-	 * (abstract) Protected helper method to write subclass entity data to NBT.
-	 */
-	public void writeEntityToNBT(NBTTagCompound par1NBTTagCompound) {
-		super.writeEntityToNBT(par1NBTTagCompound);
-		par1NBTTagCompound.setInteger("Profession", this.getProfession().getIntValue());
-		par1NBTTagCompound.setInteger("Riches", this.wealth);
-
-		if (this.buyingList != null) {
-			par1NBTTagCompound.setCompoundTag("Offers", this.buyingList.getRecipiesAsTags());
-		}
-	}
-
-	/**
-	 * (abstract) Protected helper method to read subclass entity data from NBT.
-	 */
-	public void readEntityFromNBT(NBTTagCompound par1NBTTagCompound) {
-		super.readEntityFromNBT(par1NBTTagCompound);
-		this.setProfession(PLEB_PROFESSION.professionForInt(par1NBTTagCompound.getInteger("Profession")));
-		this.wealth = par1NBTTagCompound.getInteger("Riches");
-
-		if (par1NBTTagCompound.hasKey("Offers")) {
-			NBTTagCompound nbttagcompound1 = par1NBTTagCompound.getCompoundTag("Offers");
-			this.buyingList = new MerchantRecipeList(nbttagcompound1);
-		}
-	}
-
-	/**
 	 * Determines if an entity can be despawned, used on idle far away entities
 	 */
 	protected boolean canDespawn() {
@@ -340,7 +251,7 @@ public class EntityPleb extends EntityAgeable implements INpc {
 	 * Returns the sound this mob makes while it's alive.
 	 */
 	protected String getLivingSound() {
-		return this.isTrading() ? "mob.villager.haggle" : "mob.villager.idle";
+		return "mob.villager.idle";
 	}
 
 	/**
@@ -426,39 +337,6 @@ public class EntityPleb extends EntityAgeable implements INpc {
 		super.onDeath(par1DamageSource);
 	}
 
-	public void setCustomer(EntityPlayer par1EntityPlayer) {
-		this.buyingPlayer = par1EntityPlayer;
-	}
-
-	public EntityPlayer getCustomer() {
-		return this.buyingPlayer;
-	}
-
-	public boolean isTrading() {
-		return this.buyingPlayer != null;
-	}
-
-	public void useRecipe(MerchantRecipe par1MerchantRecipe) {
-		par1MerchantRecipe.incrementToolUses();
-		this.livingSoundTime = -this.getTalkInterval();
-		this.playSound("mob.villager.yes", this.getSoundVolume(), this.getSoundPitch());
-
-		if (par1MerchantRecipe.hasSameIDsAs((MerchantRecipe) this.buyingList.get(this.buyingList.size() - 1))) {
-			this.timeUntilReset = 40;
-			this.needsInitilization = true;
-
-			if (this.buyingPlayer != null) {
-				this.lastBuyingPlayer = this.buyingPlayer.getCommandSenderName();
-			} else {
-				this.lastBuyingPlayer = null;
-			}
-		}
-
-		if (par1MerchantRecipe.getItemToBuy().itemID == Item.emerald.itemID) {
-			this.wealth += par1MerchantRecipe.getItemToBuy().stackSize;
-		}
-	}
-
 	public void func_110297_a_(ItemStack par1ItemStack) {
 		if (!this.worldObj.isRemote && this.livingSoundTime > -this.getTalkInterval() + 20) {
 			this.livingSoundTime = -this.getTalkInterval();
@@ -525,5 +403,24 @@ public class EntityPleb extends EntityAgeable implements INpc {
 	
 	public BlacksmithOrders getBlacksmithOrders() {
 		return blacksmithOrders;
+	}
+	
+	public void writeEntityToNBT(NBTTagCompound par1NBTTagCompound) {
+		super.writeEntityToNBT(par1NBTTagCompound);
+		par1NBTTagCompound.setInteger("Profession", this.getProfession().getIntValue());
+		
+		if (this.getProfession() == PLEB_PROFESSION.BLACKSMITH) {
+			this.blacksmithOrders.writeOrdersToNBT(par1NBTTagCompound);
+		}
+	}
+
+	public void readEntityFromNBT(NBTTagCompound par1NBTTagCompound) {
+		super.readEntityFromNBT(par1NBTTagCompound);
+		this.setProfession(PLEB_PROFESSION.professionForInt(par1NBTTagCompound.getInteger("Profession")));
+		
+		if (this.getProfession() == PLEB_PROFESSION.BLACKSMITH) {
+			this.blacksmithOrders = new BlacksmithOrders();
+			this.blacksmithOrders.readOrdersFromNBT(par1NBTTagCompound);
+		}
 	}
 }

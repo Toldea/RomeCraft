@@ -18,9 +18,8 @@ public class GuiBlacksmith extends RomeCraftGuiScreen {
 	private static final int BUTTON_WIDTH = 20;
 	private static final int BUTTON_HEIGHT = 20;
 	private static final int BUTTON_HORIZONTAL_SPACING = 0;
-
+	
 	public GuiBlacksmith(EntityPleb blacksmithPleb) {
-		
 	}
 	
 	public void initGui() {
@@ -52,8 +51,11 @@ public class GuiBlacksmith extends RomeCraftGuiScreen {
 		for (int i = 0; i < this.buttonList.size(); i++) {
 			GuiButton guiButton = (GuiButton) this.buttonList.get(i);
 			if (guiButton instanceof GuiItemButton) {
-				((GuiItemButton) guiButton).drawButtonImage(minecraft);
-				fontRenderer.drawString("0", guiLeft + 7 + i * (BUTTON_WIDTH + BUTTON_HORIZONTAL_SPACING), guiTop + 22, 0x404040);
+				GuiItemButton guiItemButton = (GuiItemButton) guiButton;
+				guiItemButton.drawButtonImage(minecraft);
+				int itemId = guiItemButton.getItemStack().itemID;
+				//int quantity = blacksmithPleb.getBlacksmithOrders().getOrderQuantityForItemId(itemId);
+				//fontRenderer.drawString("" + quantity, guiLeft + 7 + i * (BUTTON_WIDTH + BUTTON_HORIZONTAL_SPACING), guiTop + 22, 0x404040);
 			}
 		}
 	}
@@ -61,7 +63,9 @@ public class GuiBlacksmith extends RomeCraftGuiScreen {
 	@Override
 	protected void actionPerformed(GuiButton guiButton) {
 		if (guiButton instanceof GuiItemButton) {
-			ItemStack itemStack = ((GuiItemButton)guiButton).getItemStack();
+			GuiItemButton guiItemButton = (GuiItemButton) guiButton;
+			ItemStack itemStack = guiItemButton.getItemStack();
+			//blacksmithPleb.getBlacksmithOrders().adjustOrderQuantityForItemId(itemStack.itemID, 1);
 		}
 	}
 }

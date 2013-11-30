@@ -6,6 +6,7 @@ import net.minecraft.world.World;
 import toldea.romecraft.RomeCraft;
 import toldea.romecraft.client.gui.GuiBlacksmith;
 import toldea.romecraft.client.gui.GuiForum;
+import toldea.romecraft.entity.EntityPleb;
 import toldea.romecraft.tileentity.TileEntityRomanVillageForum;
 import cpw.mods.fml.common.network.IGuiHandler;
 import cpw.mods.fml.common.network.NetworkRegistry;
@@ -44,7 +45,7 @@ public class GuiManager implements IGuiHandler {
 				return new GuiForum((TileEntityRomanVillageForum) tileEntity);
 			}
 		case blacksmithGuiId:
-			return new GuiBlacksmith(null);
+			return new GuiBlacksmith((EntityPleb) world.getEntityByID(x));
 		default:
 			return null;
 		}
