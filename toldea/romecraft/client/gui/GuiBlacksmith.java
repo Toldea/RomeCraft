@@ -11,6 +11,7 @@ import org.lwjgl.opengl.GL11;
 import toldea.romecraft.entity.EntityPleb;
 import toldea.romecraft.item.crafting.RomanAnvilRecipes;
 import toldea.romecraft.item.crafting.RomanAnvilRecipes.AnvilRecipe;
+import toldea.romecraft.managers.PacketManager;
 
 public class GuiBlacksmith extends RomeCraftGuiScreen {
 	private static final ResourceLocation texture = new ResourceLocation("romecraft", "textures/gui/gui_blacksmith.png");
@@ -18,10 +19,13 @@ public class GuiBlacksmith extends RomeCraftGuiScreen {
 	private static final int BUTTON_WIDTH = 20;
 	private static final int BUTTON_HEIGHT = 20;
 	private static final int BUTTON_HORIZONTAL_SPACING = 0;
-	
+
+	private final EntityPleb blacksmithPleb;
+
 	public GuiBlacksmith(EntityPleb blacksmithPleb) {
+		this.blacksmithPleb = blacksmithPleb;
 	}
-	
+
 	public void initGui() {
 		this.xSize = 248;
 		this.ySize = 166;
@@ -54,18 +58,19 @@ public class GuiBlacksmith extends RomeCraftGuiScreen {
 				GuiItemButton guiItemButton = (GuiItemButton) guiButton;
 				guiItemButton.drawButtonImage(minecraft);
 				int itemId = guiItemButton.getItemStack().itemID;
-				//int quantity = blacksmithPleb.getBlacksmithOrders().getOrderQuantityForItemId(itemId);
-				//fontRenderer.drawString("" + quantity, guiLeft + 7 + i * (BUTTON_WIDTH + BUTTON_HORIZONTAL_SPACING), guiTop + 22, 0x404040);
+				int quantity = blacksmithPleb.getBlacksmithOrders().getOrderQuantityForItemId(itemId);
+				fontRenderer.drawString("" + quantity, guiLeft + 7 + i * (BUTTON_WIDTH + BUTTON_HORIZONTAL_SPACING), guiTop + 22, 0x404040);
 			}
 		}
 	}
-	
+
 	@Override
 	protected void actionPerformed(GuiButton guiButton) {
 		if (guiButton instanceof GuiItemButton) {
 			GuiItemButton guiItemButton = (GuiItemButton) guiButton;
 			ItemStack itemStack = guiItemButton.getItemStack();
-			//blacksmithPleb.getBlacksmithOrders().adjustOrderQuantityForItemId(itemStack.itemID, 1);
+			blacksmithPleb.getBlacksmithOrders().adjustOrderQuantityForItemId(itemStack.itemID, 1);
+			PacketManager.sendAdjustBlacksmithOrderQuantityPacketToServer(blacksmithPleb.entityId, itemStack.itemID, 1);
 		}
 	}
 }

@@ -16,7 +16,6 @@ public class RenderRomanVillageMap {
 
 	public RenderRomanVillageMap(TextureManager par2TextureManager, int size) {
 		this.textureManager = par2TextureManager;
-		System.out.println("------ size: " + size);
 		this.bufferedImage = new DynamicTexture(size, size);
 		this.mapImageTexture = par2TextureManager.getDynamicTextureLocation("romanvillagemap", this.bufferedImage);
 		this.size = size;

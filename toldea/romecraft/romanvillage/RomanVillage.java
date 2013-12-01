@@ -83,7 +83,6 @@ public class RomanVillage {
 	 * Called periodically by VillageCollection
 	 */
 	public void tick(int par1) {
-		// System.out.println("villageDoorInfoList size: " + villageDoorInfoList.size());
 		this.tickCounter = par1;
 		this.removeDeadAndOutOfRangeObjectsForList(plebDoorInfoList);
 		this.removeDeadAndOutOfRangeObjectsForList(bloomeryInfoList);
@@ -96,20 +95,8 @@ public class RomanVillage {
 		if (par1 % 20 == 0) {
 			this.updateNumPlebs();
 		}
-		/*
-		 * if (par1 % 30 == 0) { this.updateNumIronGolems(); }
-		 */
 
 		int j = this.numPlebs / 10;
-
-		/*
-		 * if (this.numIronGolems < j && this.villageDoorInfoList.size() > 20 && this.worldObj.rand.nextInt(7000) == 0) { Vec3 vec3 =
-		 * this.tryGetIronGolemSpawningLocation(MathHelper.floor_float((float) this.center.posX), MathHelper.floor_float((float) this.center.posY),
-		 * MathHelper.floor_float((float) this.center.posZ), 2, 4, 2);
-		 * 
-		 * if (vec3 != null) { EntityIronGolem entityirongolem = new EntityIronGolem(this.worldObj); entityirongolem.setPosition(vec3.xCoord, vec3.yCoord,
-		 * vec3.zCoord); this.worldObj.spawnEntityInWorld(entityirongolem); ++this.numIronGolems; } }
-		 */
 	}
 
 	public RomanVillageMap getVillageMapData() {
@@ -474,7 +461,6 @@ public class RomanVillage {
 	}
 
 	private void updateVillageRadiusAndCenter() {
-		System.out.println("RomanVillage.updateVillageRadiusAndCenter");
 		int i = this.plebDoorInfoList.size() + this.bloomeryInfoList.size();
 
 		if (i == 0) {

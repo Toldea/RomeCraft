@@ -8,6 +8,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
+import toldea.romecraft.entity.EntityPleb;
 import toldea.romecraft.tileentity.TileEntityBellows;
 import toldea.romecraft.tileentity.TileEntityBloomery;
 
@@ -29,7 +30,7 @@ public class PacketManager implements IPacketHandler {
 
 		byte packetId = reader.readByte();
 		
-		int x, y, z, entityId;
+		int x, y, z, entityId, itemId, adjustment;
 		TileEntity te;
 
 		switch (packetId) {
@@ -55,7 +56,13 @@ public class PacketManager implements IPacketHandler {
 				TileEntityBloomery bloomery = (TileEntityBloomery) te;
 				bloomery.applyBellowsBoost(entityPlayer.worldObj);
 			}
-			
+			break;
+		case 2:
+			entityId = reader.readInt();
+			itemId = reader.readInt();
+			adjustment = reader.readInt();
+			EntityPleb blacksmithPleb = (EntityPleb) entityPlayer.worldObj.getEntityByID(entityId);
+			blacksmithPleb.getBlacksmithOrders().adjustOrderQuantityForItemId(itemId, adjustment);
 			break;
 		default:
 			break;
@@ -91,6 +98,22 @@ public class PacketManager implements IPacketHandler {
 			PacketDispatcher.sendPacketToServer(PacketDispatcher.getPacket(CHANNEL, byteStream.toByteArray()));
 		} catch (IOException ex) {
 			System.err.append("RomeCraft: Failed to send ApplyBellowsBoost packet!");
+		}
+	}
+	
+	public static void sendAdjustBlacksmithOrderQuantityPacketToServer(int entityId, int itemId, int quantityAdjustment) {
+		ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+		DataOutputStream dataStream = new DataOutputStream(byteStream);
+
+		try {
+			dataStream.writeByte((byte) 2);
+			dataStream.writeInt(entityId);
+			dataStream.writeInt(itemId);
+			dataStream.writeInt(quantityAdjustment);
+
+			PacketDispatcher.sendPacketToServer(PacketDispatcher.getPacket(CHANNEL, byteStream.toByteArray()));
+		} catch (IOException ex) {
+			System.err.append("RomeCraft: Failed to send AdjustBlacksmithOrderQuantity packet!");
 		}
 	}
 }

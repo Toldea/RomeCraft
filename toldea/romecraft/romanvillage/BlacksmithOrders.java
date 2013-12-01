@@ -28,6 +28,23 @@ public class BlacksmithOrders {
 		}
 	}
 	
+	public int[] getAllQuantities() {
+		Object[] values = itemOrderQuantityMap.values().toArray();
+		int[] quantitiesArray = new int[itemOrderQuantityMap.size()];
+		for (int i = 0; i < values.length; i++) {
+			quantitiesArray[i] = ((Integer)values[i]).intValue();
+		}
+		return quantitiesArray;
+	}
+	
+	public void setQuantities(int[] quantities) {
+		Object[] keys = itemOrderQuantityMap.keySet().toArray();
+		int[] itemIdsArray = new int[itemOrderQuantityMap.size()];
+		for (int i = 0; i < keys.length; i++) {
+			itemOrderQuantityMap.put((Integer)keys[i], Integer.valueOf(quantities[i]));
+		}
+	}
+	
 	public void adjustOrderQuantityForItemId(int itemId, int adjustment) {
 		if (itemOrderQuantityMap.containsKey(Integer.valueOf(itemId))) {
 			int currentQuantity = itemOrderQuantityMap.get(Integer.valueOf(itemId)).intValue();
@@ -54,7 +71,6 @@ public class BlacksmithOrders {
 		}
 		for (int i = 0; i < values.length; i++) {
 			quantitiesArray[i] = ((Integer)values[i]).intValue();
-			System.out.println("Writing blacksmith order combination: " + itemIdsArray[i]  + ", " + quantitiesArray[i]);
 		}
 	    
 	    ordersCompound.setIntArray("itemIds", itemIdsArray);
@@ -68,7 +84,6 @@ public class BlacksmithOrders {
 			int[] itemIdsArray = ordersCompound.getIntArray("itemIds");
 			int[] quantitiesArray = ordersCompound.getIntArray("quantities");
 			for (int i = 0; i < itemIdsArray.length; i++) {
-				System.out.println("Reading blacksmith order combination: " + itemIdsArray[i]  + ", " + quantitiesArray[i]);
 				itemOrderQuantityMap.put(Integer.valueOf(itemIdsArray[i]), Integer.valueOf(quantitiesArray[i]));
 			}
 		}

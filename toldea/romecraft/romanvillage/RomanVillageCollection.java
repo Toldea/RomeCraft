@@ -138,35 +138,6 @@ public class RomanVillageCollection extends WorldSavedData {
 		}
 	}
 
-	/*
-	 * private void addNewDoorsToVillageOrCreateVillage() { //System.out.println("RomanVillageCollection.addNewDoorsToVillageOrCreateVillage"); int i = 0;
-	 * 
-	 * while (i < this.newDoors.size()) { System.out.println("looping through new door #" + i); RomanVillageDoorInfo villagedoorinfo = (RomanVillageDoorInfo)
-	 * this.newDoors.get(i); boolean flag = false; Iterator iterator = this.villageList.iterator();
-	 * 
-	 * while (true) { if (iterator.hasNext()) { RomanVillage village = (RomanVillage) iterator.next(); System.out.println("Looping through village: " +
-	 * village); int j = (int) village.getCenter().getDistanceSquared(villagedoorinfo.posX, villagedoorinfo.posY, villagedoorinfo.posZ); float k = 32f +
-	 * village.getVillageRadius();
-	 * 
-	 * if (j > k * k) { continue; }
-	 * 
-	 * village.addVillageDoorInfo(villagedoorinfo); flag = true; }
-	 * 
-	 * if (!flag) { RomanVillage village1 = new RomanVillage(this.worldObj);
-	 * 
-	 * System.out.println("Creating new village!: " + village1);
-	 * 
-	 * System.out.println("-- Roman Village Data --"); System.out.println("Village Center: (" + village1.getCenter().posX + ", " + village1.getCenter().posY +
-	 * ", " + village1.getCenter().posZ + ")"); System.out.println("Number of doors: " + village1.getNumVillageDoors());
-	 * System.out.println("Number of villagers: " + village1.getNumVillagers()); System.out.println("Village radius: " + village1.getVillageRadius());
-	 * 
-	 * village1.addVillageDoorInfo(villagedoorinfo); this.villageList.add(village1); this.markDirty(); }
-	 * 
-	 * ++i; break; } }
-	 * 
-	 * this.newDoors.clear(); }
-	 */
-
 	private void addNewObjectsToVillage(List infoList) {
 		int i = 0;
 

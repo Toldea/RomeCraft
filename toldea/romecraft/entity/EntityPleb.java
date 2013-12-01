@@ -34,10 +34,15 @@ import toldea.romecraft.managers.ItemManager;
 import toldea.romecraft.managers.TickManager;
 import toldea.romecraft.romanvillage.BlacksmithOrders;
 import toldea.romecraft.romanvillage.RomanVillage;
+
+import com.google.common.io.ByteArrayDataInput;
+import com.google.common.io.ByteArrayDataOutput;
+
+import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class EntityPleb extends EntityAgeable implements INpc {
+public class EntityPleb extends EntityAgeable implements INpc, IEntityAdditionalSpawnData {
 	public enum PLEB_PROFESSION {
 		NONE(0), BLACKSMITH(1);
 		private final int value;
@@ -421,6 +426,30 @@ public class EntityPleb extends EntityAgeable implements INpc {
 		if (this.getProfession() == PLEB_PROFESSION.BLACKSMITH) {
 			this.blacksmithOrders = new BlacksmithOrders();
 			this.blacksmithOrders.readOrdersFromNBT(par1NBTTagCompound);
+		}
+	}
+
+	@Override
+	public void writeSpawnData(ByteArrayDataOutput data) {
+		if (this.getProfession() == PLEB_PROFESSION.BLACKSMITH && blacksmithOrders != null) {
+			int[] quantities = blacksmithOrders.getAllQuantities();
+			data.writeShort(quantities.length);
+			for (int i = 0; i < quantities.length; i++) {
+				data.writeShort(quantities[i]);
+			}
+		}
+	}
+
+	@Override
+	public void readSpawnData(ByteArrayDataInput data) {
+		if (this.getProfession() == PLEB_PROFESSION.BLACKSMITH) {
+			int length = data.readShort();
+			int[] quantities = new int[length];
+			for (int i = 0; i < length; i++) {
+				quantities[i] = data.readShort();
+			}
+			this.blacksmithOrders = new BlacksmithOrders();
+			blacksmithOrders.setQuantities(quantities);
 		}
 	}
 }
