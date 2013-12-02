@@ -9,6 +9,7 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import toldea.romecraft.entity.EntityPleb;
+import toldea.romecraft.entity.ai.blacksmith.BlacksmithOrders;
 import toldea.romecraft.item.crafting.RomanAnvilRecipes;
 import toldea.romecraft.item.crafting.RomanAnvilRecipes.AnvilRecipe;
 import toldea.romecraft.managers.PacketManager;
@@ -59,9 +60,24 @@ public class GuiBlacksmith extends RomeCraftGuiScreen {
 				guiItemButton.drawButtonImage(minecraft);
 				int itemId = guiItemButton.getItemStack().itemID;
 				int quantity = blacksmithPleb.getBlacksmithOrders().getOrderQuantityForItemId(itemId);
-				fontRenderer.drawString("" + quantity, guiLeft + 7 + i * (BUTTON_WIDTH + BUTTON_HORIZONTAL_SPACING), guiTop + 22, 0x404040);
+				fontRenderer.drawString("" + quantity, guiLeft + 8 + i * (BUTTON_WIDTH + BUTTON_HORIZONTAL_SPACING), guiTop + 22, 0x404040);
 			}
 		}
+	}
+
+	@Override
+	protected void mouseClicked(int par1, int par2, int par3) {
+		if (par3 == 1) {
+			for (int l = 0; l < this.buttonList.size(); ++l) {
+				GuiButton guibutton = (GuiButton) this.buttonList.get(l);
+
+				if (guibutton.mousePressed(this.mc, par1, par2)) {
+					this.mc.sndManager.playSoundFX("random.click", 1.0F, 1.0F);
+					this.rightClickActionPerformed(guibutton);
+				}
+			}
+		}
+		super.mouseClicked(par1, par2, par3);
 	}
 
 	@Override
@@ -69,8 +85,22 @@ public class GuiBlacksmith extends RomeCraftGuiScreen {
 		if (guiButton instanceof GuiItemButton) {
 			GuiItemButton guiItemButton = (GuiItemButton) guiButton;
 			ItemStack itemStack = guiItemButton.getItemStack();
-			blacksmithPleb.getBlacksmithOrders().adjustOrderQuantityForItemId(itemStack.itemID, 1);
+			BlacksmithOrders orders = blacksmithPleb.getBlacksmithOrders();
+			orders.adjustOrderQuantityForItemId(itemStack.itemID, 1);
 			PacketManager.sendAdjustBlacksmithOrderQuantityPacketToServer(blacksmithPleb.entityId, itemStack.itemID, 1);
+		}
+	}
+
+	protected void rightClickActionPerformed(GuiButton guiButton) {
+		if (guiButton instanceof GuiItemButton) {
+			GuiItemButton guiItemButton = (GuiItemButton) guiButton;
+			ItemStack itemStack = guiItemButton.getItemStack();
+			BlacksmithOrders orders = blacksmithPleb.getBlacksmithOrders();
+			// Check if we have more than 0 items, if so reduce the quantity by 1.
+			if (orders.getOrderQuantityForItemId(itemStack.itemID) > 0) {
+				orders.adjustOrderQuantityForItemId(itemStack.itemID, -1);
+				PacketManager.sendAdjustBlacksmithOrderQuantityPacketToServer(blacksmithPleb.entityId, itemStack.itemID, -1);
+			}
 		}
 	}
 }

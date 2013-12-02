@@ -29,10 +29,10 @@ import net.minecraft.world.World;
 import toldea.romecraft.RomeCraft;
 import toldea.romecraft.entity.ai.EntityAIBlacksmithing;
 import toldea.romecraft.entity.ai.EntityAIPlebMate;
+import toldea.romecraft.entity.ai.blacksmith.BlacksmithOrders;
 import toldea.romecraft.managers.GuiManager;
 import toldea.romecraft.managers.ItemManager;
 import toldea.romecraft.managers.TickManager;
-import toldea.romecraft.romanvillage.BlacksmithOrders;
 import toldea.romecraft.romanvillage.RomanVillage;
 
 import com.google.common.io.ByteArrayDataInput;

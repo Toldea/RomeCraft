@@ -6,9 +6,12 @@ public abstract class StateMachineVariables {
 	public static String TARGET_LOCATION = "targetLocation";
 	public static String IN_RANGE_DIST = "inRangeDist";
 	public static String SLOT = "slot";
+	public static String CHEST = "chest";
 	
-	// Blacksmith State Machine Variables
+	// Smelting State Machine Variables
 	public static String BLOOMERY = "bloomery";
 	public static String BELLOWS = "bellows";
-	public static String CHEST = "chest";
+	
+	// Blacksmith State Machine Variables
+	public static String ROMAN_ANVIL = "romanAnvil";
 }

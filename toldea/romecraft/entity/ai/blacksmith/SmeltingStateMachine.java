@@ -1,4 +1,4 @@
-package toldea.romecraft.entity.ai.fsm;
+package toldea.romecraft.entity.ai.blacksmith;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityCreature;
@@ -6,11 +6,14 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.ChunkCoordinates;
+import toldea.romecraft.entity.ai.fsm.State;
+import toldea.romecraft.entity.ai.fsm.StateMachine;
+import toldea.romecraft.entity.ai.fsm.StateMachineVariables;
 import toldea.romecraft.managers.ItemManager;
 import toldea.romecraft.tileentity.TileEntityBellows;
 import toldea.romecraft.tileentity.TileEntityBloomery;
 
-public class BlacksmithStateMachine extends StateMachine {
+public class SmeltingStateMachine extends StateMachine {
 
 	@Override
 	public void initialize() {
@@ -18,7 +21,7 @@ public class BlacksmithStateMachine extends StateMachine {
 
 		Idle.instance.linkStateMachine(this);
 		WithdrawFromChest.instance.linkStateMachine(this);
-		PlaceInChest.instance.linkStateMachine(this);
+		PlaceInChestAdjacentToBloomery.instance.linkStateMachine(this);
 		WithdrawFromBloomery.instance.linkStateMachine(this);
 		PlaceInBloomery.instance.linkStateMachine(this);
 		PushBellows.instance.linkStateMachine(this);
@@ -55,17 +58,17 @@ public class BlacksmithStateMachine extends StateMachine {
 				setVariable(StateMachineVariables.SLOT, new Integer(1));
 				return PlaceInBloomery.instance;
 			} else {
-				return PlaceInChest.instance;
+				return PlaceInChestAdjacentToBloomery.instance;
 			}
 		} else if (entityHoldingIronOre) {
 			if (!bloomeryHasIronOre) {
 				setVariable(StateMachineVariables.SLOT, new Integer(0));
 				return PlaceInBloomery.instance;
 			} else {
-				return PlaceInChest.instance;
+				return PlaceInChestAdjacentToBloomery.instance;
 			}
 		} else if (entityHoldingIronBloom) {
-			return PlaceInChest.instance;
+			return PlaceInChestAdjacentToBloomery.instance;
 		} else if (bloomeryHasIronBloom) {
 			setVariable(StateMachineVariables.SLOT, new Integer(2));
 			return WithdrawFromBloomery.instance;
@@ -86,7 +89,7 @@ public class BlacksmithStateMachine extends StateMachine {
 	 * STATES *
 	 **********/
 
-	public static class Idle extends State {
+	private static class Idle extends State {
 		public static final Idle instance = new Idle();
 		
 		private static final int IDLE_TIME = 10;
@@ -110,13 +113,11 @@ public class BlacksmithStateMachine extends StateMachine {
 
 		@Override
 		public void finish() {
-			// TODO Auto-generated method stub
-			
 		}
 		
 	}
 	
-	public static class WithdrawFromChest extends State {
+	private static class WithdrawFromChest extends State {
 		public static final WithdrawFromChest instance = new WithdrawFromChest();
 
 		@Override
@@ -163,8 +164,8 @@ public class BlacksmithStateMachine extends StateMachine {
 		}
 	}
 
-	public static class PlaceInChest extends State {
-		public static final PlaceInChest instance = new PlaceInChest();
+	private static class PlaceInChestAdjacentToBloomery extends State {
+		public static final PlaceInChestAdjacentToBloomery instance = new PlaceInChestAdjacentToBloomery();
 
 		@Override
 		public boolean start() {
@@ -198,7 +199,7 @@ public class BlacksmithStateMachine extends StateMachine {
 		}
 	}
 
-	public static class WithdrawFromBloomery extends State {
+	private static class WithdrawFromBloomery extends State {
 		public static final WithdrawFromBloomery instance = new WithdrawFromBloomery();
 
 		@Override
@@ -236,7 +237,7 @@ public class BlacksmithStateMachine extends StateMachine {
 		}
 	}
 
-	public static class PlaceInBloomery extends State {
+	private static class PlaceInBloomery extends State {
 		public static final PlaceInBloomery instance = new PlaceInBloomery();
 
 		@Override
@@ -275,7 +276,7 @@ public class BlacksmithStateMachine extends StateMachine {
 		}
 	}
 
-	public static class PushBellows extends State {
+	private static class PushBellows extends State {
 		public static final PushBellows instance = new PushBellows();
 		
 		private static final int TASK_DURATION = TileEntityBellows.ROTATION_TIME + 10;
