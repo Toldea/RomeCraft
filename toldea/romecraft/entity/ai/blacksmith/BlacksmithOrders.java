@@ -1,6 +1,6 @@
 package toldea.romecraft.entity.ai.blacksmith;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.nbt.NBTTagCompound;
@@ -8,78 +8,109 @@ import toldea.romecraft.item.crafting.RomanAnvilRecipes;
 import toldea.romecraft.item.crafting.RomanAnvilRecipes.AnvilRecipe;
 
 public class BlacksmithOrders {
-	private final HashMap<Integer, Integer> itemOrderQuantityMap;
+	private final List<BlacksmithOrder> blacksmithOrdersList;
 	private int totalOrderQuantity;
+	
+	public class BlacksmithOrder {
+		private final int itemId;
+		private final AnvilRecipe anvilRecipe;
+		private int quantity;
+		private BlacksmithOrder(AnvilRecipe anvilRecipe, int quantity) {
+			this.anvilRecipe = anvilRecipe;
+			this.itemId = anvilRecipe.craftedItem.itemID;
+			this.quantity = quantity;
+		}
+		public int getItemId() {
+			return itemId;
+		}
+		public AnvilRecipe getAnvilRecipe() {
+			return anvilRecipe;
+		}
+		public int getQuantity() {
+			return quantity;
+		}
+		public void setQuantity(int quantity) {
+			this.quantity = quantity;
+		}
+		public void adjustQuantity(int adjustment) {
+			quantity -= adjustment;
+			if (quantity < 0) {
+				System.out.println("Warning: RomeCraft.BlacksmithOrder.adjustQuantity adjusted item with id" + itemId + " to below zero!");
+				quantity = 0;
+			}
+		}
+	}
 
 	public BlacksmithOrders() {
-		itemOrderQuantityMap = new HashMap<Integer, Integer>();
+		blacksmithOrdersList = new ArrayList<BlacksmithOrder>();
 		totalOrderQuantity = 0;
 		
 		List<AnvilRecipe> anvilRecipes = RomanAnvilRecipes.instance().getRecipeList();
 		for (int i = 0; i < anvilRecipes.size(); i++) {
 			AnvilRecipe recipe = anvilRecipes.get(i);
-			itemOrderQuantityMap.put(Integer.valueOf(recipe.craftedItem.itemID), 0);
+			blacksmithOrdersList.add(new BlacksmithOrder(recipe, 0));
 		}
 	}
 	
 	public int getOrderQuantityForItemId(int itemId) {
-		if (itemOrderQuantityMap.containsKey(Integer.valueOf(itemId))) {
-			return itemOrderQuantityMap.get(Integer.valueOf(itemId)).intValue();
-		} else {
-			return -1;
+		for (int i = 0; i < blacksmithOrdersList.size(); i++) {
+			if (blacksmithOrdersList.get(i).getItemId() == itemId) {
+				return blacksmithOrdersList.get(i).getQuantity();
+			}
 		}
+		return -1;
 	}
 	
 	public int[] getAllQuantities() {
-		Object[] values = itemOrderQuantityMap.values().toArray();
-		int[] quantitiesArray = new int[itemOrderQuantityMap.size()];
-		for (int i = 0; i < values.length; i++) {
-			quantitiesArray[i] = ((Integer)values[i]).intValue();
+		int[] quantitiesArray = new int[blacksmithOrdersList.size()];
+		for (int i = 0; i < quantitiesArray.length; i++) {
+			quantitiesArray[i] = blacksmithOrdersList.get(i).getQuantity();
 		}
 		return quantitiesArray;
 	}
 	
 	public void setQuantities(int[] quantities) {
 		totalOrderQuantity = 0;
-		Object[] keys = itemOrderQuantityMap.keySet().toArray();
-		int[] itemIdsArray = new int[itemOrderQuantityMap.size()];
-		for (int i = 0; i < keys.length; i++) {
-			itemOrderQuantityMap.put((Integer)keys[i], Integer.valueOf(quantities[i]));
+		for (int i = 0; i < quantities.length; i++) {
+			blacksmithOrdersList.get(i).setQuantity(quantities[i]);
 			totalOrderQuantity += quantities[i];
 		}
 	}
 	
 	public void adjustOrderQuantityForItemId(int itemId, int adjustment) {
-		if (itemOrderQuantityMap.containsKey(Integer.valueOf(itemId))) {
-			int currentQuantity = itemOrderQuantityMap.get(Integer.valueOf(itemId)).intValue();
-			int newQuantity = currentQuantity + adjustment;
-			if (newQuantity < 0) {
-				System.out.println("Warning: RomeCraft.BlacksmithOrders.adjustOrderQuantityForItemId adjusted item with id" + itemId + " to below zero!");
+		for (int i = 0; i < blacksmithOrdersList.size(); i++) {
+			if (blacksmithOrdersList.get(i).getItemId() == itemId) {
+				blacksmithOrdersList.get(i).adjustQuantity(adjustment);
+				totalOrderQuantity += adjustment;
+				return;
 			}
-			itemOrderQuantityMap.put(Integer.valueOf(itemId), newQuantity);
-			totalOrderQuantity += adjustment;
-		} else {
-			System.out.println("Error: RomeCraft.BlacksmithOrders.adjustOrderQuantityForItemId called for unknown itemId:" + itemId);
 		}
+		System.out.println("Error: RomeCraft.BlacksmithOrders.adjustOrderQuantityForItemId called for unknown itemId:" + itemId);
 	}
 	
 	public boolean hasOrder() {
 		return totalOrderQuantity > 0;
 	}
 	
+	public BlacksmithOrder getNextOrder() {
+		for (int i = 0; i < blacksmithOrdersList.size(); i++) {
+			if (blacksmithOrdersList.get(i).getQuantity() > 0) {
+				return blacksmithOrdersList.get(i);
+			}
+		}
+		return null;
+	}
+	
 	public void writeOrdersToNBT(NBTTagCompound compound) {
 		NBTTagCompound ordersCompound = new NBTTagCompound();
 		
-		Object[] keys = itemOrderQuantityMap.keySet().toArray();
-		Object[] values = itemOrderQuantityMap.values().toArray();
-		int[] itemIdsArray = new int[itemOrderQuantityMap.size()];
-		int[] quantitiesArray = new int[itemOrderQuantityMap.size()];
+		int[] itemIdsArray = new int[blacksmithOrdersList.size()];
+		int[] quantitiesArray = new int[blacksmithOrdersList.size()];
 		
-		for (int i = 0; i < keys.length; i++) {
-			itemIdsArray[i] = ((Integer)keys[i]).intValue();
-		}
-		for (int i = 0; i < values.length; i++) {
-			quantitiesArray[i] = ((Integer)values[i]).intValue();
+		for (int i = 0; i < itemIdsArray.length; i++) {
+			BlacksmithOrder order = blacksmithOrdersList.get(i);
+			itemIdsArray[i] = order.getItemId();
+			quantitiesArray[i] = order.getQuantity();
 		}
 	    
 	    ordersCompound.setIntArray("itemIds", itemIdsArray);
@@ -93,8 +124,9 @@ public class BlacksmithOrders {
 			int[] itemIdsArray = ordersCompound.getIntArray("itemIds");
 			int[] quantitiesArray = ordersCompound.getIntArray("quantities");
 			totalOrderQuantity = 0;
+			blacksmithOrdersList.clear();
 			for (int i = 0; i < itemIdsArray.length; i++) {
-				itemOrderQuantityMap.put(Integer.valueOf(itemIdsArray[i]), Integer.valueOf(quantitiesArray[i]));
+				blacksmithOrdersList.add(new BlacksmithOrder(RomanAnvilRecipes.instance().getRecipeForRecipeResultItemId(itemIdsArray[i]), quantitiesArray[i]));
 				totalOrderQuantity += quantitiesArray[i];
 			}
 		}

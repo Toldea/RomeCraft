@@ -8,10 +8,8 @@ public abstract class StateMachineVariables {
 	public static String SLOT = "slot";
 	public static String CHEST = "chest";
 	
-	// Smelting State Machine Variables
+	// Blacksmith State Machine Variables
 	public static String BLOOMERY = "bloomery";
 	public static String BELLOWS = "bellows";
-	
-	// Blacksmith State Machine Variables
 	public static String ROMAN_ANVIL = "romanAnvil";
 }

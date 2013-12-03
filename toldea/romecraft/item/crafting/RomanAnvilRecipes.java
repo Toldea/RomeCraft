@@ -60,6 +60,14 @@ public class RomanAnvilRecipes {
 	public List<AnvilRecipe> getRecipeList() {
 		return this.anvilRecipeList;
 	}
+	public AnvilRecipe getRecipeForRecipeResultItemId(int itemId) {
+		for (int i = 0; i < anvilRecipeList.size(); i++) {
+			if (anvilRecipeList.get(i).craftedItem.itemID == itemId) {
+				return anvilRecipeList.get(i);
+			}
+		}
+		return null;
+	}
 	
 	public int getNumberOfRecipes() {
 		return numberOfRecipes;

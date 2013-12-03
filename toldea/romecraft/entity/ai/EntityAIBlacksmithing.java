@@ -7,7 +7,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import toldea.romecraft.entity.EntityPleb;
 import toldea.romecraft.entity.EntityPleb.PLEB_PROFESSION;
-import toldea.romecraft.entity.ai.blacksmith.SmeltingStateMachine;
+import toldea.romecraft.entity.ai.blacksmith.BlacksmithStateMachine;
 import toldea.romecraft.entity.ai.fsm.StateMachineVariables;
 import toldea.romecraft.managers.TickManager;
 import toldea.romecraft.romanvillage.RomanVillage;
@@ -18,12 +18,12 @@ import toldea.romecraft.tileentity.TileEntityBloomery;
 public class EntityAIBlacksmithing extends EntityAIBase {
 	private final EntityPleb entityPleb;
 	
-	private final SmeltingStateMachine smeltingStateMachine;
+	private final BlacksmithStateMachine blacksmithStateMachine;
 
 	public EntityAIBlacksmithing(EntityPleb entityPleb) {
 		this.entityPleb = entityPleb;
 		this.setMutexBits(1);
-		smeltingStateMachine = new SmeltingStateMachine();
+		blacksmithStateMachine = new BlacksmithStateMachine();
 	}
 
 	@Override
@@ -79,11 +79,11 @@ public class EntityAIBlacksmithing extends EntityAIBase {
 						continue;
 					}
 					
-					smeltingStateMachine.initialize();
+					blacksmithStateMachine.initialize();
 					
-					smeltingStateMachine.setVariable(StateMachineVariables.OWNER_ENTITY, entityPleb);
-					smeltingStateMachine.setVariable(StateMachineVariables.BLOOMERY, bloomery);
-					smeltingStateMachine.setVariable(StateMachineVariables.BELLOWS, bellows);
+					blacksmithStateMachine.setVariable(StateMachineVariables.OWNER_ENTITY, entityPleb);
+					blacksmithStateMachine.setVariable(StateMachineVariables.BLOOMERY, bloomery);
+					blacksmithStateMachine.setVariable(StateMachineVariables.BELLOWS, bellows);
 					
 					return true;
 				}
@@ -93,6 +93,6 @@ public class EntityAIBlacksmithing extends EntityAIBase {
 	}
 
 	public boolean continueExecuting() {
-		return smeltingStateMachine.update();
+		return blacksmithStateMachine.update();
 	}
 }
