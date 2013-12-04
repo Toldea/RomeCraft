@@ -13,6 +13,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldSavedData;
 import toldea.romecraft.managers.BlockManager;
 import toldea.romecraft.tileentity.TileEntityBloomery;
+import toldea.romecraft.tileentity.TileEntityRomanAnvil;
 
 public class RomanVillageCollection extends WorldSavedData {
 	public static final String key = "romanVillages";
@@ -24,6 +25,7 @@ public class RomanVillageCollection extends WorldSavedData {
 
 	private final List newDoors = new ArrayList();
 	private final List newBloomeries = new ArrayList();
+	private final List newRomanAnvils = new ArrayList();
 
 	private int tickCounter;
 
@@ -79,6 +81,7 @@ public class RomanVillageCollection extends WorldSavedData {
 
 		this.addNewObjectsToVillage(newDoors);
 		this.addNewObjectsToVillage(newBloomeries);
+		this.addNewObjectsToVillage(newRomanAnvils);
 
 		if (this.tickCounter % 400 == 0) {
 			this.markDirty();
@@ -159,6 +162,8 @@ public class RomanVillageCollection extends WorldSavedData {
 						village.addVillageObjectInfoToInfoList(village.getVillageDoorInfoList(), villageObjectInfo);
 					} else if (villageObjectInfo instanceof RomanVillageBloomeryInfo) {
 						village.addVillageObjectInfoToInfoList(village.getBloomeryInfoList(), villageObjectInfo);
+					} else if (villageObjectInfo instanceof RomanVillageAnvilInfo) {
+						village.addVillageObjectInfoToInfoList(village.getRomanAnvilInfoList(), villageObjectInfo);
 					}
 				}
 				++i;
@@ -213,9 +218,13 @@ public class RomanVillageCollection extends WorldSavedData {
 
 						if (villageObjectInfo == null) {
 							this.addBloomeryToNewListIfAppropriate(i, j, k);
-						}/* else if (villageObjectInfo instanceof RomanVillageBloomeryInfo) {
-							((RomanVillageDoorInfo) villageObjectInfo).lastActivityTimestamp = this.tickCounter;
-						}*/
+						}
+					} else if (this.isRomanAnvilAt(i, j, k)) {
+						RomanVillageObjectInfo villageObjectInfo = this.getVillageObjectAt(this.newRomanAnvils, i, j, k);
+
+						if (villageObjectInfo == null) {
+							this.addRomanAnvilToNewListIfAppropriate(i, j, k);
+						}
 					}
 				}
 			}
@@ -301,6 +310,13 @@ public class RomanVillageCollection extends WorldSavedData {
 			this.newBloomeries.add(new RomanVillageBloomeryInfo(x, y, z));
 		}
 	}
+	private void addRomanAnvilToNewListIfAppropriate(int x, int y, int z) {
+		TileEntityRomanAnvil romanAnvil = (TileEntityRomanAnvil) this.worldObj.getBlockTileEntity(x, y, z);
+		if (romanAnvil != null && romanAnvil instanceof TileEntityRomanAnvil) {
+			System.out.println("RomanVillageCollection.addRomanAnvilToNewListIfAppropriate adding new Roman Anvil!");
+			this.newRomanAnvils.add(new RomanVillageAnvilInfo(x, y, z));
+		}
+	}
 
 	private boolean isVillagerPositionPresent(int par1, int par2, int par3) {
 		Iterator iterator = this.villagerPositionsList.iterator();
@@ -325,6 +341,11 @@ public class RomanVillageCollection extends WorldSavedData {
 	private boolean isBloomeryAt(int x, int y, int z) {
 		int l = this.worldObj.getBlockId(x, y, z);
 		return l == BlockManager.blockBloomery.blockID;
+	}
+	
+	private boolean isRomanAnvilAt(int x, int y, int z) {
+		int l = this.worldObj.getBlockId(x, y, z);
+		return l == BlockManager.blockRomanAnvil.blockID;
 	}
 
 	/**

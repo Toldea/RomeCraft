@@ -19,13 +19,15 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import toldea.romecraft.entity.EntityPleb;
 import toldea.romecraft.tileentity.TileEntityBloomery;
+import toldea.romecraft.tileentity.TileEntityRomanAnvil;
 
 public class RomanVillage {
 	private World worldObj;
 
-	/** list of VillageDoorInfo objects */
+	// TODO: Rewrite this whole different lists system to something more elegant.
 	private final List plebDoorInfoList = new ArrayList();
 	private final List bloomeryInfoList = new ArrayList();
+	private final List romanAnvilInfoList = new ArrayList();
 
 	private final ChunkCoordinates centerHelper = new ChunkCoordinates(0, 0, 0);
 	private final ChunkCoordinates center = new ChunkCoordinates(0, 0, 0);
@@ -86,6 +88,7 @@ public class RomanVillage {
 		this.tickCounter = par1;
 		this.removeDeadAndOutOfRangeObjectsForList(plebDoorInfoList);
 		this.removeDeadAndOutOfRangeObjectsForList(bloomeryInfoList);
+		this.removeDeadAndOutOfRangeObjectsForList(romanAnvilInfoList);
 		// this.removeDeadAndOldAgressors();
 
 		if (par1 % 2000 == 0) {
@@ -224,6 +227,10 @@ public class RomanVillage {
 	public int getNumBloomeries() {
 		return this.bloomeryInfoList.size();
 	}
+	
+	public int getNumRomanAnvils() {
+		return this.romanAnvilInfoList.size();
+	}
 
 	public int getTicksSinceLastDoorAdding() {
 		return this.tickCounter - this.lastAddDoorTimestamp;
@@ -250,6 +257,10 @@ public class RomanVillage {
 
 	public List getBloomeryInfoList() {
 		return this.bloomeryInfoList;
+	}
+	
+	public List getRomanAnvilInfoList() {
+		return this.romanAnvilInfoList;
 	}
 
 	public RomanVillageObjectInfo findNearestObjectForInfoList(List infoList, int par1, int par2, int par3) {
@@ -302,11 +313,20 @@ public class RomanVillage {
 	 * Loops through all different object lists and returns any object found at that position or null if none are found.
 	 */
 	public RomanVillageObjectInfo getVillageObjectAt(int x, int y, int z) {
-		RomanVillageObjectInfo objectInfo = getVillageObjectForInfoListAt(this.bloomeryInfoList, x, y, z);
-		if (objectInfo == null) {
-			objectInfo = getVillageObjectForInfoListAt(this.plebDoorInfoList, x, y, z);
+		RomanVillageObjectInfo objectInfo;
+		objectInfo = getVillageObjectForInfoListAt(this.plebDoorInfoList, x, y, z);
+		if (objectInfo != null) {
+			return objectInfo;
 		}
-		return objectInfo;
+		objectInfo = getVillageObjectForInfoListAt(this.bloomeryInfoList, x, y, z);
+		if (objectInfo != null) {
+			return objectInfo;
+		}
+		objectInfo = getVillageObjectForInfoListAt(this.romanAnvilInfoList, x, y, z);
+		if (objectInfo != null) {
+			return objectInfo;
+		}
+		return null;
 	}
 
 	public RomanVillageObjectInfo getVillageObjectForInfoListAt(List infoList, int x, int y, int z) {
@@ -428,6 +448,12 @@ public class RomanVillage {
 					System.out.println("Removing invalid Bloomery from village!");
 					removeObject = true;
 				}
+			} else if (villageObjectInfo instanceof RomanVillageAnvilInfo) {
+				RomanVillageAnvilInfo villageAnvilInfo = (RomanVillageAnvilInfo) villageObjectInfo;
+				if (!isBlockValidRomanAnvil(villageAnvilInfo.posX, villageAnvilInfo.posY, villageAnvilInfo.posZ)) {
+					System.out.println("Removing invalid Anvil from village!");
+					removeObject = true;
+				}
 			}
 
 			if (removeObject) {
@@ -459,9 +485,18 @@ public class RomanVillage {
 			return (bloomery.getIsValid() && bloomery.getIsMaster());
 		}
 	}
+	
+	private boolean isBlockValidRomanAnvil(int x, int y, int z) {
+		TileEntity tileEntity = this.worldObj.getBlockTileEntity(x, y, z);
+		if (tileEntity == null || !(tileEntity instanceof TileEntityRomanAnvil)) {
+			return false;
+		} else {
+			return true;
+		}
+	}
 
 	private void updateVillageRadiusAndCenter() {
-		int i = this.plebDoorInfoList.size() + this.bloomeryInfoList.size();
+		int i = this.plebDoorInfoList.size() + this.bloomeryInfoList.size() + this.romanAnvilInfoList.size();
 
 		if (i == 0) {
 			this.center.set(villageForumLocation.posX, villageForumLocation.posY, villageForumLocation.posZ);
@@ -478,6 +513,11 @@ public class RomanVillage {
 			}
 
 			for (Iterator iterator = this.bloomeryInfoList.iterator(); iterator.hasNext(); j = Math.max(
+					villageObjectInfo.getDistanceSquared(this.center.posX, this.center.posY, this.center.posZ), j)) {
+				villageObjectInfo = (RomanVillageObjectInfo) iterator.next();
+			}
+			
+			for (Iterator iterator = this.romanAnvilInfoList.iterator(); iterator.hasNext(); j = Math.max(
 					villageObjectInfo.getDistanceSquared(this.center.posX, this.center.posY, this.center.posZ), j)) {
 				villageObjectInfo = (RomanVillageObjectInfo) iterator.next();
 			}
@@ -548,6 +588,15 @@ public class RomanVillage {
 					nbttagcompound1.getInteger("Z"));
 			this.bloomeryInfoList.add(bloomeryInfo);
 		}
+		
+		NBTTagList romanAnvilsTagList = par1NBTTagCompound.getTagList("RomanAnvils");
+
+		for (int i = 0; i < romanAnvilsTagList.tagCount(); ++i) {
+			NBTTagCompound nbttagcompound1 = (NBTTagCompound) romanAnvilsTagList.tagAt(i);
+			RomanVillageAnvilInfo anvilInfo = new RomanVillageAnvilInfo(nbttagcompound1.getInteger("X"), nbttagcompound1.getInteger("Y"),
+					nbttagcompound1.getInteger("Z"));
+			this.romanAnvilInfoList.add(anvilInfo);
+		}
 
 		NBTTagList nbttaglist1 = par1NBTTagCompound.getTagList("Players");
 
@@ -614,6 +663,20 @@ public class RomanVillage {
 		}
 
 		par1NBTTagCompound.setTag("Bloomeries", tagListBloomery);
+		
+		NBTTagList tagListAnvil = new NBTTagList("RomanAnvils");
+		iterator = this.romanAnvilInfoList.iterator();
+
+		while (iterator.hasNext()) {
+			RomanVillageAnvilInfo anvilInfo = (RomanVillageAnvilInfo) iterator.next();
+			NBTTagCompound nbttagcompound1 = new NBTTagCompound("RomanAnvil");
+			nbttagcompound1.setInteger("X", anvilInfo.posX);
+			nbttagcompound1.setInteger("Y", anvilInfo.posY);
+			nbttagcompound1.setInteger("Z", anvilInfo.posZ);
+			tagListBloomery.appendTag(nbttagcompound1);
+		}
+
+		par1NBTTagCompound.setTag("RomanAnvils", tagListBloomery);
 
 		NBTTagList nbttaglist1 = new NBTTagList("Players");
 		Iterator iterator1 = this.playerReputation.keySet().iterator();

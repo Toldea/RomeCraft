@@ -70,6 +70,7 @@ public class GuiForum extends RomeCraftGuiScreen {
 		fontRenderer.drawString("Village Radius: " + village.getVillageRadius(), x, y + i++ * d, 0x404040);
 		fontRenderer.drawString("Number of Doors: " + village.getNumVillageDoors(), x, y + i++ * d, 0x404040);
 		fontRenderer.drawString("Number of Bloomeries: " + village.getNumBloomeries(), x, y + i++ * d, 0x404040);
+		fontRenderer.drawString("Number of Anvils: " + village.getNumRomanAnvils(), x, y + i++ * d, 0x404040);
 		fontRenderer.drawString("Number of Plebs: " + village.getNumPlebs() + " / " + village.getMaxNumberOfPlebs(), x, y + i++ * d, 0x404040);
 
 		drawVillageMap();

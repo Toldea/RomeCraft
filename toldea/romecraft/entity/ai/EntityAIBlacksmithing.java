@@ -11,9 +11,11 @@ import toldea.romecraft.entity.ai.blacksmith.BlacksmithStateMachine;
 import toldea.romecraft.entity.ai.fsm.StateMachineVariables;
 import toldea.romecraft.managers.TickManager;
 import toldea.romecraft.romanvillage.RomanVillage;
+import toldea.romecraft.romanvillage.RomanVillageAnvilInfo;
 import toldea.romecraft.romanvillage.RomanVillageBloomeryInfo;
 import toldea.romecraft.tileentity.TileEntityBellows;
 import toldea.romecraft.tileentity.TileEntityBloomery;
+import toldea.romecraft.tileentity.TileEntityRomanAnvil;
 
 public class EntityAIBlacksmithing extends EntityAIBase {
 	private final EntityPleb entityPleb;
@@ -84,6 +86,21 @@ public class EntityAIBlacksmithing extends EntityAIBase {
 					blacksmithStateMachine.setVariable(StateMachineVariables.OWNER_ENTITY, entityPleb);
 					blacksmithStateMachine.setVariable(StateMachineVariables.BLOOMERY, bloomery);
 					blacksmithStateMachine.setVariable(StateMachineVariables.BELLOWS, bellows);
+					// TODO: Rewrite this to something more elegant and less doublenested.
+					List romanAnvilInfoList = village.getRomanAnvilInfoList();
+					if (romanAnvilInfoList != null) {
+						for (int j = 0; j < romanAnvilInfoList.size(); j++) {
+							RomanVillageAnvilInfo anvilInfo = (RomanVillageAnvilInfo)romanAnvilInfoList.get(j);
+							if (anvilInfo != null) {
+								TileEntityRomanAnvil romanAnvil = (TileEntityRomanAnvil) entityPleb.worldObj.getBlockTileEntity(anvilInfo.posX, anvilInfo.posY, anvilInfo.posZ);
+								if (romanAnvil != null && romanAnvil instanceof TileEntityRomanAnvil) {
+									blacksmithStateMachine.setVariable(StateMachineVariables.ROMAN_ANVIL, romanAnvil);
+									break;
+								}
+							}
+						}
+					}
+					
 					
 					return true;
 				}
