@@ -35,7 +35,7 @@ public class BlacksmithStateMachine extends StateMachine {
 			return Idle.instance;
 		}
 		
-		TileEntityBloomery bloomery = (TileEntityBloomery) this.getVariable("bloomery");
+		TileEntityBloomery bloomery = (TileEntityBloomery) this.getVariable(StateMachineVariables.BLOOMERY);
 		if (bloomery == null || !(bloomery instanceof TileEntityBloomery)) {
 			return null;
 		}
@@ -77,6 +77,10 @@ public class BlacksmithStateMachine extends StateMachine {
 						// craft item
 					} else if (numIronBloomsInAnvil < recipeIronBloomQuantity) {
 						// withdraw from chest
+						setVariable(StateMachineVariables.TARGET_ISIDED_INVENTORY, anvil);
+						setVariable(StateMachineVariables.SLOT, new Integer(0));
+						setVariable(StateMachineVariables.QUANTITY, new Integer(recipeIronBloomQuantity - numIronBloomsInAnvil));
+						return WithdrawFromChest.instance;
 					} else if (numIronBloomsInAnvil > recipeIronBloomQuantity) {
 						// withdraw from anvil -> put in chest
 					}
@@ -101,7 +105,9 @@ public class BlacksmithStateMachine extends StateMachine {
 		} else if (entityHoldingIronBloom) {
 			return PlaceInChestAdjacentToBloomery.instance;
 		} else if (bloomeryHasIronBloom) {
+			setVariable(StateMachineVariables.TARGET_ISIDED_INVENTORY, bloomery);
 			setVariable(StateMachineVariables.SLOT, new Integer(2));
+			setVariable(StateMachineVariables.QUANTITY, new Integer(1));
 			return WithdrawFromBloomery.instance;
 		} else if (!bloomeryHasFuel) {
 			setVariable(StateMachineVariables.SLOT, new Integer(1));
