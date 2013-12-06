@@ -33,7 +33,7 @@ public class BlacksmithOrders {
 			this.quantity = quantity;
 		}
 		public void adjustQuantity(int adjustment) {
-			quantity -= adjustment;
+			quantity += adjustment;
 			if (quantity < 0) {
 				System.out.println("Warning: RomeCraft.BlacksmithOrder.adjustQuantity adjusted item with id" + itemId + " to below zero!");
 				quantity = 0;

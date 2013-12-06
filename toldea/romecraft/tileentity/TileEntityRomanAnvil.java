@@ -221,6 +221,7 @@ public class TileEntityRomanAnvil extends TileEntity implements ISidedInventory 
 			}
 
 			onInventoryChanged();
+			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 		}
 	}
 

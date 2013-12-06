@@ -17,7 +17,6 @@ import net.minecraft.world.World;
 import toldea.romecraft.block.BlockHelper;
 import toldea.romecraft.item.crafting.BloomeryRecipes;
 import toldea.romecraft.managers.BlockManager;
-import toldea.romecraft.managers.ItemManager;
 import toldea.romecraft.managers.PacketManager;
 import toldea.romecraft.utility.AdjacentTileEntityCache;
 
@@ -181,15 +180,15 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 
 		// If there is a smelted iron bloom left in the furnace and we have at least one adjacent chest with room left, return true.
 		if (hasSmeltedItem) {
-			return (getAdjacentChestWithValidContentsForBloomerySlot(2) != null);
+			return (getAdjacentChestWithStoreRoomForItemStack(getStackInSlot(2)) != null);
 		}
 
 		// Loop through all adjacent chests to find if there is any fuel and iron available.
 		if (!hasIronOre) {
-			hasIronOre = (getAdjacentChestWithValidContentsForBloomerySlot(0) != null);
+			hasIronOre = (getAdjacentChestWithValidResourcesForISidedInventorySlot(this, 0) != null);
 		}
 		if (!hasFuel) {
-			hasFuel = (getAdjacentChestWithValidContentsForBloomerySlot(1) != null);
+			hasFuel = (getAdjacentChestWithValidResourcesForISidedInventorySlot(this, 1) != null);
 		}
 
 		// Return true if we have both fuel and iron somewhere in the system, else return false.
@@ -223,21 +222,35 @@ public class TileEntityBloomery extends TileEntity implements ISidedInventory {
 	}
 
 	/**
-	 * Gets the first adjacent chest which has valid contents for the specified slot. 0 for ores. 1 for fuel. 2 for a valid spot to deposit iron blooms.
+	 * Gets the first adjacent chest which has valid resources able to put into the specified slot of the specified ISidedInventory.
 	 */
-	public TileEntityChest getAdjacentChestWithValidContentsForBloomerySlot(int bloomerySlot) {
+	public TileEntityChest getAdjacentChestWithValidResourcesForISidedInventorySlot(ISidedInventory inventory, int slot) {
 		ItemStack itemstack;
 		for (int i = 0; i < 4; i++) {
 			TileEntityChest chest = getAdjacentChestForDirection(i);
 			if (chest != null) {
-				for (int slot = 0; slot < chest.getSizeInventory(); slot++) {
-					itemstack = chest.getStackInSlot(slot);
-					if (bloomerySlot == 2) {
-						// If the itemstack equals null (aka a free slot) or equals iron bloom with a stack size lower than the max stack size, return true.
-						if (itemstack == null || (itemstack.itemID == ItemManager.itemIronBloom.itemID && itemstack.stackSize < chest.getInventoryStackLimit())) {
-							return chest;
-						}
-					} else if (itemstack != null && this.isItemValidForSlot(bloomerySlot, itemstack)) {
+				for (int s = 0; s < chest.getSizeInventory(); s++) {
+					itemstack = chest.getStackInSlot(s);
+					if (itemstack != null && inventory.isItemValidForSlot(slot, itemstack)) {
+						return chest;
+					}
+				}
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * Gets the first adjacent chest which has valid storage room to store the passed itemStack.
+	 */
+	public TileEntityChest getAdjacentChestWithStoreRoomForItemStack(ItemStack itemStackToStore) {
+		ItemStack itemstack;
+		for (int i = 0; i < 4; i++) {
+			TileEntityChest chest = getAdjacentChestForDirection(i);
+			if (chest != null) {
+				for (int s = 0; s < chest.getSizeInventory(); s++) {
+					itemstack = chest.getStackInSlot(s);
+					if (itemstack == null || (itemstack.itemID == itemStackToStore.itemID && itemstack.stackSize + itemStackToStore.stackSize < chest.getInventoryStackLimit())) {
 						return chest;
 					}
 				}

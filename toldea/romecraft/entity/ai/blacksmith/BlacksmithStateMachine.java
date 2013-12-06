@@ -1,8 +1,10 @@
 package toldea.romecraft.entity.ai.blacksmith;
 
 import net.minecraft.block.Block;
+import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.ChunkCoordinates;
 import toldea.romecraft.entity.EntityPleb;
@@ -22,10 +24,10 @@ public class BlacksmithStateMachine extends StateMachine {
 		this.setVariable(StateMachineVariables.IN_RANGE_DIST, new Double(4.0d));
 
 		Idle.instance.linkStateMachine(this);
-		WithdrawFromChest.instance.linkStateMachine(this);
+		WithdrawFromChestAdjacentToBloomery.instance.linkStateMachine(this);
 		PlaceInChestAdjacentToBloomery.instance.linkStateMachine(this);
-		WithdrawFromBloomery.instance.linkStateMachine(this);
-		PlaceInBloomery.instance.linkStateMachine(this);
+		WithdrawFromISidedInventory.instance.linkStateMachine(this);
+		PlaceInISidedInventory.instance.linkStateMachine(this);
 		PushBellows.instance.linkStateMachine(this);
 	}
 
@@ -65,56 +67,81 @@ public class BlacksmithStateMachine extends StateMachine {
 		// if so, fetch from chest, then place in anvil
 		// once enough in anvil, hammer until complete (enough items and not finished item)
 		
+		System.out.println("hasBlacksmithOrders: " + hasBlacksmithOrders);
 		if (hasBlacksmithOrders) {
 			BlacksmithOrder nextOrder = orders.getNextOrder();
 			TileEntityRomanAnvil anvil = (TileEntityRomanAnvil)getVariable(StateMachineVariables.ROMAN_ANVIL);
 			if (anvil != null && anvil instanceof TileEntityRomanAnvil) {
+				System.out.println("hasRomanAnvil!");
 				ItemStack ironBloomsInAnvilStack = anvil.getStackInSlot(0);
+				int numIronBloomsInAnvil = 0;
 				if (ironBloomsInAnvilStack != null) {
-					int numIronBloomsInAnvil = ironBloomsInAnvilStack.stackSize;
-					int recipeIronBloomQuantity = nextOrder.getAnvilRecipe().rawIngredientQuantity;
-					if (numIronBloomsInAnvil == recipeIronBloomQuantity) {
-						// craft item
-					} else if (numIronBloomsInAnvil < recipeIronBloomQuantity) {
-						// withdraw from chest
+					numIronBloomsInAnvil = ironBloomsInAnvilStack.stackSize;
+				}
+				int recipeIronBloomQuantity = nextOrder.getAnvilRecipe().rawIngredientQuantity;
+				if (numIronBloomsInAnvil == recipeIronBloomQuantity) {
+					// craft item
+				} else if (numIronBloomsInAnvil < recipeIronBloomQuantity) {
+					if (entityHoldingIronBloom) {
+						setVariable(StateMachineVariables.TARGET_TILE_ENTITY, anvil);
+						setVariable(StateMachineVariables.TARGET_ISIDED_INVENTORY, anvil);
+						setVariable(StateMachineVariables.SLOT, new Integer(0));
+						setVariable(StateMachineVariables.QUANTITY, new Integer(1));
+						return PlaceInISidedInventory.instance;
+					} else {
 						setVariable(StateMachineVariables.TARGET_ISIDED_INVENTORY, anvil);
 						setVariable(StateMachineVariables.SLOT, new Integer(0));
 						setVariable(StateMachineVariables.QUANTITY, new Integer(recipeIronBloomQuantity - numIronBloomsInAnvil));
-						return WithdrawFromChest.instance;
-					} else if (numIronBloomsInAnvil > recipeIronBloomQuantity) {
-						// withdraw from anvil -> put in chest
+						return WithdrawFromChestAdjacentToBloomery.instance;
 					}
+				} else if (numIronBloomsInAnvil > recipeIronBloomQuantity) {
+					setVariable(StateMachineVariables.TARGET_TILE_ENTITY, anvil);
+					setVariable(StateMachineVariables.TARGET_ISIDED_INVENTORY, anvil);
+					setVariable(StateMachineVariables.SLOT, new Integer(1));
+					setVariable(StateMachineVariables.QUANTITY, new Integer(1));
+					return WithdrawFromISidedInventory.instance;
 				}
 			}
 		}
 
 		if (entityHoldingFuel) {
 			if (!bloomeryHasFuel) {
+				setVariable(StateMachineVariables.TARGET_TILE_ENTITY, bloomery);
+				setVariable(StateMachineVariables.TARGET_ISIDED_INVENTORY, bloomery);
 				setVariable(StateMachineVariables.SLOT, new Integer(1));
-				return PlaceInBloomery.instance;
+				setVariable(StateMachineVariables.QUANTITY, new Integer(1));
+				return PlaceInISidedInventory.instance;
 			} else {
 				return PlaceInChestAdjacentToBloomery.instance;
 			}
 		} else if (entityHoldingIronOre) {
 			if (!bloomeryHasIronOre) {
+				setVariable(StateMachineVariables.TARGET_TILE_ENTITY, bloomery);
+				setVariable(StateMachineVariables.TARGET_ISIDED_INVENTORY, bloomery);
 				setVariable(StateMachineVariables.SLOT, new Integer(0));
-				return PlaceInBloomery.instance;
+				setVariable(StateMachineVariables.QUANTITY, new Integer(1));
+				return PlaceInISidedInventory.instance;
 			} else {
 				return PlaceInChestAdjacentToBloomery.instance;
 			}
 		} else if (entityHoldingIronBloom) {
 			return PlaceInChestAdjacentToBloomery.instance;
 		} else if (bloomeryHasIronBloom) {
+			setVariable(StateMachineVariables.TARGET_TILE_ENTITY, bloomery);
 			setVariable(StateMachineVariables.TARGET_ISIDED_INVENTORY, bloomery);
 			setVariable(StateMachineVariables.SLOT, new Integer(2));
 			setVariable(StateMachineVariables.QUANTITY, new Integer(1));
-			return WithdrawFromBloomery.instance;
+			return WithdrawFromISidedInventory.instance;
 		} else if (!bloomeryHasFuel) {
 			setVariable(StateMachineVariables.SLOT, new Integer(1));
-			return WithdrawFromChest.instance;
+			setVariable(StateMachineVariables.QUANTITY, new Integer(1));
+			setVariable(StateMachineVariables.TARGET_ISIDED_INVENTORY, bloomery);
+			return WithdrawFromChestAdjacentToBloomery.instance;
 		} else if (!bloomeryHasIronOre) {
 			setVariable(StateMachineVariables.SLOT, new Integer(0));
-			return WithdrawFromChest.instance;
+			setVariable(StateMachineVariables.QUANTITY, new Integer(1));
+			setVariable(StateMachineVariables.TARGET_ISIDED_INVENTORY, bloomery);
+			return WithdrawFromChestAdjacentToBloomery.instance;
 		} else if (bloomeryHasIronOre && bloomeryHasFuel && !bloomeryHasIronBloom) {
 			return PushBellows.instance;
 		} else {
@@ -154,8 +181,8 @@ public class BlacksmithStateMachine extends StateMachine {
 		
 	}
 	
-	private static class WithdrawFromChest extends State {
-		public static final WithdrawFromChest instance = new WithdrawFromChest();
+	private static class WithdrawFromChestAdjacentToBloomery extends State {
+		public static final WithdrawFromChestAdjacentToBloomery instance = new WithdrawFromChestAdjacentToBloomery();
 
 		@Override
 		public boolean start() {
@@ -163,11 +190,15 @@ public class BlacksmithStateMachine extends StateMachine {
 			if (bloomery == null || !(bloomery instanceof TileEntityBloomery)) {
 				return false;
 			}
+			ISidedInventory targetInventory = (ISidedInventory) stateMachine.getVariable(StateMachineVariables.TARGET_ISIDED_INVENTORY);
+			if (targetInventory == null || !(targetInventory instanceof ISidedInventory)) {
+				return false;
+			}
 			Integer slot = (Integer) stateMachine.getVariable(StateMachineVariables.SLOT);
 			if (slot == null || !(slot instanceof Integer)) {
 				return false;
 			}
-			TileEntityChest chest = bloomery.getAdjacentChestWithValidContentsForBloomerySlot(slot);
+			TileEntityChest chest = bloomery.getAdjacentChestWithValidResourcesForISidedInventorySlot(targetInventory, slot);
 			if (chest != null) {
 				stateMachine.setVariable(StateMachineVariables.CHEST, chest);
 				stateMachine.setVariable(StateMachineVariables.TARGET_LOCATION, new ChunkCoordinates(chest.xCoord, chest.yCoord, chest.zCoord));
@@ -183,15 +214,19 @@ public class BlacksmithStateMachine extends StateMachine {
 				stateMachine.commonActions.moveTowardsTargetLocation();
 				return false;
 			} else {
-				TileEntityBloomery bloomery = (TileEntityBloomery) stateMachine.getVariable(StateMachineVariables.BLOOMERY);
-				if (bloomery == null || !(bloomery instanceof TileEntityBloomery)) {
+				ISidedInventory targetInventory = (ISidedInventory) stateMachine.getVariable(StateMachineVariables.TARGET_ISIDED_INVENTORY);
+				if (targetInventory == null || !(targetInventory instanceof ISidedInventory)) {
 					return false;
 				}
 				Integer slot = (Integer) stateMachine.getVariable(StateMachineVariables.SLOT);
 				if (slot == null || !(slot instanceof Integer)) {
 					return false;
 				}
-				stateMachine.commonActions.withdrawItemFromChestValidForISidedInventorySlot(bloomery, slot);
+				Integer quantity = (Integer) stateMachine.getVariable(StateMachineVariables.QUANTITY);
+				if (slot == null || !(slot instanceof Integer)) {
+					return false;
+				}
+				stateMachine.commonActions.withdrawItemWithQuantityFromChestValidForISidedInventorySlot(quantity, targetInventory, slot);
 				return true;
 			}
 		}
@@ -236,16 +271,16 @@ public class BlacksmithStateMachine extends StateMachine {
 		}
 	}
 
-	private static class WithdrawFromBloomery extends State {
-		public static final WithdrawFromBloomery instance = new WithdrawFromBloomery();
+	private static class WithdrawFromISidedInventory extends State {
+		public static final WithdrawFromISidedInventory instance = new WithdrawFromISidedInventory();
 
 		@Override
 		public boolean start() {
-			TileEntityBloomery bloomery = (TileEntityBloomery) stateMachine.getVariable(StateMachineVariables.BLOOMERY);
-			if (bloomery == null || !(bloomery instanceof TileEntityBloomery)) {
+			TileEntity targetTileEntity = (TileEntity) stateMachine.getVariable(StateMachineVariables.TARGET_TILE_ENTITY);
+			if (targetTileEntity == null || !(targetTileEntity instanceof TileEntity)) {
 				return false;
 			}
-			stateMachine.setVariable(StateMachineVariables.TARGET_LOCATION, new ChunkCoordinates(bloomery.xCoord, bloomery.yCoord, bloomery.zCoord));
+			stateMachine.setVariable(StateMachineVariables.TARGET_LOCATION, new ChunkCoordinates(targetTileEntity.xCoord, targetTileEntity.yCoord, targetTileEntity.zCoord));
 			return true;
 		}
 
@@ -256,16 +291,19 @@ public class BlacksmithStateMachine extends StateMachine {
 				stateMachine.commonActions.moveTowardsTargetLocation();
 				return false;
 			} else {
-				TileEntityBloomery bloomery = (TileEntityBloomery) stateMachine.getVariable(StateMachineVariables.BLOOMERY);
-				if (bloomery == null || !(bloomery instanceof TileEntityBloomery)) {
+				ISidedInventory targetInventory = (ISidedInventory) stateMachine.getVariable(StateMachineVariables.TARGET_ISIDED_INVENTORY);
+				if (targetInventory == null || !(targetInventory instanceof ISidedInventory)) {
 					return false;
 				}
 				Integer slot = (Integer) stateMachine.getVariable(StateMachineVariables.SLOT);
 				if (slot == null || !(slot instanceof Integer)) {
 					return false;
 				}
-				stateMachine.commonActions.withdrawItemFromISidedInventorySlo(bloomery, slot);
-				return true;
+				Integer quantity = (Integer) stateMachine.getVariable(StateMachineVariables.QUANTITY);
+				if (slot == null || !(slot instanceof Integer)) {
+					return false;
+				}
+				return stateMachine.commonActions.withdrawItemQuantityFromISidedInventorySlot(quantity, targetInventory, slot);
 			}
 		}
 
@@ -274,16 +312,16 @@ public class BlacksmithStateMachine extends StateMachine {
 		}
 	}
 
-	private static class PlaceInBloomery extends State {
-		public static final PlaceInBloomery instance = new PlaceInBloomery();
+	private static class PlaceInISidedInventory extends State {
+		public static final PlaceInISidedInventory instance = new PlaceInISidedInventory();
 
 		@Override
 		public boolean start() {
-			TileEntityBloomery bloomery = (TileEntityBloomery) stateMachine.getVariable(StateMachineVariables.BLOOMERY);
-			if (bloomery == null || !(bloomery instanceof TileEntityBloomery)) {
+			TileEntity targetTileEntity = (TileEntity) stateMachine.getVariable(StateMachineVariables.TARGET_TILE_ENTITY);
+			if (targetTileEntity == null || !(targetTileEntity instanceof TileEntity)) {
 				return false;
 			}
-			stateMachine.setVariable(StateMachineVariables.TARGET_LOCATION, new ChunkCoordinates(bloomery.xCoord, bloomery.yCoord, bloomery.zCoord));
+			stateMachine.setVariable(StateMachineVariables.TARGET_LOCATION, new ChunkCoordinates(targetTileEntity.xCoord, targetTileEntity.yCoord, targetTileEntity.zCoord));
 			return true;
 
 		}
@@ -295,15 +333,19 @@ public class BlacksmithStateMachine extends StateMachine {
 				stateMachine.commonActions.moveTowardsTargetLocation();
 				return false;
 			} else {
-				TileEntityBloomery bloomery = (TileEntityBloomery) stateMachine.getVariable(StateMachineVariables.BLOOMERY);
-				if (bloomery == null || !(bloomery instanceof TileEntityBloomery)) {
+				ISidedInventory targetInventory = (ISidedInventory) stateMachine.getVariable(StateMachineVariables.TARGET_ISIDED_INVENTORY);
+				if (targetInventory == null || !(targetInventory instanceof ISidedInventory)) {
 					return false;
 				}
 				Integer slot = (Integer) stateMachine.getVariable(StateMachineVariables.SLOT);
 				if (slot == null || !(slot instanceof Integer)) {
 					return false;
 				}
-				stateMachine.commonActions.insertItemInISidedInventorySlot(bloomery, slot);
+				Integer quantity = (Integer) stateMachine.getVariable(StateMachineVariables.QUANTITY);
+				if (slot == null || !(slot instanceof Integer)) {
+					return false;
+				}
+				stateMachine.commonActions.insertItemQuantityInISidedInventorySlot(quantity, targetInventory, slot);
 				return true;
 			}
 		}

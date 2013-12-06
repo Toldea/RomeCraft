@@ -82,29 +82,33 @@ public class CommonActions {
 				(float) ownerEntity.getVerticalFaceSpeed());
 	}
 
-	public boolean insertItemInISidedInventorySlot(ISidedInventory inventory, int inventorySlot) {
+	public boolean insertItemQuantityInISidedInventorySlot(int quantity, ISidedInventory inventory, int inventorySlot) {
 		EntityCreature entityCreature = (EntityCreature) stateMachine.getVariable(StateMachineVariables.OWNER_ENTITY);
 		if (entityCreature == null || !(entityCreature instanceof EntityCreature)) {
 			return false;
 		}
 
 		ItemStack equippedItem = entityCreature.getCurrentItemOrArmor(0);
+		if (equippedItem.stackSize < quantity) {
+			return false;
+		}
 
 		if (inventory.isItemValidForSlot(inventorySlot, equippedItem)) {
-			ItemStack bloomerySlotStack = inventory.getStackInSlot(inventorySlot);
-			if (bloomerySlotStack == null) {
-				bloomerySlotStack = equippedItem.copy();
-				bloomerySlotStack.stackSize = 1;
+			ItemStack inventoryItemStack = inventory.getStackInSlot(inventorySlot);
+			if (inventoryItemStack == null) {
+				inventoryItemStack = equippedItem.copy();
+				inventoryItemStack.stackSize = quantity;
+				equippedItem.stackSize -= quantity;
 			} else {
-				if (bloomerySlotStack.stackSize < inventory.getInventoryStackLimit()) {
-					bloomerySlotStack.stackSize++;
+				if (inventoryItemStack.stackSize + quantity < inventory.getInventoryStackLimit()) {
+					inventoryItemStack.stackSize += quantity;
+					equippedItem.stackSize -= quantity;
 				} else {
 					return false;
 				}
 			}
-			inventory.setInventorySlotContents(inventorySlot, bloomerySlotStack);
-			--equippedItem.stackSize;
-			if (equippedItem.stackSize == 0) {
+			inventory.setInventorySlotContents(inventorySlot, inventoryItemStack);
+			if (equippedItem.stackSize <= 0) {
 				entityCreature.setCurrentItemOrArmor(0, null);
 			} else {
 				entityCreature.setCurrentItemOrArmor(0, equippedItem);
@@ -114,7 +118,7 @@ public class CommonActions {
 		return false;
 	}
 
-	public boolean withdrawItemFromISidedInventorySlo(ISidedInventory inventory, int inventorySlot) {
+	public boolean withdrawItemQuantityFromISidedInventorySlot(int quantity, ISidedInventory inventory, int inventorySlot) {
 		EntityCreature entityCreature = (EntityCreature) stateMachine.getVariable(StateMachineVariables.OWNER_ENTITY);
 		if (entityCreature == null || !(entityCreature instanceof EntityCreature)) {
 			return false;
@@ -123,10 +127,17 @@ public class CommonActions {
 		ItemStack equippedItem = entityCreature.getCurrentItemOrArmor(0);
 
 		if (equippedItem == null) {
-			equippedItem = inventory.getStackInSlot(2);
-			if (equippedItem != null && equippedItem.stackSize > 0) {
+			ItemStack inventoryStack = inventory.getStackInSlot(inventorySlot);
+			if (inventoryStack.stackSize >= quantity) {
+				equippedItem = inventoryStack.copy();
+				equippedItem.stackSize = quantity;
+				inventoryStack.stackSize -= quantity;
+				if (inventoryStack.stackSize <= 0) {
+					inventory.setInventorySlotContents(inventorySlot, null);
+				} else {
+					inventory.setInventorySlotContents(inventorySlot, inventoryStack);
+				}
 				entityCreature.setCurrentItemOrArmor(0, equippedItem);
-				inventory.setInventorySlotContents(2, null);
 				return true;
 			}
 		}
@@ -181,7 +192,7 @@ public class CommonActions {
 		}
 	}
 
-	public boolean withdrawItemFromChestValidForISidedInventorySlot(ISidedInventory inventory, int inventorySlot) {
+	public boolean withdrawItemWithQuantityFromChestValidForISidedInventorySlot(int quantity, ISidedInventory inventory, int inventorySlot) {
 		TileEntityChest chest = (TileEntityChest) stateMachine.getVariable(StateMachineVariables.CHEST);
 		if (chest == null || !(chest instanceof TileEntityChest)) {
 			return false;
@@ -200,16 +211,18 @@ public class CommonActions {
 		for (int slot = 0; slot < chest.getSizeInventory(); slot++) {
 			chestItemStack = chest.getStackInSlot(slot);
 			if (chestItemStack != null && inventory.isItemValidForSlot(inventorySlot, chestItemStack)) {
-				equippedItem = chestItemStack.copy();
-				equippedItem.stackSize = 1;
-				chestItemStack.stackSize--;
-				if (chestItemStack.stackSize <= 0) {
-					chest.setInventorySlotContents(slot, null);
-				} else {
-					chest.setInventorySlotContents(slot, chestItemStack);
+				if (chestItemStack.stackSize >= quantity) {
+					equippedItem = chestItemStack.copy();
+					equippedItem.stackSize = quantity;
+					chestItemStack.stackSize -= quantity;
+					if (chestItemStack.stackSize <= 0) {
+						chest.setInventorySlotContents(slot, null);
+					} else {
+						chest.setInventorySlotContents(slot, chestItemStack);
+					}
+					entityCreature.setCurrentItemOrArmor(0, equippedItem);
+					return true;
 				}
-				entityCreature.setCurrentItemOrArmor(0, equippedItem);
-				return true;
 			}
 		}
 		return false;
