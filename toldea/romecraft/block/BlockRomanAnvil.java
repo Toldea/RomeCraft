@@ -54,7 +54,7 @@ public class BlockRomanAnvil extends RomeCraftBlockContainer {
 				int id = itemstack.itemID;
 
 				if (id == ItemManager.itemHammer.itemID) {
-					tileEntity.hammerIron(world);
+					tileEntity.hammerIron();
 					return true;
 				} else {
 					int slot = -1;

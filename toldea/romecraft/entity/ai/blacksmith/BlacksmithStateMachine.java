@@ -29,6 +29,7 @@ public class BlacksmithStateMachine extends StateMachine {
 		WithdrawFromISidedInventory.instance.linkStateMachine(this);
 		PlaceInISidedInventory.instance.linkStateMachine(this);
 		PushBellows.instance.linkStateMachine(this);
+		HammerAnvil.instance.linkStateMachine(this);
 	}
 
 	@Override
@@ -80,7 +81,7 @@ public class BlacksmithStateMachine extends StateMachine {
 				}
 				int recipeIronBloomQuantity = nextOrder.getAnvilRecipe().rawIngredientQuantity;
 				if (numIronBloomsInAnvil == recipeIronBloomQuantity) {
-					// craft item
+					return HammerAnvil.instance;
 				} else if (numIronBloomsInAnvil < recipeIronBloomQuantity) {
 					if (entityHoldingIronBloom) {
 						setVariable(StateMachineVariables.TARGET_TILE_ENTITY, anvil);
@@ -385,6 +386,50 @@ public class BlacksmithStateMachine extends StateMachine {
 						return false;
 					}
 					bellows.pushBellows();
+					taskTimer = 1;
+					return false;
+				} else {
+					taskTimer++;
+					return taskTimer >= TASK_DURATION;
+				}
+			}
+		}
+
+		@Override
+		public void finish() {
+		}
+	}
+	
+	private static class HammerAnvil extends State {
+		public static final HammerAnvil instance = new HammerAnvil();
+		
+		private static final int TASK_DURATION = TileEntityBellows.ROTATION_TIME + 10;
+		private static int taskTimer;
+
+		@Override
+		public boolean start() {
+			TileEntityRomanAnvil anvil = (TileEntityRomanAnvil) stateMachine.getVariable(StateMachineVariables.ROMAN_ANVIL);
+			if (anvil == null || !(anvil instanceof TileEntityRomanAnvil)) {
+				return false;
+			}
+			stateMachine.setVariable(StateMachineVariables.TARGET_LOCATION, new ChunkCoordinates(anvil.xCoord, anvil.yCoord, anvil.zCoord));
+			taskTimer = 0;
+			return true;
+		}
+
+		@Override
+		public boolean update() {
+			stateMachine.commonActions.lookAtTargetLocation();
+			if (!stateMachine.commonActions.inRangeOfTargetLocation()) {
+				stateMachine.commonActions.moveTowardsTargetLocation();
+				return false;
+			} else {
+				if (taskTimer == 0) {
+					TileEntityRomanAnvil anvil = (TileEntityRomanAnvil) stateMachine.getVariable(StateMachineVariables.ROMAN_ANVIL);
+					if (anvil == null || !(anvil instanceof TileEntityRomanAnvil)) {
+						return false;
+					}
+					anvil.hammerIron();
 					taskTimer = 1;
 					return false;
 				} else {

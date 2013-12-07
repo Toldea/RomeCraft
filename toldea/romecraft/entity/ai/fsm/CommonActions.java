@@ -100,7 +100,7 @@ public class CommonActions {
 				inventoryItemStack.stackSize = quantity;
 				equippedItem.stackSize -= quantity;
 			} else {
-				if (inventoryItemStack.stackSize + quantity < inventory.getInventoryStackLimit()) {
+				if (inventoryItemStack.stackSize + quantity <= inventory.getInventoryStackLimit()) {
 					inventoryItemStack.stackSize += quantity;
 					equippedItem.stackSize -= quantity;
 				} else {

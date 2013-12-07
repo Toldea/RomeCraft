@@ -9,7 +9,6 @@ import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
 import toldea.romecraft.item.crafting.RomanAnvilRecipes;
 import toldea.romecraft.managers.ItemManager;
 
@@ -30,18 +29,18 @@ public class TileEntityRomanAnvil extends TileEntity implements ISidedInventory 
 		anvilItems = new ItemStack[2];
 	}
 
-	public void hammerIron(World world) {
+	public void hammerIron() {
 		if (hasIronBloom()) {
 			anvilHammeredCount++;
 			if (anvilHammeredCount >= 10) {
 				createItem();
-			} else if (world.isRemote) {
+			} else if (worldObj.isRemote) {
 				// Play a 'hammer on the iron bloom' sound.
-				world.playSound(xCoord + .5, yCoord + .5, zCoord + .5, "romecraft:hammer_use", 1f, 1f, false);
+				worldObj.playSound(xCoord + .5, yCoord + .5, zCoord + .5, "romecraft:hammer_use", 1f, 1f, false);
 			}
-		} else if (world.isRemote) {
+		} else if (worldObj.isRemote) {
 			// Play a 'there is nothing on the anvil so hit the anvil' sound.
-			world.playSound(xCoord + .5, yCoord + .5, zCoord + .5, "romecraft:hammer_use", .4f, .7f, false);
+			worldObj.playSound(xCoord + .5, yCoord + .5, zCoord + .5, "romecraft:hammer_use", .4f, .7f, false);
 		}
 	}
 
