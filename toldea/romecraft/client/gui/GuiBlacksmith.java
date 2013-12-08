@@ -87,7 +87,7 @@ public class GuiBlacksmith extends RomeCraftGuiScreen {
 			ItemStack itemStack = guiItemButton.getItemStack();
 			BlacksmithOrders orders = blacksmithPleb.getBlacksmithOrders();
 			orders.adjustOrderQuantityForItemId(itemStack.itemID, 1);
-			PacketManager.sendAdjustBlacksmithOrderQuantityPacketToServer(blacksmithPleb.entityId, itemStack.itemID, 1);
+			PacketManager.sendAdjustBlacksmithOrderQuantityPacketToSide(blacksmithPleb.entityId, itemStack.itemID, 1, true);
 		}
 	}
 
@@ -99,7 +99,7 @@ public class GuiBlacksmith extends RomeCraftGuiScreen {
 			// Check if we have more than 0 items, if so reduce the quantity by 1.
 			if (orders.getOrderQuantityForItemId(itemStack.itemID) > 0) {
 				orders.adjustOrderQuantityForItemId(itemStack.itemID, -1);
-				PacketManager.sendAdjustBlacksmithOrderQuantityPacketToServer(blacksmithPleb.entityId, itemStack.itemID, -1);
+				PacketManager.sendAdjustBlacksmithOrderQuantityPacketToSide(blacksmithPleb.entityId, itemStack.itemID, -1, true);
 			}
 		}
 	}

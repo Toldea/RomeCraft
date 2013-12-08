@@ -156,6 +156,9 @@ public class CommonActions {
 		}
 
 		ItemStack equippedItem = entityCreature.getCurrentItemOrArmor(0);
+		if (equippedItem == null || equippedItem.stackSize <= 0) {
+			return;
+		}
 		ItemStack chestItemStack;
 
 		int firstEmptySlot = -1;
@@ -167,7 +170,7 @@ public class CommonActions {
 					firstEmptySlot = slot;
 				}
 				continue;
-			} else if (chestItemStack.itemID == equippedItem.itemID && chestItemStack.stackSize < chest.getInventoryStackLimit()) {
+			} else if (chestItemStack.itemID == equippedItem.itemID && chestItemStack.stackSize < chest.getInventoryStackLimit() && chestItemStack.getMaxStackSize() >= chestItemStack.stackSize + equippedItem.stackSize) {
 				chestItemStack.stackSize++;
 				insertOrMergeEquippedItemWithChestStackInSlot(entityCreature, chest, equippedItem, chestItemStack, slot);
 				return;

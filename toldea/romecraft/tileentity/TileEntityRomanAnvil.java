@@ -11,6 +11,7 @@ import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.tileentity.TileEntity;
 import toldea.romecraft.item.crafting.RomanAnvilRecipes;
 import toldea.romecraft.managers.ItemManager;
+import toldea.romecraft.managers.PacketManager;
 
 public class TileEntityRomanAnvil extends TileEntity implements ISidedInventory {
 	private ItemStack[] anvilItems;
@@ -29,11 +30,15 @@ public class TileEntityRomanAnvil extends TileEntity implements ISidedInventory 
 		anvilItems = new ItemStack[2];
 	}
 
-	public void hammerIron() {
+	public boolean hammerIron() {
+		if (!worldObj.isRemote) {
+			PacketManager.sendHammerAnvilPacketToAllPlayers(this);
+		}
 		if (hasIronBloom()) {
 			anvilHammeredCount++;
+			anvilNotHammeredTime = 0;
 			if (anvilHammeredCount >= 10) {
-				createItem();
+				return createItem();
 			} else if (worldObj.isRemote) {
 				// Play a 'hammer on the iron bloom' sound.
 				worldObj.playSound(xCoord + .5, yCoord + .5, zCoord + .5, "romecraft:hammer_use", 1f, 1f, false);
@@ -42,6 +47,7 @@ public class TileEntityRomanAnvil extends TileEntity implements ISidedInventory 
 			// Play a 'there is nothing on the anvil so hit the anvil' sound.
 			worldObj.playSound(xCoord + .5, yCoord + .5, zCoord + .5, "romecraft:hammer_use", .4f, .7f, false);
 		}
+		return false;
 	}
 
 	public void updateEntity() {
@@ -69,7 +75,7 @@ public class TileEntityRomanAnvil extends TileEntity implements ISidedInventory 
 		}
 	}
 
-	public void createItem() {
+	public boolean createItem() {
 		if (canCreateItem()) {
 			ItemStack itemStack = RomanAnvilRecipes.instance().getRecipeResult(anvilItems[0]);
 			anvilItems[1] = itemStack.copy();
@@ -80,6 +86,10 @@ public class TileEntityRomanAnvil extends TileEntity implements ISidedInventory 
 			if (!this.worldObj.isRemote) {
 				this.worldObj.playSoundEffect(xCoord + .5, yCoord + .5, zCoord + .5, "random.anvil_land", 1.0F, 1.0F);
 			}
+			
+			return true;
+		} else {
+			return false;
 		}
 	}
 

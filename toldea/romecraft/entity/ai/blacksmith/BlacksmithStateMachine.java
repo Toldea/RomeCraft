@@ -13,6 +13,7 @@ import toldea.romecraft.entity.ai.fsm.State;
 import toldea.romecraft.entity.ai.fsm.StateMachine;
 import toldea.romecraft.entity.ai.fsm.StateMachineVariables;
 import toldea.romecraft.managers.ItemManager;
+import toldea.romecraft.managers.PacketManager;
 import toldea.romecraft.tileentity.TileEntityBellows;
 import toldea.romecraft.tileentity.TileEntityBloomery;
 import toldea.romecraft.tileentity.TileEntityRomanAnvil;
@@ -60,20 +61,26 @@ public class BlacksmithStateMachine extends StateMachine {
 		boolean entityHoldingFuel = (equippedItem != null && equippedItem.itemID == Item.coal.itemID);
 		boolean entityHoldingIronOre = (equippedItem != null && equippedItem.itemID == Block.oreIron.blockID);
 		boolean entityHoldingIronBloom = (equippedItem != null && equippedItem.itemID == ItemManager.itemIronBloom.itemID);
-		boolean entityHoldingSomethingElse = (!entityHoldingFuel && !entityHoldingIronOre && !entityHoldingIronBloom);
+		boolean entityHoldingSomethingElse = (!entityHoldingFuel && !entityHoldingIronOre && !entityHoldingIronBloom && equippedItem != null);
 		
-		// if has order
-		// check if enough iron blooms are in anvil
-		// if not, check if enough iron blooms are available in a chest
-		// if so, fetch from chest, then place in anvil
-		// once enough in anvil, hammer until complete (enough items and not finished item)
+		if (entityHoldingSomethingElse) {
+			return PlaceInChestAdjacentToBloomery.instance;
+		}
 		
-		System.out.println("hasBlacksmithOrders: " + hasBlacksmithOrders);
+		TileEntityRomanAnvil anvil = (TileEntityRomanAnvil)getVariable(StateMachineVariables.ROMAN_ANVIL);
+		if (anvil != null && anvil instanceof TileEntityRomanAnvil) {
+			if (anvil.hasFinishedItem()) {
+				setVariable(StateMachineVariables.TARGET_TILE_ENTITY, anvil);
+				setVariable(StateMachineVariables.TARGET_ISIDED_INVENTORY, anvil);
+				setVariable(StateMachineVariables.SLOT, new Integer(1));
+				setVariable(StateMachineVariables.QUANTITY, new Integer(1));
+				return WithdrawFromISidedInventory.instance;
+			}
+		}
+		
 		if (hasBlacksmithOrders) {
 			BlacksmithOrder nextOrder = orders.getNextOrder();
-			TileEntityRomanAnvil anvil = (TileEntityRomanAnvil)getVariable(StateMachineVariables.ROMAN_ANVIL);
 			if (anvil != null && anvil instanceof TileEntityRomanAnvil) {
-				System.out.println("hasRomanAnvil!");
 				ItemStack ironBloomsInAnvilStack = anvil.getStackInSlot(0);
 				int numIronBloomsInAnvil = 0;
 				if (ironBloomsInAnvilStack != null) {
@@ -403,7 +410,7 @@ public class BlacksmithStateMachine extends StateMachine {
 	private static class HammerAnvil extends State {
 		public static final HammerAnvil instance = new HammerAnvil();
 		
-		private static final int TASK_DURATION = TileEntityBellows.ROTATION_TIME + 10;
+		private static final int TASK_DURATION = 10;
 		private static int taskTimer;
 
 		@Override
@@ -429,7 +436,18 @@ public class BlacksmithStateMachine extends StateMachine {
 					if (anvil == null || !(anvil instanceof TileEntityRomanAnvil)) {
 						return false;
 					}
-					anvil.hammerIron();
+					// Check if hammering the iron caused an item to be created.
+					if (anvil.hammerIron() == true) {
+						// If so, adjust the order quantity to reflect this.
+						EntityPleb blacksmithPleb = (EntityPleb) stateMachine.getVariable(StateMachineVariables.OWNER_ENTITY);
+						if (blacksmithPleb == null || !(blacksmithPleb instanceof EntityPleb)) {
+							return false;
+						}
+						BlacksmithOrders orders = blacksmithPleb.getBlacksmithOrders();
+						BlacksmithOrder finishedOrder = orders.getNextOrder();
+						orders.adjustOrderQuantityForItemId(finishedOrder.getItemId(), -1);
+						PacketManager.sendAdjustBlacksmithOrderQuantityPacketToSide(blacksmithPleb.entityId, finishedOrder.getItemId(), -1, false);
+					}
 					taskTimer = 1;
 					return false;
 				} else {

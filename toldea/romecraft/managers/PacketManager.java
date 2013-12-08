@@ -11,6 +11,7 @@ import net.minecraft.tileentity.TileEntity;
 import toldea.romecraft.entity.EntityPleb;
 import toldea.romecraft.tileentity.TileEntityBellows;
 import toldea.romecraft.tileentity.TileEntityBloomery;
+import toldea.romecraft.tileentity.TileEntityRomanAnvil;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
@@ -32,6 +33,7 @@ public class PacketManager implements IPacketHandler {
 		
 		int x, y, z, entityId, itemId, adjustment;
 		TileEntity te;
+		EntityPleb blacksmithPleb;
 
 		switch (packetId) {
 		case 0:
@@ -61,8 +63,20 @@ public class PacketManager implements IPacketHandler {
 			entityId = reader.readInt();
 			itemId = reader.readInt();
 			adjustment = reader.readInt();
-			EntityPleb blacksmithPleb = (EntityPleb) entityPlayer.worldObj.getEntityByID(entityId);
+			blacksmithPleb = (EntityPleb) entityPlayer.worldObj.getEntityByID(entityId);
 			blacksmithPleb.getBlacksmithOrders().adjustOrderQuantityForItemId(itemId, adjustment);
+			break;
+		case 3:
+			x = reader.readInt();
+			y = reader.readInt();
+			z = reader.readInt();
+
+			te = entityPlayer.worldObj.getBlockTileEntity(x, y, z);
+			if (te != null && te instanceof TileEntityRomanAnvil) {
+				TileEntityRomanAnvil anvil = (TileEntityRomanAnvil) te;
+				anvil.hammerIron();
+			}
+			
 			break;
 		default:
 			break;
@@ -101,7 +115,10 @@ public class PacketManager implements IPacketHandler {
 		}
 	}
 	
-	public static void sendAdjustBlacksmithOrderQuantityPacketToServer(int entityId, int itemId, int quantityAdjustment) {
+	/**
+	 * Sends a packet to adjust a blacksmith's order quantity by a specific amount. If sendToServer is true this packet is sent to the server, else it is sent to all players.
+	 */
+	public static void sendAdjustBlacksmithOrderQuantityPacketToSide(int entityId, int itemId, int quantityAdjustment, boolean sendToServer) {
 		ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
 		DataOutputStream dataStream = new DataOutputStream(byteStream);
 
@@ -111,9 +128,29 @@ public class PacketManager implements IPacketHandler {
 			dataStream.writeInt(itemId);
 			dataStream.writeInt(quantityAdjustment);
 
-			PacketDispatcher.sendPacketToServer(PacketDispatcher.getPacket(CHANNEL, byteStream.toByteArray()));
+			if (sendToServer) {
+				PacketDispatcher.sendPacketToServer(PacketDispatcher.getPacket(CHANNEL, byteStream.toByteArray()));
+			} else {
+				PacketDispatcher.sendPacketToAllPlayers(PacketDispatcher.getPacket(CHANNEL, byteStream.toByteArray()));
+			}
 		} catch (IOException ex) {
 			System.err.append("RomeCraft: Failed to send AdjustBlacksmithOrderQuantity packet!");
+		}
+	}
+	
+	public static void sendHammerAnvilPacketToAllPlayers(TileEntityRomanAnvil anvil) {
+		ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+		DataOutputStream dataStream = new DataOutputStream(byteStream);
+
+		try {
+			dataStream.writeByte((byte) 3);
+			dataStream.writeInt(anvil.xCoord);
+			dataStream.writeInt(anvil.yCoord);
+			dataStream.writeInt(anvil.zCoord);
+			
+			PacketDispatcher.sendPacketToAllPlayers(PacketDispatcher.getPacket(CHANNEL, byteStream.toByteArray()));
+		} catch (IOException ex) {
+			System.err.append("RomeCraft: Failed to send HammerAnvil packet!");
 		}
 	}
 }
