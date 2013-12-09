@@ -19,7 +19,11 @@ public class GuiBlacksmith extends RomeCraftGuiScreen {
 
 	private static final int BUTTON_WIDTH = 20;
 	private static final int BUTTON_HEIGHT = 20;
-	private static final int BUTTON_HORIZONTAL_SPACING = 0;
+	private int buttonHorizontalSpacing = 0;
+	private static final int BUTTON_START_HORIZONTAL_OFFSET = 20;
+	private static final int BUTTON_START_VERTICAL_OFFSET = 50;
+	private static final int BUTTON_TEXT_HORIZONTAL_OFFSET = 8;
+	private static final int BUTTON_TEXT_VERTICAL_OFFSET = 22;
 
 	private final EntityPleb blacksmithPleb;
 
@@ -36,9 +40,14 @@ public class GuiBlacksmith extends RomeCraftGuiScreen {
 	@Override
 	public void initGuiComponents() {
 		List<AnvilRecipe> anvilRecipes = RomanAnvilRecipes.instance().getRecipeList();
-		for (int i = 0; i < anvilRecipes.size(); i++) {
+		int numRecipes = anvilRecipes.size();
+		buttonHorizontalSpacing = xSize;
+		buttonHorizontalSpacing -= numRecipes * BUTTON_WIDTH;
+		buttonHorizontalSpacing -= 2 * BUTTON_START_HORIZONTAL_OFFSET;
+		buttonHorizontalSpacing /= numRecipes - 1;
+		for (int i = 0; i < numRecipes; i++) {
 			AnvilRecipe recipe = anvilRecipes.get(i);
-			this.buttonList.add(new GuiItemButton(i, guiLeft + i * (BUTTON_WIDTH + BUTTON_HORIZONTAL_SPACING), guiTop, BUTTON_WIDTH, BUTTON_WIDTH, "",
+			this.buttonList.add(new GuiItemButton(i, guiLeft + BUTTON_START_HORIZONTAL_OFFSET + i * (BUTTON_WIDTH + buttonHorizontalSpacing), guiTop + BUTTON_START_VERTICAL_OFFSET, BUTTON_WIDTH, BUTTON_WIDTH, "",
 					recipe.craftedItem));
 		}
 	}
@@ -53,6 +62,8 @@ public class GuiBlacksmith extends RomeCraftGuiScreen {
 
 	@Override
 	public void drawForeground() {
+		fontRenderer.drawStringWithShadow("Blacksmith", guiLeft + 8, guiTop + 6, 0xFFFFFF);
+		
 		for (int i = 0; i < this.buttonList.size(); i++) {
 			GuiButton guiButton = (GuiButton) this.buttonList.get(i);
 			if (guiButton instanceof GuiItemButton) {
@@ -60,7 +71,7 @@ public class GuiBlacksmith extends RomeCraftGuiScreen {
 				guiItemButton.drawButtonImage(minecraft);
 				int itemId = guiItemButton.getItemStack().itemID;
 				int quantity = blacksmithPleb.getBlacksmithOrders().getOrderQuantityForItemId(itemId);
-				fontRenderer.drawString("" + quantity, guiLeft + 8 + i * (BUTTON_WIDTH + BUTTON_HORIZONTAL_SPACING), guiTop + 22, 0x404040);
+				fontRenderer.drawString("" + quantity, guiLeft + BUTTON_START_HORIZONTAL_OFFSET + BUTTON_TEXT_HORIZONTAL_OFFSET + i * (BUTTON_WIDTH + buttonHorizontalSpacing), guiTop + BUTTON_TEXT_VERTICAL_OFFSET + BUTTON_START_VERTICAL_OFFSET, 0x404040);
 			}
 		}
 	}
