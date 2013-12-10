@@ -2,6 +2,8 @@ package toldea.romecraft.tileentity;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.MathHelper;
@@ -82,6 +84,12 @@ public class TileEntityRomanVillageForum extends TileEntity {
 	public void readFromNBT(NBTTagCompound par1) {
 		super.readFromNBT(par1);
 		isValidMultiblock = par1.getBoolean("isValidMultiblock");
+	}
+	
+	public Packet getDescriptionPacket() {
+		NBTTagCompound nbtTag = new NBTTagCompound();
+		this.writeToNBT(nbtTag);
+		return new Packet132TileEntityData(this.xCoord, this.yCoord, this.zCoord, 1, nbtTag);
 	}
 
 	private boolean isBlockMarble(int x, int y, int z) {
